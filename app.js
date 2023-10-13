@@ -18,45 +18,40 @@ app.set("views", path.join(__dirname, "views"));
 
 // Connect to MongoDB
 mongoose.connect(process.env.DB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useNewUrlParser: true, useUnifiedTopology: true,
 });
 
 // Configure express-session middleware
-app.use(
-    session({
-        secret: "secret-key",
-        resave: false,
-        saveUninitialized: false,
-    })
-);
+app.use(session({
+    secret: "secret-key", resave: false, saveUninitialized: false,
+}));
 
 // Configure passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+const flash = require("connect-flash");
+app.use(flash());
 
 // Configure passport-local strategy
-passport.use(
-    new LocalStrategy(async function (username, password, done) {
-        try {
-            const user = await User.findOne({ username: username });
-            
-            if (!user) {
-                return done(null, false, { message: "Incorrect username." });
-            }
-            
-            const isPasswordValid = await user.validPassword(password);
-            
-            if (!isPasswordValid) {
-                return done(null, false, { message: "Incorrect password." });
-            }
-            
-            return done(null, user);
-        } catch (err) {
-            return done(err);
+passport.use(new LocalStrategy(async function (username, password, done) {
+    try {
+        const user = await User.findOne({ username: username });
+        
+        if (!user) {
+            return done(null, false, { message: "Incorrect username." });
         }
-    })
-);
+        
+        const isPasswordValid = await user.validPassword(password);
+        
+        if (!isPasswordValid) {
+            return done(null, false, { message: "Incorrect password." });
+        }
+        
+        return done(null, user);
+    } catch (err) {
+        return done(err);
+    }
+}));
 
 // Serialize and deserialize user
 passport.serializeUser(function (user, done) {
@@ -73,12 +68,10 @@ passport.deserializeUser(async function (id, done) {
 });
 
 // Routes
-app.get("/", function (req, res) {
-    res.render("index");
-});
-
 app.get("/login", function (req, res) {
-    res.render("login");
+    res.render("login", {
+        messages: req.flash(),
+    });
 });
 
 // Route for user registration form
@@ -100,8 +93,7 @@ app.post("/register", function (req, res) {
             
             // Create a new user
             const newUser = new User({
-                username: username,
-                password: password,
+                username: username, password: password,
             });
             
             // Save the user to the database
@@ -116,30 +108,65 @@ app.post("/register", function (req, res) {
         });
 });
 
-app.post(
-    "/login",
-    passport.authenticate("local", {
-        successRedirect: "/dashboard",
-        failureRedirect: "/login",
-    })
-);
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/login",
+    failureFlash: true,
+    successFlash: true,
+    failureMessage: "Invalid username or password.",
+    successMessage: "Logged in successfully.",
+}));
 
-app.get("/dashboard", function (req, res) {
+// Define the authentication middleware
+function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        console.log(`/dashboard ${req.id}`)
-        console.log(`/dashboard ${req.user}`)
-        res.render("dashboard", {data: req.id});
-    } else {
-        res.redirect("/login");
+        return next(); // User is authenticated, proceed to the next middleware/route handler
     }
+    // User is not authenticated, redirect to the login page
+    res.redirect("/login");
+}
+
+// Apply the authentication middleware to the "/dashboard" route
+app.get("/dashboard", ensureAuthenticated, function (req, res) {
+    console.log(`/dashboard ${req.user}`);
+    res.render("dashboard");
 });
+
+app.get("/", ensureAuthenticated, function (req, res) {
+    res.render("index");
+});
+
+app.get("/about", ensureAuthenticated, function (req, res) {
+    res.render("about");
+});
+
+app.get("/contact", ensureAuthenticated, function (req, res) {
+    res.render("contact");
+});
+
 
 app.get("/logout", function (req, res) {
-    req.logout();
-    res.redirect("/");
+    req.logout(function (err) {
+        if (err) {
+            // Handle any errors that may occur during logout
+            // You can redirect to an error page or do other error handling here
+            res.redirect("/error");
+        } else {
+            // Successful logout
+            res.redirect("/");
+        }
+    });
 });
 
-// Start the server
+app.use(function (req, res, next) {
+    res.status(404).render("404");
+});
+
+app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).render("500");
+});
+
 app.listen(process.env.PORT, function () {
     console.log(`http://localhost:${process.env.PORT}`);
     
