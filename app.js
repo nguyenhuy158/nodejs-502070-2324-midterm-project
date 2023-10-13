@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const flash = require("connect-flash");
+const { requireRole } = require("./authMiddleware");
 require("dotenv").config();
 
 // Import user model
@@ -29,7 +31,6 @@ app.use(session({
 // Configure passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-const flash = require("connect-flash");
 app.use(flash());
 
 // Configure passport-local strategy
@@ -81,13 +82,14 @@ app.get("/register", function (req, res) {
 
 // Route for handling user registration
 // Route for handling user registration
-app.post("/register", function (req, res) {
+app.post("/register", function (req, res, next) {
     const { username, password } = req.body;
     
     // Check if username already exists
     User.findOne({ username: username })
         .then((existingUser) => {
             if (existingUser) {
+                req.flash('error', 'User')
                 return res.render("register", { error: "Username already exists." });
             }
             
@@ -104,7 +106,7 @@ app.post("/register", function (req, res) {
         })
         .catch((err) => {
             console.error(err);
-            return res.status(500).send("Internal Server Error");
+            next(err);
         });
 });
 
@@ -144,6 +146,10 @@ app.get("/contact", ensureAuthenticated, function (req, res) {
     res.render("contact");
 });
 
+app.get("/admin/dashboard", ensureAuthenticated, requireRole("admin"), (req, res) => {
+    // Only users with the "admin" role can access this route
+    res.render("adminDashboard"); // Render the permissionDenied.pug template
+});
 
 app.get("/logout", function (req, res) {
     req.logout(function (err) {
