@@ -8,7 +8,7 @@ exports.requireRole = function (role) {
             // User has the required role, proceed to the next middleware or route handler
             next();
         } else {
-            // User does not have the required role, return an error or redirect to an unauthorized page
+            // User does not have the required role, return an error or redirect to an unauthorized pages
             res.status(403).render("permissionDenied");
         }
     };

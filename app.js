@@ -124,7 +124,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next(); // User is authenticated, proceed to the next middleware/route handler
     }
-    // User is not authenticated, redirect to the login page
+    // User is not authenticated, redirect to the login pages
     res.redirect("/login");
 }
 
@@ -155,7 +155,7 @@ app.get("/logout", function (req, res) {
     req.logout(function (err) {
         if (err) {
             // Handle any errors that may occur during logout
-            // You can redirect to an error page or do other error handling here
+            // You can redirect to an error pages or do other error handling here
             res.redirect("/error");
         } else {
             // Successful logout
@@ -175,6 +175,4 @@ app.use(function (err, req, res, next) {
 
 app.listen(process.env.PORT, function () {
     console.log(`http://localhost:${process.env.PORT}`);
-    
-    console.log("Server started on port 3000");
 });

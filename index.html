@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Voice Call</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        
+        // Gửi cuộc gọi đến server
+        function makeCall() {
+            const callData = {
+                // Thông tin cuộc gọi
+            };
+            socket.emit("call", callData);
+        }
+        
+        // Nhận cuộc gọi từ server
+        socket.on("call", data => {
+            // Xử lý cuộc gọi
+        });
+    </script>
+</head>
+<body>
+<button onclick="makeCall()">Make Call</button>
+</body>
+</html>
