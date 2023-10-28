@@ -75,7 +75,17 @@
 
             // Create a new WebRTC peer connection
             function createPeerConnection() {
-                peerConnection = new RTCPeerConnection();
+                const configuration = {
+                    iceServers: [
+                        {
+                            urls: "turn:your-turn-server.com:3478",
+                            username: "your-username",
+                            credential: "your-password"
+                        }
+                    ]
+                };
+
+                peerConnection = new RTCPeerConnection(configuration);
 
                 // Add the local stream to the peer connection
                 localStream.getTracks().forEach((track) => {
