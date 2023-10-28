@@ -7,8 +7,16 @@
 
     <body>
         <h1>Real-Time Caller</h1>
-        <h3 id="yourUserIdContainer"></h3>
+        <h3 id="yourUserIdContainer" hidden></h3>
         <p id="errorMessageContainer"></p>
+
+
+        <form>
+            <label for="userNameInput">Name: </label>
+            <input type="text" id="userNameInput" placeholder="Enter your name">
+            <button id="submitName" type="button">Submit Name</button>
+        </form>
+        <p id="yourNameContainer"></p>
 
         <video id="localVideo" autoplay playsinline width="300" height="300"></video>
         <video id="remoteVideo" autoplay playsinline width="300" height="300"></video>
@@ -21,6 +29,11 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <script>
+
+            const userNameInput = document.getElementById("userNameInput");
+            const submitNameButton = document.getElementById("submitName");
+            const yourNameContainer = document.getElementById("yourNameContainer");
+
             // Initialize variables
             const localVideo = document.getElementById('localVideo');
             const remoteVideo = document.getElementById('remoteVideo');
@@ -134,6 +147,19 @@
             socket.on('ice-candidate', (candidate) => {
                 // Add the ICE candidate to the peer connection
                 peerConnection.addIceCandidate(candidate);
+            });
+
+            // Event handler for the "Submit Name" button click event
+            submitNameButton.addEventListener("click", () => {
+                const userName = userNameInput.value.trim(); // Get the entered name
+                if (userName !== "") {
+                    socket.emit("set-username", userName); // Emit the name to the server
+                    userNameInput.parentElement.hidden = true;
+                }
+            });
+
+            socket.on("your-name", (userName) => {
+                yourNameContainer.innerText = `Your Name: ${userName}`; // Display the user's name
             });
 
             // Handle the 'user-not-found' event
