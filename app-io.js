@@ -1,57 +1,70 @@
 // Dependencies
-const express = require("express");
-const app     = express();
-const http    = require("http")
-    .Server(app);
-const io      = require("socket.io")(http);
-const port    = 3000;
+const express           = require("express");
+const app               = express();
+const { v4: uuid }      = require("uuid");
+const socketIO          = require("socket.io");
+const http              = require("http");
+const expressHTTPServer = http.createServer(app);
+const io                = new socketIO.Server(expressHTTPServer);
+const port              = 3000;
 
-// Serve static files from the public directory
-app.use(express.static(__dirname + "/public"));
 
-// Route for the home pages
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-});
-
-// Socket.io connection event
 io.on("connection", (socket) => {
-    console.log("A user connected.");
     
-    // Join room event
-    socket.on("join room", (roomId) => {
+    // socket.on("joinRoom", (roomId) => {
+    //     socket.join(roomId);
+    //
+    //     socket.to(roomId).emit("newJoining", )
+    //
+    // });
+    // console.log("Socket io connected");
+    console.log("Socket.io connected");
+    
+    socket.on("joinRoom", (roomId) => {
         socket.join(roomId);
-        console.log("User joined room:", roomId);
-    });
-    
-    // Offer event
-    socket.on("offer", (offer, roomId) => {
+        
         socket.to(roomId)
-              .emit("offer", offer);
-        console.log("Sent offer to room:", roomId);
-    });
-    
-    // Answer event
-    socket.on("answer", (answer, roomId) => {
-        socket.to(roomId)
-              .emit("answer", answer);
-        console.log("Sent answer to room:", roomId);
-    });
-    
-    // ICE candidate event
-    socket.on("ice candidate", (candidate, roomId) => {
-        socket.to(roomId)
-              .emit("ice candidate", candidate);
-        console.log("Sent ICE candidate to room:", roomId);
-    });
-    
-    // Disconnect event
-    socket.on("disconnect", () => {
-        console.log("A user disconnected.");
+              .emit("newJoining", socket.id);
+        
+        socket.on("offer", (offer) => {
+            socket.to(roomId)
+                  .emit("offer", socket.id, offer);
+        });
+        
+        socket.on("answer", (peerId, answer) => {
+            io.to(peerId)
+              .emit("answer", socket.id, answer);
+        });
+        
+        socket.on("ice-candidate", (peerId, candidate) => {
+            io.to(peerId)
+              .emit("ice-candidate", socket.id, candidate);
+        });
+        
+        socket.on("disconnect", () => {
+            socket.to(roomId)
+                  .emit("userDisconnected", socket.id);
+        });
     });
 });
 
-// Start server
-http.listen(port, () => {
+app.use(express.static(__dirname + "/public"));
+app.set("view engine", "ejs");
+
+
+app.get("/", (req, res) => {
+    // res.sendFile(__dirname + "/views/pages/index.ejs");
+    res.redirect(`/${uuid()}`);
+});
+
+app.get("/:roomId", (req, res) => {
+    const roomId = req.params.roomId;
+    res.render("pages/index", {
+        roomId
+    });
+});
+
+expressHTTPServer.listen(port, () => {
     console.log(`Server running on port ${port}.`);
 });
+

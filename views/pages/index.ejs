@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Call</title>
+</head>
+<body>
+
+<video id="localVideo" autoplay height="300" width="300"></video>
+<video id="remoteVideo" autoplay height="300" width="300"></video>
+
+<button id="mute-audio">Mute</button>
+<button id="off-cam">Off cam</button>
+<button id="share-screen">Share your screen</button>
+<hr>
+<label for="cam-op">Camera option</label>
+<select id="cam-op"></select>
+<hr>
+<label for="mic-op">Mic option</label>
+<select id="mic-op"></select>
+
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<!-- <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script> -->
+
+<script>
+    const roomId = "<%= roomId %>";
+    console.log(roomId);
+
+    const socket = io();
+    let localStream;
+    let peerConnection;
+
+    async function getMedia(cameraId, micId, screen) {
+        const init             = {
+            video: true,
+            audio: true
+        };
+        const initWithCameraId = {
+            video: { deviceId: { exact: cameraId } },
+            audio: true
+        };
+        const initWithMicId    = {
+            video: true,
+            audio: { deviceId: micId }
+        };
+        const condition        = cameraId || micId ? (cameraId ? initWithCameraId : initWithMicId) : init;
+
+        try {
+            localStream                                     = await navigator.mediaDevices.getUserMedia(condition);
+            document.getElementById("localVideo").srcObject = localStream;
+        } catch (error) {
+            console.error("Error accessing media devices:", error);
+        }
+
+        makeWebRTCConnection();
+    }
+
+    $("#mute-audio")
+        .on("click", function () {
+            localStream.getAudioTracks()
+                       .forEach(track => track.enabled = !track.enabled);
+        });
+
+    $("#off-cam")
+        .on("click", function () {
+            localStream.getVideoTracks()
+                       .forEach(track => track.enabled = !track.enabled);
+        });
+
+    async function getAllCamera() {
+        const allDevices = await navigator.mediaDevices.enumerateDevices();
+        allDevices.forEach(device => {
+            if (device.kind === "videoinput") {
+                const option = $(`<option value="${device.deviceId}">${device.label}</option>`);
+                $("#cam-op")
+                    .append(option);
+            }
+        });
+
+        $("#cam-op")
+            .on("input", function () {
+                const deviceId = $(this)
+                    .val();
+                getMedia(deviceId, undefined);
+            });
+    }
+
+    async function getAllMic() {
+        const allDevices = await navigator.mediaDevices.enumerateDevices();
+        allDevices.forEach(device => {
+            if (device.kind === "audioinput") {
+                const option = $(`<option value="${device.deviceId}">${device.label}</option>`);
+                $("#mic-op")
+                    .append(option);
+            }
+        });
+
+        $("#mic-op")
+            .on("input", function () {
+                const deviceId = $(this)
+                    .val();
+                getMedia(undefined, deviceId);
+            });
+    }
+
+    $("#share-screen")
+        .on("click", async function getScreenMedia() {
+            try {
+                let screen = await navigator.mediaDevices.getDisplayMedia({
+                                                                              video: true,
+                                                                              audio: true
+                                                                          });
+                await getMedia(undefined, undefined, screen);
+            } catch (error) {
+                console.error("Error sharing screen:", error);
+            }
+        });
+
+    getMedia();
+    getAllCamera();
+    getAllMic();
+
+    socket.emit("joinRoom", roomId);
+    socket.on("newJoining", (socketId) => {
+        console.log(`User with socket ID ${socketId} has joined.`);
+    });
+
+    function createOffer() {
+        peerConnection.createOffer()
+                      .then(offer => peerConnection.setLocalDescription(offer))
+                      .then(() => {
+                          socket.emit("offer", roomId, peerConnection.localDescription);
+                      })
+                      .catch(error => {
+                          console.error("Error creating and sending offer:", error);
+                      });
+    }
+
+    function makeWebRTCConnection() {
+        peerConnection = new RTCPeerConnection();
+
+        localStream.getTracks()
+                   .forEach(track => peerConnection.addTrack(track, localStream));
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                socket.emit("ice-candidate", roomId, event.candidate);
+            }
+        };
+
+        peerConnection.ontrack = (event) => {
+            const remoteVideo     = document.getElementById("remoteVideo");
+            remoteVideo.srcObject = event.streams[0];
+        };
+
+        createOffer();
+    }
+
+    socket.on("offer", (socketId, offer) => {
+        peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
+                      .then(() => peerConnection.createAnswer())
+                      .then(answer => peerConnection.setLocalDescription(answer))
+                      .then(() => {
+                          socket.emit("answer", roomId, socketId, peerConnection.localDescription);
+                      })
+                      .catch(error => {
+                          console.error("Error creating and sending answer:", error);
+                      });
+    });
+
+    socket.on("answer", (socketId, answer) => {
+        peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
+                      .catch(error => {
+                          console.error("Error setting remote description:", error);
+                      });
+    });
+
+    socket.on("ice-candidate", (socketId, candidate) => {
+        const iceCandidate = new RTCIceCandidate(candidate);
+        peerConnection.addIceCandidate(iceCandidate)
+                      .catch(error => {
+                          console.error("Error adding ICE candidate:", error);
+                      });
+    });
+
+</script>
+</body>
+</html>
