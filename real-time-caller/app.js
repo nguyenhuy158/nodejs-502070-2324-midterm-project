@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
     // Handle other events as needed
     
     socket.on("disconnect", () => {
-        console.log("A user disconnected");
+        console.log(`${userId} user disconnected`);
         // Remove the user from the users object when they disconnect
         delete users[userId];
     });
