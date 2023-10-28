@@ -10,6 +10,11 @@
         <h3 id="yourUserIdContainer" hidden></h3>
         <p id="errorMessageContainer"></p>
 
+        <button id="load-active-list">Reload list</button>
+        <label for="">list user active</label>
+        <ul id="active-list">
+        </ul>
+
 
         <form>
             <label for="userNameInput">Name: </label>
@@ -41,6 +46,9 @@
             const endCallButton = document.getElementById('endCall');
             const yourUserIdContainer = document.getElementById('yourUserIdContainer');
             const errorMessageContainer = document.getElementById('errorMessageContainer');
+            const btnLoadActiveList = document.getElementById('load-active-list');
+            const listActiveList = document.getElementById('active-list');
+            let id;
 
             let localStream;
             let peerConnection;
@@ -62,6 +70,7 @@
             // Handle the 'your-id' event to get and display the user's ID
             socket.on('your-id', (userId) => {
                 yourUserIdContainer.innerText = `Your User ID: ${userId}`;
+                id = userId;
             });
 
             // Create a new WebRTC peer connection
@@ -166,6 +175,26 @@
             socket.on('user-not-found', (targetUserId) => {
                 errorMessageContainer.innerText = `User with ID ${targetUserId} not found`;
             });
+
+            btnLoadActiveList.addEventListener('click', () => {
+                socket.emit('get-active-list');
+            });
+
+            socket.on("active-list", (data) => {
+                listActiveList.innerHTML = '';
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const value = data[key];
+                        console.log(`${key}: ${value}`);
+
+                        const li = document.createElement('li');
+                        li.textContent = key;
+                        listActiveList.append(li);
+                    }
+                }
+            });
+
+            socket.emit('get-active-list');
 
         </script>
 

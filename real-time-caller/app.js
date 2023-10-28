@@ -28,11 +28,22 @@ io.on("connection", (socket) => {
         // Here, we associate the user's name with their socket ID
         const tempVal = users[userId];
         delete users[userId];
-        userId          = userName;
+        userId = userName;
         users[userId] = tempVal;
         console.log(`${userName} user connected`);
         console.log("=>users", users);
         socket.emit("your-name", userName); // Send the generated user name to the client
+    });
+
+    socket.on('get-active-list', () => {
+        console.log(`get-active-list: ${userId}`);
+        const objCopy = { ...users };
+
+        if (objCopy.hasOwnProperty(userId)) {
+            delete objCopy[userId];
+        }
+
+        socket.emit('active-list', objCopy);
     });
 
     socket.on("offer", (offer, targetUserId) => {
