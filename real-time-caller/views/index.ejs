@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Real-Time Caller</title>
+    </head>
+
+    <body>
+        <h1>Real-Time Caller</h1>
+        <h3 id="yourUserIdContainer"></h3>
+        <p id="errorMessageContainer"></p>
+
+        <video id="localVideo" autoplay playsinline width="300" height="300"></video>
+        <video id="remoteVideo" autoplay playsinline width="300" height="300"></video>
+
+        <button id="startCall">Start Call</button>
+        <button id="endCall">End Call</button>
+
+        <!-- Include the WebRTC adapter and socket.io library -->
+        <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+        <script>
+            // Initialize variables
+            const localVideo = document.getElementById('localVideo');
+            const remoteVideo = document.getElementById('remoteVideo');
+            const startCallButton = document.getElementById('startCall');
+            const endCallButton = document.getElementById('endCall');
+            const yourUserIdContainer = document.getElementById('yourUserIdContainer');
+            const errorMessageContainer = document.getElementById('errorMessageContainer');
+
+            let localStream;
+            let peerConnection;
+            let targetSocketId;
+            const socket = io();
+
+
+            // Get access to user's camera and microphone
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then((stream) => {
+                    localStream = stream;
+                    localVideo.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error('Error accessing user media:', error);
+                });
+
+            // Handle the 'your-id' event to get and display the user's ID
+            socket.on('your-id', (userId) => {
+                yourUserIdContainer.innerText = `Your User ID: ${userId}`;
+            });
+
+            // Create a new WebRTC peer connection
+            function createPeerConnection() {
+                peerConnection = new RTCPeerConnection();
+
+                // Add the local stream to the peer connection
+                localStream.getTracks().forEach((track) => {
+                    peerConnection.addTrack(track, localStream);
+                });
+
+                // Handle remote video stream when it arrives
+                peerConnection.ontrack = (event) => {
+                    remoteVideo.srcObject = event.streams[0];
+                };
+
+                // Handle ICE candidate events by sending them to the other peer
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        socket.emit('ice-candidate', event.candidate, targetSocketId);
+                    }
+                };
+            }
+
+            // Handle the "Start Call" button click event
+            startCallButton.addEventListener('click', () => {
+                // porm
+                targetSocketId = prompt('enter target socket id');
+
+                // Create a peer connection
+                createPeerConnection();
+
+                // Create an SDP offer
+                peerConnection
+                    .createOffer()
+                    .then((offer) => {
+                        return peerConnection.setLocalDescription(offer);
+                    })
+                    .then(() => {
+                        // Send the offer to the other peer
+                        socket.emit('offer', peerConnection.localDescription, targetSocketId);
+                    })
+                    .catch((error) => {
+                        console.error('Error creating offer:', error);
+                    });
+            });
+
+            // Handle the "End Call" button click event
+            endCallButton.addEventListener('click', () => {
+                // Close the peer connection and reset video elements
+                if (peerConnection) {
+                    peerConnection.close();
+                    remoteVideo.srcObject = null;
+                }
+            });
+
+            // Handle incoming offers from the other peer
+            socket.on('offer', (offer, sourceSocketId) => {
+                // Create a peer connection
+                createPeerConnection();
+
+                // Set the remote description and create an answer
+                peerConnection
+                    .setRemoteDescription(offer)
+                    .then(() => peerConnection.createAnswer())
+                    .then((answer) => peerConnection.setLocalDescription(answer))
+                    .then(() => {
+                        // Send the answer to the other peer
+                        socket.emit('answer', peerConnection.localDescription, sourceSocketId);
+                    })
+                    .catch((error) => {
+                        console.error('Error handling offer:', error);
+                    });
+            });
+
+            // Handle incoming answers from the other peer
+            socket.on('answer', (answer) => {
+                // Set the remote description
+                peerConnection.setRemoteDescription(answer);
+            });
+
+            // Handle incoming ICE candidates from the other peer
+            socket.on('ice-candidate', (candidate) => {
+                // Add the ICE candidate to the peer connection
+                peerConnection.addIceCandidate(candidate);
+            });
+
+            // Handle the 'user-not-found' event
+            socket.on('user-not-found', (targetUserId) => {
+                errorMessageContainer.innerText = `User with ID ${targetUserId} not found`;
+            });
+
+        </script>
+
+    </body>
+
+</html>
