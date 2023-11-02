@@ -38,4 +38,11 @@ router.get("/logout", AccountController.getLogout);
 
 router.get("/logout-success", AccountController.getLogoutSuccess);
 
+router.get("/data-tables", (req, res, next) => {
+    res.render("data-tables");
+});
+router.get("/lazy", (req, res, next) => {
+    res.render("lazy");
+});
+
 module.exports = router;
