@@ -1,18 +1,36 @@
-const express    = require("express");
-const http       = require("http");
-const { Server } = require("socket.io");
-const app        = express();
-const server     = http.createServer(app);
-const io         = new Server(server);
+const express      = require("express");
+const http         = require("http");
+const { Server }   = require("socket.io");
+const app          = express();
+const server       = http.createServer(app);
+const io           = new Server(server);
+const indexRouter  = require("./routes/indexRouter");
+const logger       = require("morgan");
+const cookieParser = require("cookie-parser");
+const path         = require("path");
+const connectDb = require("./middlewares/server/config/db");
+
+
+const CSRF_SECRET = "super csrf secret";
+const COOKIES_SECRET = "super cookie secret";
+const CSRF_COOKIE_NAME = "x-csrf-token";
 
 const users = {}; // Store user socket IDs
 
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser(COOKIES_SECRET));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(connectDb);
+app.use("", indexRouter);
 
 app.get("/", (req, res, next) => {
     res.render("index");
 });
+
 
 io.on("connection", (socket) => {
     
