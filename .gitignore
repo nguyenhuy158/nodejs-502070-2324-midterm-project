@@ -132,8 +132,6 @@ dist
 /.idea/
 yarn.lock
 
-public/css/*
-
 public/images/*
 
 public/uploads/*

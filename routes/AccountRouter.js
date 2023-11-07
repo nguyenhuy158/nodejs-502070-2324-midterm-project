@@ -34,6 +34,18 @@ router.get("/register", AccountController.isNotAuthenticated, AccountController.
 
 router.post("/register", customValidator.postRegister, AccountController.postRegister);
 
+router.get(
+	'/forget-password',
+	AccountController.isNotAuthenticated,
+	AccountController.getForgetPassword,
+);
+
+router.post(
+	'/forget-password',
+	customValidator.postForgetPassword,
+	AccountController.getForgetPassword,
+);
+
 router.get("/logout", AccountController.getLogout);
 
 router.get("/logout-success", AccountController.getLogoutSuccess);
