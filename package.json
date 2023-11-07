@@ -62,5 +62,22 @@
         "webrtc": "^1.14.1",
         "winston": "^3.10.0",
         "yarn": "^1.22.19"
-    }
+    },
+    "engines": {
+        "node": ">=18.18.0 <19.0.0"
+    },
+    "keywords": [
+        "express",
+        "nodejs",
+        "mongoose",
+        "tech-hut",
+        "retail-store"
+    ],
+    "name": "callmate",
+    "version": "1.0.0",
+    "description": "Real-time caller using WebRTC",
+    "main": "app.js",
+    "repository": "https://github.com/nguyenhuy158/nodejs-502070-2324-midterm-project",
+    "author": "huy.ntq <huy.ntq02@gmail.com>",
+    "license": "MIT"
 }

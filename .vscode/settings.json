@@ -266,6 +266,9 @@
     "[jade]": {
         "editor.defaultFormatter": "ducfilan.pug-formatter"
     },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
     // "editor.defaultFormatter": "GitHub.copilot",
     // "editor.defaultFoldingRangeProvider": "GitHub.copilot",
     // "editor.cursorBlinking": "smooth",

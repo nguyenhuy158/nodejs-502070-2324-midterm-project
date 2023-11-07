@@ -1,6 +1,6 @@
 # CallQuick Project [nodejs-502070-2324-middle-project]
 
-Project: Real-time caller using WebRTC
+Project: Real-time caller using WebRTC [Projects](https://drive.google.com/file/d/15Jn0WJvZvjyFAVr_qeT0fVKYVj8L6Eqs/view)
 
 Website: [https://callquick.onrender.com](https://callquick.onrender.com)
 
@@ -12,28 +12,28 @@ Website: [https://callquick.onrender.com](https://callquick.onrender.com)
 
 2. Yarn version 1.22.19 is required. You can install it using the following command:
 
-   ```bash
-   npm install -g yarn
-   ```
+    ```bash
+    npm install -g yarn
+    ```
 
 # Getting Started
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/nguyenhuy158/nodejs-502070-2324-midterm-project
-   ```
+    ```bash
+    git clone https://github.com/nguyenhuy158/nodejs-502070-2324-midterm-project
+    ```
 2. Change to the project directory:
-   ```bash
-   cd nodejs-502070-2324-midterm-project/real-time-caller
-   ```
+    ```bash
+    cd nodejs-502070-2324-midterm-project/real-time-caller
+    ```
 3. Install project dependencies:
-   ```bash
-   yarn
-   ```
+    ```bash
+    yarn
+    ```
 4. Build and run the project:
-   ```bash
-   yarn dev
-   ```
+    ```bash
+    yarn dev
+    ```
 5. Open a web browser and navigate to http://localhost:8080 to access the local development version of the website.
 
 # Deployment
@@ -49,13 +49,14 @@ To deploy your changes to the server (onrender.com):
 # Database Configuration
 
 Configure your MongoDB database connection in the .env file:
-   ```env
-   DB_URI=mongodb+srv://noreplaynodejs502070:9bmdioNxz8UeylCQ@techhutgc.foofgxp.mongodb.net/ChitChatConnect
-   ```
+
+```env
+DB_URI=mongodb+srv://noreplaynodejs502070:9bmdioNxz8UeylCQ@techhutgc.foofgxp.mongodb.net/ChitChatConnect
+```
+
 Please note that the project currently lacks a sign-in/sign-up functionality.
 
 # Deployment Account
-
 
 Information on deployment can be found at https://render.com/.
 
@@ -63,19 +64,21 @@ Manage your deployed applications at https://dashboard.render.com/.
 
 Login with the following account credentials:
 
-- Username: `noreplay.nodejs.502070@gmail.com`
-- Password: `noreplay.nodejs.502070`
+-   Username: `noreplay.nodejs.502070@gmail.com`
+-   Password: `noreplay.nodejs.502070`
 
 # User Guide
-Use the application to make real-time calls using WebRTC.
-- Open a browser and go to https://callquick.onrender.com, allow access to your camera and audio, enter your name in the input field, and click 'Submit Name.'
-- Open another browser or an incognito tab and access the same link, then follow the same steps.
-- In one of the two windows, click the "Reload List" button to fetch the list of active users.
-- To initiate a call, click the "Start Call" button, enter the name of the person you want to call, and click "OK."
-- The call will be automatically established, and both parties will be able to see and hear each other.
 
+Use the application to make real-time calls using WebRTC.
+
+-   Open a browser and go to https://callquick.onrender.com, allow access to your camera and audio, enter your name in the input field, and click 'Submit Name.'
+-   Open another browser or an incognito tab and access the same link, then follow the same steps.
+-   In one of the two windows, click the "Reload List" button to fetch the list of active users.
+-   To initiate a call, click the "Start Call" button, enter the name of the person you want to call, and click "OK."
+-   The call will be automatically established, and both parties will be able to see and hear each other.
 
 # Current Issue
-If two computers are on the same network, calls can be made. However, if they are on different networks, calls between them may not work. 
+
+If two computers are on the same network, calls can be made. However, if they are on different networks, calls between them may not work.
 
 # End
