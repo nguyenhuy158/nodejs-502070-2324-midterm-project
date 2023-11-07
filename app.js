@@ -4,13 +4,23 @@ const http = require("http");
 const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server,
+    {
+        cors: {
+            origin: "*:*",
+            methods: ["GET", "POST"]
+        }
+    });
 const indexRouter = require("./routes/indexRouter");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDb = require("./middlewares/db");
 
+const port = process.env.PORT || 8080;
+const ip = process.env.IP || '0.0.0.0';
+console.log(`🚀 🚀 file: app.js:15 🚀 port`, port);
+console.log(`🚀 🚀 file: app.js:16 🚀 ip`, ip);
 
 const CSRF_SECRET = "super csrf secret";
 const COOKIES_SECRET = "super cookie secret";
@@ -126,12 +136,15 @@ io.on("connection", (socket) => {
     });
 });
 
+
 function generateUserId() {
     return Math.random()
         .toString(36)
         .substr(2, 9);
 }
 
-server.listen(process.env.PORT, () => {
-    console.log(`Server is running on http://localhost:${process.env.PORT}`);
+server.listen(port, ip, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on ip ${ip}`);
 });
+
