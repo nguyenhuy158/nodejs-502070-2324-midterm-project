@@ -1,222 +1,249 @@
-    <!DOCTYPE html>
-    <html>
-
+<!DOCTYPE html>
+<html>
     <head>
         <title>Real-Time Caller</title>
     </head>
 
     <body>
-    <h1>Real-Time Caller</h1>
-    <h3 id="yourUserIdContainer" hidden></h3>
-    <p id="errorMessageContainer"></p>
+        <h1>Real-Time Caller</h1>
+        <h3 id="yourUserIdContainer" hidden></h3>
+        <p id="errorMessageContainer"></p>
 
-    <button id="load-active-list">Reload list</button>
-    <label for="">list user active</label>
-    <ul id="active-list">
-    </ul>
+        <button id="load-active-list">Reload list</button>
+        <label for="">list user active</label>
+        <ul id="active-list"></ul>
 
+        <form>
+            <label for="userNameInput">Name: </label>
+            <input
+                type="text"
+                id="userNameInput"
+                placeholder="Enter your name"
+            />
+            <button id="submitName" type="button">Submit Name</button>
+        </form>
+        <p id="yourNameContainer"></p>
 
-    <form>
-        <label for="userNameInput">Name: </label>
-        <input type="text" id="userNameInput" placeholder="Enter your name">
-        <button id="submitName" type="button">Submit Name</button>
-    </form>
-    <p id="yourNameContainer"></p>
+        <video
+            id="localVideo"
+            autoplay
+            playsinline
+            width="300"
+            height="300"
+        ></video>
+        <video
+            id="remoteVideo"
+            autoplay
+            playsinline
+            width="300"
+            height="300"
+        ></video>
 
-    <video id="localVideo" autoplay playsinline width="300" height="300"></video>
-    <video id="remoteVideo" autoplay playsinline width="300" height="300"></video>
+        <button id="startCall">Start Call</button>
+        <button id="endCall">End Call</button>
 
-    <button id="startCall">Start Call</button>
-    <button id="endCall">End Call</button>
+        <!-- Include the WebRTC adapter and socket.io library -->
+        <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
 
-    <!-- Include the WebRTC adapter and socket.io library -->
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const userNameInput = document.getElementById('userNameInput');
+            const submitNameButton = document.getElementById('submitName');
+            const yourNameContainer =
+                document.getElementById('yourNameContainer');
 
-    <script>
+            // Initialize variables
+            const localVideo = document.getElementById('localVideo');
+            const remoteVideo = document.getElementById('remoteVideo');
+            const startCallButton = document.getElementById('startCall');
+            const endCallButton = document.getElementById('endCall');
+            const yourUserIdContainer = document.getElementById(
+                'yourUserIdContainer',
+            );
+            const errorMessageContainer = document.getElementById(
+                'errorMessageContainer',
+            );
+            const btnLoadActiveList =
+                document.getElementById('load-active-list');
+            const listActiveList = document.getElementById('active-list');
+            let id;
 
-        const userNameInput     = document.getElementById("userNameInput");
-        const submitNameButton  = document.getElementById("submitName");
-        const yourNameContainer = document.getElementById("yourNameContainer");
+            let localStream;
+            let peerConnection;
+            let targetSocketId;
+            const socket = io();
 
-        // Initialize variables
-        const localVideo            = document.getElementById('localVideo');
-        const remoteVideo           = document.getElementById('remoteVideo');
-        const startCallButton       = document.getElementById('startCall');
-        const endCallButton         = document.getElementById('endCall');
-        const yourUserIdContainer   = document.getElementById('yourUserIdContainer');
-        const errorMessageContainer = document.getElementById('errorMessageContainer');
-        const btnLoadActiveList     = document.getElementById('load-active-list');
-        const listActiveList        = document.getElementById('active-list');
-        let id;
+            // Get access to user's camera and microphone
+            navigator.mediaDevices
+                .getUserMedia({
+                    video: true,
+                    audio: true,
+                })
+                .then((stream) => {
+                    localStream = stream;
+                    localVideo.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error('Error accessing user media:', error);
+                });
 
-        let localStream;
-        let peerConnection;
-        let targetSocketId;
-        const socket = io();
+            // Handle the 'your-id' event to get and display the user's ID
+            socket.on('your-id', (userId) => {
+                yourUserIdContainer.innerText = `Your User ID: ${userId}`;
+                id = userId;
+            });
 
+            // Create a new WebRTC peer connection
+            function createPeerConnection() {
+                const configuration = {
+                    iceServers: [
+                        {
+                            urls: 'turn:your-turn-server.com:3478',
+                            username: 'your-username',
+                            credential: 'your-password',
+                        },
+                    ],
+                };
 
-        // Get access to user's camera and microphone
-        navigator.mediaDevices
-                 .getUserMedia({
-                                   video: true,
-                                   audio: true
-                               })
-                 .then((stream) => {
-                     localStream          = stream;
-                     localVideo.srcObject = stream;
-                 })
-                 .catch((error) => {
-                     console.error('Error accessing user media:', error);
-                 });
+                peerConnection = new RTCPeerConnection(configuration);
 
-        // Handle the 'your-id' event to get and display the user's ID
-        socket.on('your-id', (userId) => {
-            yourUserIdContainer.innerText = `Your User ID: ${userId}`;
-            id                            = userId;
-        });
+                // Add the local stream to the peer connection
+                localStream.getTracks().forEach((track) => {
+                    peerConnection.addTrack(track, localStream);
+                });
 
-        // Create a new WebRTC peer connection
-        function createPeerConnection() {
-            const configuration = {
-                iceServers: [
-                    {
-                        urls      : "turn:your-turn-server.com:3478",
-                        username  : "your-username",
-                        credential: "your-password"
+                // Handle remote video stream when it arrives
+                peerConnection.ontrack = (event) => {
+                    remoteVideo.srcObject = event.streams[0];
+                };
+
+                // Handle ICE candidate events by sending them to the other peer
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        socket.emit(
+                            'ice-candidate',
+                            event.candidate,
+                            targetSocketId,
+                        );
                     }
-                ]
-            };
+                };
+            }
 
-            peerConnection = new RTCPeerConnection(configuration);
+            // Handle the "Start Call" button click event
+            startCallButton.addEventListener('click', () => {
+                // porm
+                targetSocketId = prompt('enter target socket id');
 
-            // Add the local stream to the peer connection
-            localStream.getTracks()
-                       .forEach((track) => {
-                           peerConnection.addTrack(track, localStream);
-                       });
+                // Create a peer connection
+                createPeerConnection();
 
-            // Handle remote video stream when it arrives
-            peerConnection.ontrack = (event) => {
-                remoteVideo.srcObject = event.streams[0];
-            };
+                // Create an SDP offer
+                peerConnection
+                    .createOffer()
+                    .then((offer) => {
+                        return peerConnection.setLocalDescription(offer);
+                    })
+                    .then(() => {
+                        // Send the offer to the other peer
+                        socket.emit(
+                            'offer',
+                            peerConnection.localDescription,
+                            targetSocketId,
+                        );
+                    })
+                    .catch((error) => {
+                        console.error('Error creating offer:', error);
+                    });
+            });
 
-            // Handle ICE candidate events by sending them to the other peer
-            peerConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    socket.emit('ice-candidate', event.candidate, targetSocketId);
+            // Handle the "End Call" button click event
+            endCallButton.addEventListener('click', () => {
+                // Close the peer connection and reset video elements
+                if (peerConnection) {
+                    peerConnection.close();
+                    remoteVideo.srcObject = null;
                 }
-            };
-        }
+            });
 
-        // Handle the "Start Call" button click event
-        startCallButton.addEventListener('click', () => {
-            // porm
-            targetSocketId = prompt('enter target socket id');
+            // Handle incoming offers from the other peer
+            socket.on('offer', (offer, sourceSocketId) => {
+                // Create a peer connection
+                createPeerConnection();
 
-            // Create a peer connection
-            createPeerConnection();
+                // Set the remote description and create an answer
+                peerConnection
+                    .setRemoteDescription(offer)
+                    .then(() => peerConnection.createAnswer())
+                    .then((answer) =>
+                        peerConnection.setLocalDescription(answer),
+                    )
+                    .then(() => {
+                        // Send the answer to the other peer
+                        socket.emit(
+                            'answer',
+                            peerConnection.localDescription,
+                            sourceSocketId,
+                        );
+                    })
+                    .catch((error) => {
+                        console.error('Error handling offer:', error);
+                    });
+            });
 
-            // Create an SDP offer
-            peerConnection
-                .createOffer()
-                .then((offer) => {
-                    return peerConnection.setLocalDescription(offer);
-                })
-                .then(() => {
-                    // Send the offer to the other peer
-                    socket.emit('offer', peerConnection.localDescription, targetSocketId);
-                })
-                .catch((error) => {
-                    console.error('Error creating offer:', error);
-                });
-        });
+            // Handle incoming answers from the other peer
+            socket.on('answer', (answer) => {
+                // Set the remote description
+                peerConnection.setRemoteDescription(answer);
+            });
 
-        // Handle the "End Call" button click event
-        endCallButton.addEventListener('click', () => {
-            // Close the peer connection and reset video elements
-            if (peerConnection) {
-                peerConnection.close();
-                remoteVideo.srcObject = null;
-            }
-        });
+            // Handle incoming ICE candidates from the other peer
+            socket.on('ice-candidate', (candidate) => {
+                // Add the ICE candidate to the peer connection
+                peerConnection.addIceCandidate(candidate);
+            });
 
-        // Handle incoming offers from the other peer
-        socket.on('offer', (offer, sourceSocketId) => {
-            // Create a peer connection
-            createPeerConnection();
+            // Event handler for the "Submit Name" button click event
+            submitNameButton.addEventListener('click', () => {
+                const userName = userNameInput.value.trim(); // Get the entered name
+                if (userName !== '') {
+                    socket.emit('set-username', userName); // Emit the name to the server
+                    userNameInput.parentElement.hidden = true;
+                }
+            });
 
-            // Set the remote description and create an answer
-            peerConnection
-                .setRemoteDescription(offer)
-                .then(() => peerConnection.createAnswer())
-                .then((answer) => peerConnection.setLocalDescription(answer))
-                .then(() => {
-                    // Send the answer to the other peer
-                    socket.emit('answer', peerConnection.localDescription, sourceSocketId);
-                })
-                .catch((error) => {
-                    console.error('Error handling offer:', error);
-                });
-        });
+            socket.on('your-name', (userName) => {
+                yourNameContainer.innerText = `Your Name: ${userName}`; // Display the user's name
+            });
 
-        // Handle incoming answers from the other peer
-        socket.on('answer', (answer) => {
-            // Set the remote description
-            peerConnection.setRemoteDescription(answer);
-        });
+            socket.on('connect_error', (err) => {
+                console.log(`connect_error due to `, err);
+                console.log(`connect_error due to ${err.message}`);
+            });
 
-        // Handle incoming ICE candidates from the other peer
-        socket.on('ice-candidate', (candidate) => {
-            // Add the ICE candidate to the peer connection
-            peerConnection.addIceCandidate(candidate);
-        });
+            // Handle the 'user-not-found' event
+            socket.on('user-not-found', (targetUserId) => {
+                errorMessageContainer.innerText = `User with ID ${targetUserId} not found`;
+            });
 
-        // Event handler for the "Submit Name" button click event
-        submitNameButton.addEventListener("click", () => {
-            const userName = userNameInput.value.trim(); // Get the entered name
-            if (userName !== "") {
-                socket.emit("set-username", userName); // Emit the name to the server
-                userNameInput.parentElement.hidden = true;
-            }
-        });
+            btnLoadActiveList.addEventListener('click', () => {
+                socket.emit('get-active-list');
+            });
 
-        socket.on("your-name", (userName) => {
-            yourNameContainer.innerText = `Your Name: ${userName}`; // Display the user's name
-        });
+            socket.on('active-list', (data) => {
+                listActiveList.innerHTML = '';
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const value = data[key];
+                        console.log(`${key}: ${value}`);
 
-        socket.on("connect_error", (err) => {
-            console.log(`connect_error due to `, err);
-            console.log(`connect_error due to ${err.message}`);
-        });
+                        const li = document.createElement('li');
+                        li.textContent = key;
+                        listActiveList.append(li);
+                    }
+                }
+            });
 
-        // Handle the 'user-not-found' event
-        socket.on('user-not-found', (targetUserId) => {
-            errorMessageContainer.innerText = `User with ID ${targetUserId} not found`;
-        });
-
-        btnLoadActiveList.addEventListener('click', () => {
             socket.emit('get-active-list');
-        });
-
-        socket.on("active-list", (data) => {
-            listActiveList.innerHTML = '';
-            for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    const value = data[key];
-                    console.log(`${key}: ${value}`);
-
-                    const li       = document.createElement('li');
-                    li.textContent = key;
-                    listActiveList.append(li);
-                }
-            }
-        });
-
-        socket.emit('get-active-list');
-
-    </script>
-
+        </script>
     </body>
-
-    </html>
+</html>

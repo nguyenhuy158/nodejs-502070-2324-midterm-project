@@ -1,70 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
 
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
 
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
-
-    <style>
-        img.lazy {
-            width: 700px;
-            height: 467px;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-<img class="lazy"
-     data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"/>
-
-<script>
-    $(function () {
-        $('.lazy').Lazy({
-            scrollDirection: 'vertical',
-            effect: 'fadeIn',
-            visibleOnly: true,
-            delay: 100,
-            onError: function (element) {
-                console.log('[lazy] error loading ' + element.data('src'));
-            },
-            beforeLoad: function (element) {
-                console.log('[lazy] before loading ' + element.data('src'));
-            },
-            afterLoad: function (element) {
-                console.log('[lazy] after loading ' + element.data('src'));
-            },
-            onFinishedAll: function () {
-                console.log('[lazy] all elements loading');
+        <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"
+        ></script>
+q
+        <style>
+            img.lazy {
+                width: 700px;
+                height: 467px;
+                display: block;
             }
-        });
-    });
-</script>
-</body>
+        </style>
+    </head>
+    <body>
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+        <img
+            class="lazy"
+            data-src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
+        />
+
+        <script>
+            $(function () {
+                $('.lazy').Lazy({
+                    scrollDirection: 'vertical',
+                    effect: 'fadeIn',
+                    visibleOnly: true,
+                    delay: 100,
+                    onError: function (element) {
+                        console.log(
+                            '[lazy] error loading ' + element.data('src'),
+                        );
+                    },
+                    beforeLoad: function (element) {
+                        console.log(
+                            '[lazy] before loading ' + element.data('src'),
+                        );
+                    },
+                    afterLoad: function (element) {
+                        console.log(
+                            '[lazy] after loading ' + element.data('src'),
+                        );
+                    },
+                    onFinishedAll: function () {
+                        console.log('[lazy] all elements loading');
+                    },
+                });
+            });
+        </script>
+    </body>
 </html>

@@ -8,8 +8,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-              integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
-              crossorigin="anonymous">
+            integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -48,7 +47,7 @@
                 <div class="col-6">
                     <div class="dropdown text-right">
                         Xin chào <a id="userName" class="dropdown-toggle text-primary"
-                           data-toggle="dropdown">{{name}}</a>
+                            data-toggle="dropdown">{{name}}</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-info-circle"></i>
@@ -63,7 +62,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 {{#each breadcrumb}}
-                <li class="breadcrumb-item"><a href="/{{this.path}}">{{this.name}}</a></li>
+                    <li class="breadcrumb-item"><a href="/{{this.path}}">{{this.name}}</a></li>
                 {{/each}}
             </ol>
             <div class="input-group mb-3">
@@ -99,54 +98,54 @@
                 </thead>
                 <tbody id="fileList">
                     {{#each filesAndFolders}}
-                    <tr>
-                        <td>
-                            {{#ifCond type 'Folder'}}
-                            <i class="fa fa-folder"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'Compressed File'}}
-                            <i class="fa fa-file-archive"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'Text Document'}}
-                            <i class="fa fa-file"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'Image'}}
-                            <i class="fa fa-file-image"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'Video'}}
-                            <i class="fa fa-file-video-o"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'Audio'}}
-                            <i class="fa fa-file-audio-o"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'Application'}}
-                            <i class="fa fa-file"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                            {{#ifCond type 'File'}}
-                            <i class="fa fa-file"></i>
-                            <a href="{{name}}">{{name}}</a>
-                            {{/ifCond}}
-                        </td>
-                        <td>{{type}}</td>
-                        <td>{{size}}</td>
-                        <td>{{lastModified}}</td>
-                        <td>
-                            <span>
-                                <a href="/download/{{name}}">
-                                    <i class="fa fa-download action"></i>
-                                </a>
-                            </span>
-                            <span><i class="fa fa-edit action"></i></span>
-                            <span><i class="fa fa-trash action"></i></span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                {{#ifCond type 'Folder'}}
+                                    <i class="fa fa-folder"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'Compressed File'}}
+                                    <i class="fa fa-file-archive"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'Text Document'}}
+                                    <i class="fa fa-file"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'Image'}}
+                                    <i class="fa fa-file-image"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'Video'}}
+                                    <i class="fa fa-file-video-o"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'Audio'}}
+                                    <i class="fa fa-file-audio-o"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'Application'}}
+                                    <i class="fa fa-file"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                                {{#ifCond type 'File'}}
+                                    <i class="fa fa-file"></i>
+                                    <a href="{{name}}">{{name}}</a>
+                                {{/ifCond}}
+                            </td>
+                            <td>{{type}}</td>
+                            <td>{{size}}</td>
+                            <td>{{lastModified}}</td>
+                            <td>
+                                <span>
+                                    <a href="/download/{{name}}">
+                                        <i class="fa fa-download action"></i>
+                                    </a>
+                                </span>
+                                <span><i class="fa fa-edit action"></i></span>
+                                <span><i class="fa fa-trash action"></i></span>
+                            </td>
+                        </tr>
                     {{/each}}
 
                 </tbody>
@@ -284,7 +283,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="btn-create-folder-modal"
-                                data-dismiss="modal">Create
+                            data-dismiss="modal">Create
                         </button>
                     </div>
                 </div>
@@ -307,12 +306,12 @@
                         <div class="form-group">
                             <label for="textFileContent">File Content</label>
                             <textarea rows="5" class="form-control" id="textFileContent"
-                                      placeholder="Enter file content"></textarea>
+                                placeholder="Enter file content"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="btn-create-text-file-modal"
-                                data-dismiss="modal">Create
+                            data-dismiss="modal">Create
                         </button>
                     </div>
                 </div>

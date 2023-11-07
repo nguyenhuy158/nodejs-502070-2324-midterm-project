@@ -9,7 +9,7 @@ const indexRouter = require("./routes/indexRouter");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const connectDb = require("./middlewares/server/config/db");
+const connectDb = require("./middlewares/db");
 
 
 const CSRF_SECRET = "super csrf secret";
