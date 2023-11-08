@@ -32,11 +32,15 @@ app.use(express.static(path.join(__dirname, "public")));
 
 connectDb();
 
-app.use("", indexRouter);
+app.use(indexRouter);
 
 io.on("connection", (socket) => {
 
-    let userId = generateUserId();
+    const requestHeaders = socket.handshake.headers;
+    console.log(`🚀 🚀 file: app.js:40 🚀 io.on 🚀 requestHeaders`, requestHeaders);
+    console.log(`🚀 🚀 file: app.js:42 🚀 io.on 🚀 requestHeaders.host`, requestHeaders.host);
+
+    let userId = socket.id;
     console.log(`${userId} user connected`);
     users[userId] = socket.id;
     console.log(`🚀 🚀 file: app.js:51 🚀 io.on 🚀 users`, users);

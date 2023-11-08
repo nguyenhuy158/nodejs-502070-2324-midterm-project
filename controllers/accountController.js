@@ -63,6 +63,7 @@ exports.postLogin = async (req, res) => {
             const isPasswordValid = await user.validPassword(password);
             console.log(`=>(accountController.js:62) isPasswordValid`, isPasswordValid);
             if (isPasswordValid) {
+                req.user = user;
                 req.session.loggedin = true;
                 req.session.email = email;
                 req.session.name = user.name;

@@ -269,3 +269,11 @@ exports.createSampleData = async function (req, res, next) {
     return res.redirect("/");
 };
 
+
+exports.isLoggedIn = (req, res, next) => {
+    if (req.session.loggedin) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+};

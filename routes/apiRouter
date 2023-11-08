@@ -1,0 +1,28 @@
+
+const express = require('express');
+const router = express.Router();
+
+// write router get /current-user get info of current user in req
+router.get('/current-user', (req, res) => {
+    res.json({
+        id: req.user.id,
+        fullName: req.user.fullName,
+        username: req.user.username,
+        email: req.user.email,
+    });
+});
+
+router.get('/', (req, res) => {
+    res.send('Welcome to the API!');
+});
+
+router.get('/users', (req, res) => {
+    res.send('List of users');
+});
+
+router.get('/users/:id', (req, res) => {
+    const userId = req.params.id;
+    res.send(`User with ID ${userId}`);
+});
+
+module.exports = router;

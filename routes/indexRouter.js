@@ -1,17 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const accountRouter = require('./AccountRouter');
-const fileManagerRouter = require('./FileManagerRouter');
-const AccountController = require('../controllers/accountController');
+const accountRouter = require('./accountRouter');
+const apiRouter = require('./apiRouter');
 const indexController = require('../controllers/indexController');
 
 
 router.use('', accountRouter);
-router.use('', fileManagerRouter);
+router.get("/", indexController.isLoggedIn, indexController.home);
+router.use(/^\/(api|rest)\//, indexController.isLoggedIn, apiRouter);
 
-router.get("/", indexController.home);
 
-router.get("/logout", AccountController.getLogout);
-
+// error handlers middleware
+router.use(function (req, res, next) {
+    res.status(404);
+    res.render('404', {});
+});
+router.use(function (error, req, res, next) {
+    res.status(500);
+    res.render('500', { error: error });
+});
 
 module.exports = router;
