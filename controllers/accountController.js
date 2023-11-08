@@ -98,6 +98,9 @@ exports.getLogin = (req, res, next) => {
     res.render("login", {csrf: req.csrfToken()});
 };
 
+exports.getForgetPassword = (req, res, next) => {
+	res.render('forget-password');
+};
 exports.isNotAuthenticated = (req, res, next) => {
     console.log("[LOGIN] -> ");
     if (req.session.loggedin) {
