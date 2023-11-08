@@ -1,0 +1,26 @@
+{
+    "semi": true,
+    "jsxSingleQuote": true,
+    "jsxBracketSameLine": false,
+    "arrowParens": "always",
+    "htmlWhitespaceSensitivity": "ignore",
+    "vueIndentScriptAndStyle": true,
+    "wrapAttributes": "force-aligned",
+    "trailingComma": "all",
+    "singleQuote": false,
+    "printWidth": 120,
+    "useTabs": false,
+    "tabWidth": 4,
+    "bracketSpacing": true,
+    "endOfLine": "auto",
+    "overrides": [
+        {
+            "files": "*.ejs",
+            "options": {
+                "parser": "html",
+                "semi": false,
+                "singleQuote": true
+            }
+        }
+    ]
+}
