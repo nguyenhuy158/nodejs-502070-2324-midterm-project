@@ -10,7 +10,6 @@ const remoteVideo = document.querySelector('#remoteVideo');
 const startCallButton = $('#startCall');
 const endCallButton = $('#endCall');
 const yourUserIdContainer = $('#yourUserIdContainer');
-const errorMessageContainer = $('#errorMessageContainer');
 const btnLoadActiveList = $('#load-active-list');
 const btnLoadLocalSteam = $('#load-local-stream');
 const listActiveList = $('#active-list');
@@ -61,18 +60,6 @@ $(() => {
 
         peerConnection = new RTCPeerConnection(peerConfiguration);
         console.log(`🚀 🚀 file: index.ejs:88 🚀 createPeerConnection 🚀 peerConnection`, peerConnection);
-
-        // const configuration = {
-        //     iceServers: [
-        //         {
-        //             urls: 'turn:openrelay.metered.ca:80',
-        //             username: 'openrelayproject',
-        //             credential: 'openrelayproject',
-        //         },
-        //     ],
-        // }
-
-        // peerConnection = new RTCPeerConnection(configuration)
 
         // Add the local stream to the peer connection
         localStream.getTracks().forEach((track) => {
