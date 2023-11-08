@@ -22,7 +22,7 @@ function showToast(type, message) {
         delay: 1000
     });
 
-    console.log("=>(index.hbs:377) toastInstance", toastInstance);
+    // console.log("=>(index.hbs:377) toastInstance", toastInstance);
 
     toastInstance.show();
 
