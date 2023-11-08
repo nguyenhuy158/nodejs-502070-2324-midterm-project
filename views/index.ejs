@@ -26,6 +26,13 @@
     </head>
 
     <body>
+        <div class="container text-center my-4">
+            <h1>CallMate Caller</h1>
+            <h3 id="yourUserIdContainer" hidden></h3>
+        </div>
+
+        <div id="offlineMessage" class="text-center h3">Please connect to the internet to use this website.</div>
+
         <!-- Toast -->
         <div class="toast-container position-fixed top-0 end-0 p-3">
             <!-- Info Toast -->
@@ -33,12 +40,8 @@
             <!-- Error Toast -->
         </div>
 
-        <div class="container text-center my-4">
-            <h1>CallMate Caller</h1>
-            <h3 id="yourUserIdContainer" hidden></h3>
-        </div>
 
-        <div class="container-fluid">
+        <div id="content" class="container-fluid">
             <div class="row">
                 <!-- feature button -->
                 <div class="col-2">

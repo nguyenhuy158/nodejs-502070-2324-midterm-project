@@ -22,6 +22,8 @@ let targetSocketId;
 const socket = io();
 
 $(() => {
+    $('#offlineMessage').hide();
+
     // Handle the "Load Local Stream" button click event
     btnLoadLocalSteam.on('click', async function requestUserMedia() {
         let stream = null;
@@ -204,4 +206,21 @@ $(() => {
     setTimeout(() => {
         clearInterval(intervalId);
     }, 30000);
+
+
+    // handle offline event
+    function updateOnlineStatus() {
+        if (navigator.onLine) {
+            $('#offlineMessage').hide();
+            $('#content').show();
+        } else {
+            $('#offlineMessage').show();
+            $('#content').hide();
+        }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    updateOnlineStatus();
 });
