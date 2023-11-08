@@ -1,16 +1,18 @@
-const userNameInput = document.getElementById('userNameInput');
-const submitNameButton = document.getElementById('submitName');
-const yourNameContainer = document.getElementById('yourNameContainer');
+/* eslint-disable no-undef */
 
-// Initialize variables
-const localVideo = document.getElementById('localVideo');
-const remoteVideo = document.getElementById('remoteVideo');
-const startCallButton = document.getElementById('startCall');
-const endCallButton = document.getElementById('endCall');
-const yourUserIdContainer = document.getElementById('yourUserIdContainer');
-const errorMessageContainer = document.getElementById('errorMessageContainer');
-const btnLoadActiveList = document.getElementById('load-active-list');
-const listActiveList = document.getElementById('active-list');
+const userNameInput = $('#userNameInput');
+const submitNameButton = $('#submitName');
+const yourNameContainer = $('#yourNameContainer');
+
+const localVideo = $('#localVideo');
+const remoteVideo = $('#remoteVideo');
+const startCallButton = $('#startCall');
+const endCallButton = $('#endCall');
+const yourUserIdContainer = $('#yourUserIdContainer');
+const errorMessageContainer = $('#errorMessageContainer');
+const btnLoadActiveList = $('#load-active-list');
+const listActiveList = $('#active-list');
+
 let id;
 
 let localStream;
@@ -85,7 +87,7 @@ async function createPeerConnection() {
 }
 
 // Handle the "Start Call" button click event
-startCallButton.addEventListener('click', async () => {
+startCallButton.on('click', async () => {
     // porm
     targetSocketId = prompt('enter target socket id');
 
@@ -108,7 +110,7 @@ startCallButton.addEventListener('click', async () => {
 });
 
 // Handle the "End Call" button click event
-endCallButton.addEventListener('click', () => {
+endCallButton.on('click', () => {
     // Close the peer connection and reset video elements
     if (peerConnection) {
         peerConnection.close();
@@ -148,7 +150,7 @@ socket.on('ice-candidate', (candidate) => {
 });
 
 // Event handler for the "Submit Name" button click event
-submitNameButton.addEventListener('click', () => {
+submitNameButton.on('click', () => {
     const userName = userNameInput.value.trim(); // Get the entered name
     if (userName !== '') {
         socket.emit('set-username', userName); // Emit the name to the server
@@ -170,22 +172,20 @@ socket.on('user-not-found', (targetUserId) => {
     errorMessageContainer.innerText = `User with ID ${targetUserId} not found`;
 });
 
-btnLoadActiveList.addEventListener('click', () => {
+btnLoadActiveList.on('click', () => {
     socket.emit('get-active-list');
 });
 
 socket.on('active-list', (data) => {
-    listActiveList.innerHTML = '';
-    for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-            const value = data[key];
-            console.log(`${key}: ${value}`);
+    listActiveList.empty();
 
-            const li = document.createElement('li');
-            li.textContent = key;
-            listActiveList.append(li);
-        }
-    }
+    $.each(data, function (key, value) {
+        console.log(`${key}: ${value}`);
+
+        const li = $('<li class="list-group-item">').text(key);
+        listActiveList.append(li);
+    });
 });
+
 
 socket.emit('get-active-list');

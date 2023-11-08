@@ -3,6 +3,13 @@
         "start": "node app.js",
         "dev": "nodemon app.js"
     },
+    "nodemonConfig": {
+        "verbose": true,
+        "ext": "js, json",
+        "ignore": [
+            "public/js/**"
+        ]
+    },
     "dependencies": {
         "@faker-js/faker": "^8.1.0",
         "@popperjs/core": "^2.11.8",

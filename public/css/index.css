@@ -1,0 +1,7 @@
+.video-frame {
+    width: 400px;
+    height: 250px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+    border-radius: 10px;
+}

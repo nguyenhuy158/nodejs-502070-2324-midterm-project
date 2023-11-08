@@ -21,7 +21,6 @@ const connectDb = require("./middlewares/db");
 const { generateUserId } = require('./middlewares/utils');
 
 
-
 const users = {};
 
 app.set("view engine", "ejs");
