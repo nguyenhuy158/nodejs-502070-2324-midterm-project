@@ -37,18 +37,17 @@
 
             <h3 id="yourUserIdContainer" hidden></h3>
             <p id="errorMessageContainer"></p>
-
-            <form class="text-start">
-                <label class="form-label" for="userNameInput">Name:</label>
-                <input class="form-control" type="text" id="userNameInput" placeholder="Enter your name" />
-                <button class="btn btn-primary" id="submitName" type="button">Submit Name</button>
-            </form>
         </div>
 
         <div class="container">
             <div class="row">
                 <div class="col-2">
                     <div class="d-grid gap-2">
+                        <form class="text-start d-grid gap-2">
+                            <input class="form-control" type="text" id="userNameInput" placeholder="Enter your name" />
+                            <button class="btn btn-primary" id="submitName" type="button">Submit Name</button>
+                        </form>
+
                         <button class="btn btn-primary" id="load-local-stream">Load stream</button>
                         <button class="btn btn-primary" id="load-active-list">Reload user active</button>
                     </div>
@@ -59,16 +58,16 @@
                 <div class="col text-center">
                     <div class="row">
                         <div class="col">
-                            <h3>
+                            <h3 class="d-inline">
                                 Local
-                                <p id="yourLocalName"></p>
+                                <p class="d-inline" id="yourLocalName"></p>
                             </h3>
                             <video id="localVideo" autoplay playsinline class="video-frame"></video>
                         </div>
                         <div class="col">
-                            <h3>
+                            <h3 class="d-inline">
                                 Remote
-                                <p id="yourRemoteName"></p>
+                                <p class="d-inline" id="yourRemoteName"></p>
                             </h3>
                             <video id="remoteVideo" autoplay playsinline class="video-frame"></video>
                         </div>
@@ -88,6 +87,5 @@
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/index.js"></script>
-
     </body>
 </html>
