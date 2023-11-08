@@ -11,6 +11,7 @@ const io = new Server(server,
             methods: ["GET", "POST"]
         }
     });
+
 const indexRouter = require("./routes/indexRouter");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
@@ -24,17 +25,13 @@ const ip = process.env.IP || '0.0.0.0';
 console.log(`🚀 🚀 file: app.js:15 🚀 port`, port);
 console.log(`🚀 🚀 file: app.js:16 🚀 ip`, ip);
 
-const CSRF_SECRET = "super csrf secret";
-const COOKIES_SECRET = "super cookie secret";
-const CSRF_COOKIE_NAME = "x-csrf-token";
-
-const users = {}; // Store user socket IDs
+const users = {};
 
 app.set("view engine", "ejs");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(COOKIES_SECRET));
+app.use(cookieParser(process.env.COOKIES_SECRET));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(connectDb);
