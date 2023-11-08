@@ -18,7 +18,6 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDb = require("./middlewares/db");
 
-const AccountController = require('./controllers/accountController');
 
 const port = process.env.PORT || 8080;
 const ip = process.env.IP || '0.0.0.0';
@@ -36,10 +35,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(connectDb);
 app.use("", indexRouter);
-
-app.get("/", (req, res, next) => {
-    res.render("index");
-});
 
 
 io.on("connection", (socket) => {
@@ -134,4 +129,3 @@ server.listen(port, ip, () => {
 });
 
 
-app.get("/logout", AccountController.getLogout);
