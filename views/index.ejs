@@ -35,20 +35,36 @@
                 <input class="form-control" type="text" id="userNameInput" placeholder="Enter your name" />
                 <button class="btn btn-primary" id="submitName" type="button">Submit Name</button>
             </form>
-
-            <h3 id="yourNameContainer"></h3>
         </div>
 
         <div class="container">
             <div class="row">
                 <div class="col-2">
-                    <button class="btn btn-primary" id="load-active-list">Reload user active</button>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" id="load-local-stream">Load stream</button>
+                        <button class="btn btn-primary" id="load-active-list">Reload user active</button>
+                    </div>
+
                     <hr />
                     <ul class="list-group" id="active-list"></ul>
                 </div>
                 <div class="col text-center">
-                    <video id="localVideo" autoplay playsinline class="video-frame"></video>
-                    <video id="remoteVideo" autoplay playsinline class="video-frame"></video>
+                    <div class="row">
+                        <div class="col">
+                            <h3>
+                                Local
+                                <p id="yourLocalName"></p>
+                            </h3>
+                            <video id="localVideo" autoplay playsinline class="video-frame"></video>
+                        </div>
+                        <div class="col">
+                            <h3>
+                                Remote
+                                <p id="yourRemoteName"></p>
+                            </h3>
+                            <video id="remoteVideo" autoplay playsinline class="video-frame"></video>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row text-center">
