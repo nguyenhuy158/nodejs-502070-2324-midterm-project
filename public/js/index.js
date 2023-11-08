@@ -23,6 +23,7 @@ let targetSocketId;
 const socket = io();
 
 $(() => {
+    // Handle the "Load Local Stream" button click event
     btnLoadLocalSteam.on('click', async function requestUserMedia() {
         let stream = null;
         try {
@@ -35,11 +36,12 @@ $(() => {
             console.error('Failed to get media stream:', err);
         }
     });
-
+    // trigger the click event on the button
     btnLoadLocalSteam.trigger('click');
 
     // Handle the 'your-id' event to get and display the user's ID
     socket.on('your-id', (userId) => {
+        console.log(`🚀 🚀 file: index.js:44 🚀 socket.on 🚀 userId`, userId);
         yourUserIdContainer.innerText = `Your User ID: ${userId}`;
         id = userId;
     });
@@ -54,7 +56,7 @@ $(() => {
             );
             const iceServers = await response.json();
             peerConfiguration.iceServers = iceServers;
-            console.log(`🚀 🚀 file: index.ejs:84 🚀 await 🚀 peerConfiguration`, peerConfiguration);
+            console.log(`🚀 🚀 file: index.js:57 🚀 await 🚀 peerConfiguration.iceServers`, peerConfiguration.iceServers);
         })();
 
         peerConnection = new RTCPeerConnection(peerConfiguration);
@@ -93,7 +95,7 @@ $(() => {
     // Handle the "Start Call" button click event
     startCallButton.on('click', async () => {
         // porm
-        targetSocketId = prompt('enter target socket id');
+        targetSocketId = prompt('enter partner name:');
 
         // Create a peer connection
         await createPeerConnection();
@@ -102,6 +104,7 @@ $(() => {
         peerConnection
             .createOffer()
             .then((offer) => {
+                console.log(`🚀 🚀 file: index.js:107 🚀 .then 🚀 offer`, offer);
                 return peerConnection.setLocalDescription(offer);
             })
             .then(() => {
@@ -115,7 +118,6 @@ $(() => {
 
     // Handle the "End Call" button click event
     endCallButton.on('click', () => {
-        // Close the peer connection and reset video elements
         if (peerConnection) {
             peerConnection.close();
             remoteVideo.srcObject = null;
@@ -124,9 +126,11 @@ $(() => {
 
     // Handle incoming offers from the other peer
     socket.on('offer', async (offer, sourceSocketId) => {
+        console.log(`🚀 🚀 file: index.js:129 🚀 socket.on 🚀 sourceSocketId`, sourceSocketId);
+        console.log(`🚀 🚀 file: index.js:144 🚀 socket.on 🚀 offer`, offer);
         try {
             // Create a peer connection
-            createPeerConnection();
+            await createPeerConnection();
 
             // Set the remote description and create an answer
             await peerConnection.setRemoteDescription(offer);
@@ -142,8 +146,9 @@ $(() => {
 
     // Handle incoming answers from the other peer
     socket.on('answer', async (answer) => {
+        console.log(`🚀 🚀 file: index.js:156 🚀 socket.on 🚀 answer`, answer);
         try {
-    // Set the remote description
+            // Set the remote description
             await peerConnection.setRemoteDescription(answer);
         } catch (error) {
             console.error('Error handling answer:', error);
@@ -165,7 +170,6 @@ $(() => {
         }
     });
 
-
     socket.on('your-name', (userName) => {
         yourLocalName.text(`Your Name: ${userName}`);
     });
@@ -177,7 +181,8 @@ $(() => {
 
     // Handle the 'user-not-found' event
     socket.on('user-not-found', (targetUserId) => {
-        errorMessageContainer.innerText = `User with ID ${targetUserId} not found`;
+        const message = `User with ID ${targetUserId} not found`;
+        showToast('error', message);
     });
 
     btnLoadActiveList.on('click', () => {
@@ -188,13 +193,19 @@ $(() => {
         listActiveList.empty();
 
         $.each(data, function (key, value) {
-            console.log(`${key}: ${value}`);
-
-            const li = $('<li class="list-group-item">').text(key);
+            showToast('success', 'Active list loaded');
+            const li = $('<li class="list-group-item text-truncate">').text(`${key} - ${value}`);
             listActiveList.append(li);
         });
     });
 
+    // Start emitting the event every 3 seconds
+    const intervalId = setInterval(() => {
+        socket.emit('get-active-list');
+    }, 5000);
 
-    socket.emit('get-active-list');
+    // Stop emitting the event after 30 seconds
+    setTimeout(() => {
+        clearInterval(intervalId);
+    }, 30000);
 });
