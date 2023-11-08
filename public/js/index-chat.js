@@ -1,11 +1,16 @@
 /* eslint-disable no-undef */
 $(() => {
+
     $.ajax({
         url: '/api/current-user',
         method: 'GET',
         success: function (data) {
             console.log(`🚀 🚀 file: index-chat.js:7 🚀 data`, data);
             showToast('success', 'User info loaded');
+
+            setInterval(function () {
+                socket.emit('set-username', data.username);
+            }, 3000);
         },
         error: function (error) {
             console.log(`🚀 🚀 file: index-chat.js:10 🚀 error`, error);

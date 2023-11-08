@@ -79,12 +79,7 @@ $(() => {
         };
     }
 
-    // Handle the "Start Call" button click event
-    startCallButton.on('click', async () => {
-        // porm
-        targetSocketId = prompt('enter partner name:');
-
-        // Create a peer connection
+    async function makeCall(targetSocketId) {
         await createPeerConnection();
 
         // Create an SDP offer
@@ -101,6 +96,12 @@ $(() => {
             .catch((error) => {
                 console.error('Error creating offer:', error);
             });
+    }
+
+    // Handle the "Start Call" button click event
+    startCallButton.on('click', async () => {
+        targetSocketId = prompt('enter partner name:');
+        await makeCall(targetSocketId);
     });
 
     // Handle the "End Call" button click event
@@ -158,7 +159,7 @@ $(() => {
     });
 
     socket.on('your-name', (userName) => {
-        yourLocalName.text(`Your Name: ${userName}`);
+        yourLocalName.text(`Name: ${userName}`);
     });
 
     socket.on('connect_error', (err) => {
@@ -181,9 +182,17 @@ $(() => {
 
         $.each(data, function (key, value) {
             showToast('success', 'Active list loaded');
-            const li = $('<li class="list-group-item text-truncate">').text(`${key} - ${value}`);
+            const li = $('<li class="list-group-item text-truncate btn-call" role="button">').text(`${key}`);
             listActiveList.append(li);
         });
+
+        $('.btn-call').off('click').on('click', async function () {
+            console.log($(this).text());
+
+            const name = $(this).text();
+            await makeCall(name);
+        });
+
     });
 
     // Start emitting the event every 3 seconds
