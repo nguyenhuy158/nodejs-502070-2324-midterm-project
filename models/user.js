@@ -90,14 +90,12 @@ userSchema.methods.updateProfilePicture = function (newProfilePicture) {
 userSchema.pre("save", function (next) {
     const user = this;
 
-    // if (!user.username) {
-    //     const emailParts = user.email.split("@");
-    //     if (emailParts.length > 0) {
-    //         user.username = emailParts[0];
-    //         user.password = user.username;
-    //         user.password_confirm = user.username;
-    //     }
-    // }
+    if (!user.username) {
+        const emailParts = user.email.split("@");
+        if (emailParts.length > 0) {
+            user.username = emailParts[0];
+        }
+    }
 
     if (!user.isModified("password")) {
         return next();

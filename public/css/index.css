@@ -8,7 +8,7 @@
 }
 
 .video-frame {
-    width: 400px;
+    width: 350px;
     height: 250px;
     border: 1px solid #ccc;
     object-fit: cover;

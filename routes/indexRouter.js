@@ -7,7 +7,7 @@ const indexController = require('../controllers/indexController');
 
 router.use('', accountRouter);
 router.get("/", indexController.isLoggedIn, indexController.home);
-router.use(/^\/(api|rest)\//, indexController.isLoggedIn, apiRouter);
+router.use(/^\/(api|rest)/, indexController.isLoggedIn, apiRouter);
 
 
 // error handlers middleware
@@ -16,6 +16,7 @@ router.use(function (req, res, next) {
     res.render('404', {});
 });
 router.use(function (error, req, res, next) {
+    console.log(`🚀 🚀 file: indexRouter.js:19 🚀 error`, error);
     res.status(500);
     res.render('500', { error: error });
 });

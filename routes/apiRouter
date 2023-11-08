@@ -2,19 +2,30 @@
 const express = require('express');
 const router = express.Router();
 
-// write router get /current-user get info of current user in req
+const apiAccountRouter = require('./apiAccountRouter');
+
 router.get('/current-user', (req, res) => {
-    res.json({
-        id: req.user.id,
-        fullName: req.user.fullName,
-        username: req.user.username,
-        email: req.user.email,
-    });
+    try {
+        console.log(`🚀 🚀 file: apiRouter:6 🚀 router.get 🚀 req.session.user`, req.session.user);
+        console.log(`🚀 🚀 file: apiRouter:14 🚀 router.get 🚀 {}`, {
+            id: req.session.user.id,
+            fullName: req.session.user.fullName,
+            username: req.session.user.username,
+            email: req.session.user.email,
+        });
+        res.json({
+            id: req.session.user.id,
+            fullName: req.session.user.fullName,
+            username: req.session.user.username,
+            email: req.session.user.email,
+        });
+    } catch (error) {
+        console.log(`🚀 🚀 file: apiRouter:15 🚀 router.get 🚀 error`, error);
+        res.status(500).json({ error: 'Internal server error' + error });
+    }
 });
 
-router.get('/', (req, res) => {
-    res.send('Welcome to the API!');
-});
+// router.user('/account', apiAccountRouter);
 
 router.get('/users', (req, res) => {
     res.send('List of users');
