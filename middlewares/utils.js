@@ -1,6 +1,11 @@
 const { transporter } = require("../config/email");
 const { v2: cloudinary } = require("cloudinary");
 
+exports.generateUserId = function () {
+    return Math.random()
+        .toString(36)
+        .substr(2, 9);
+};
 
 exports.generateToken = function () {
     const length = 64;
@@ -15,21 +20,21 @@ exports.generateToken = function () {
 exports.sendEmail = async function (req, user, token, options = undefined) {
     try {
         console.log("=>(userController.js:226) user", user);
-        
+
         const mailOptions =
-                  options ?
-                  options :
-                  {
-                      from   : process.env.FROM_EMAIL,
-                      to     : user.email,
-                      subject: "Activate Sales Account",
-                      text   : `Dear ${user.fullName},
+            options ?
+                options :
+                {
+                    from: process.env.FROM_EMAIL,
+                    to: user.email,
+                    subject: "Activate Sales Account",
+                    text: `Dear ${user.fullName},
                 An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:
                 ${req.protocol + "://" + req.get("host")}/email-confirm?token=${token}
                 Best regards,
                 Administrator`,
-                  };
-        
+                };
+
         await transporter.sendMail(mailOptions, (err, info) => {
             console.log("=>(userController.js:237) info", info);
             console.log("=>(userController.js:237) err", err);
@@ -40,13 +45,13 @@ exports.sendEmail = async function (req, user, token, options = undefined) {
 };
 
 exports.uploadImage = async (imagePath) => {
-    
+
     const options = {
-        use_filename   : true,
+        use_filename: true,
         unique_filename: false,
-        overwrite      : true,
+        overwrite: true,
     };
-    
+
     try {
         const result = await cloudinary.uploader.upload(imagePath, options);
         console.log("=>(utils.js:54) result", result);
@@ -59,9 +64,9 @@ exports.uploadImage = async (imagePath) => {
 exports.removeImageByUrl = async function (imageUrl) {
     try {
         const publicId = imageUrl.match(/\/v\d+\/(.+)\./)[1];
-        
+
         const result = await cloudinary.uploader.destroy(publicId);
-        
+
         console.log(`Image removed from Cloudinary: ${publicId}`);
         return result;
     } catch (error) {

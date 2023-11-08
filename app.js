@@ -1,28 +1,26 @@
 require('dotenv').config();
+
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server,
-    {
-        cors: {
-            origin: "*:*",
-            methods: ["GET", "POST"]
-        }
-    });
+const io = new Server(server, {
+    cors: {
+        origin: "*:*",
+        methods: ["GET", "POST"]
+    }
+});
 
 const indexRouter = require("./routes/indexRouter");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDb = require("./middlewares/db");
+const { generateUserId } = require('./middlewares/utils');
 
 
-const port = process.env.PORT || 8080;
-const ip = process.env.IP || '0.0.0.0';
-console.log(`🚀 🚀 file: app.js:15 🚀 port`, port);
-console.log(`🚀 🚀 file: app.js:16 🚀 ip`, ip);
 
 const users = {};
 
@@ -33,9 +31,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIES_SECRET));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(connectDb);
-app.use("", indexRouter);
+connectDb();
 
+app.use("", indexRouter);
 
 io.on("connection", (socket) => {
 
@@ -117,15 +115,11 @@ io.on("connection", (socket) => {
 });
 
 
-function generateUserId() {
-    return Math.random()
-        .toString(36)
-        .substr(2, 9);
-}
-
-server.listen(port, ip, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-    console.log(`Server is running on ip ${ip}`);
+const PORT = process.env.PORT || 8080;
+const IP = process.env.IP || '0.0.0.0';
+server.listen(PORT, IP, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on ip ${IP}`);
 });
 
 
