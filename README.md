@@ -24,7 +24,7 @@ Website: [https://callquick.onrender.com](https://callquick.onrender.com)
     ```
 2. Change to the project directory:
     ```bash
-    cd nodejs-502070-2324-midterm-project/real-time-caller
+    cd nodejs-502070-2324-midterm-project/
     ```
 3. Install project dependencies:
     ```bash
