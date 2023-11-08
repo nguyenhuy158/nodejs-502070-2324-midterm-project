@@ -17,6 +17,8 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDb = require("./middlewares/db");
 
+const AccountController = require('./controllers/accountController');
+
 const port = process.env.PORT || 8080;
 const ip = process.env.IP || '0.0.0.0';
 console.log(`🚀 🚀 file: app.js:15 🚀 port`, port);
@@ -148,3 +150,5 @@ server.listen(port, ip, () => {
     console.log(`Server is running on ip ${ip}`);
 });
 
+
+app.get("/logout", AccountController.getLogout);

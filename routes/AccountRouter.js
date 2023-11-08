@@ -1,3 +1,4 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const router = express.Router();
 const session = require("express-session");
@@ -6,10 +7,12 @@ const AccountController = require("../controllers/accountController");
 const customValidator = require("../middlewares/customValidator");
 const {doubleCsrf} = require("csrf-csrf");
 
-router.use(session({
-    secret: "52000668", resave: false, saveUninitialized: true
-}));
+dotenv.config();
+const secretKey = process.env.SECRET_KEY;
 
+router.use(session({
+    secret: secretKey, resave: false, saveUninitialized: true
+}));
 
 const {init, getAccount, createAccount} = require("../config/db");
 
@@ -41,6 +44,7 @@ router.get("/logout-success", AccountController.getLogoutSuccess);
 router.get("/data-tables", (req, res, next) => {
     res.render("data-tables");
 });
+
 router.get("/lazy", (req, res, next) => {
     res.render("lazy");
 });
