@@ -131,7 +131,12 @@ io.on("connection", (socket) => {
 
 
 instrument(io, {
-    auth: false
+    auth: {
+        type: "basic",
+        username: "admin",
+        password: "$2a$10$Zek90ZcKamw4C3XW6Y28KuLxdyFcywscn2o7KWBO3T0Za.oWORs.6" // "changeit" encrypted with bcrypt
+    },
+    serverId: `${require("os").hostname()}#${process.pid}`
 });
 
 const PORT = process.env.PORT || 8080;
