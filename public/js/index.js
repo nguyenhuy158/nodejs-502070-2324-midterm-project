@@ -22,6 +22,11 @@ let targetSocketId;
 const socket = io();
 
 $(() => {
+    socket.on('connect', () => {
+        console.log('Connected to the signaling server with id', socket.id);
+        showToast('success', 'Connected to the signaling server');
+    });
+
     $('#offlineMessage').hide();
 
     // Handle the "Load Local Stream" button click event

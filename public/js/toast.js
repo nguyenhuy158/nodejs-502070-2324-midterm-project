@@ -19,7 +19,7 @@ function showToast(type, message) {
 
     const toastInstance = new bootstrap.Toast(toast[0], {
         autohide: true,
-        delay: 1000
+        delay: 5000
     });
 
     // console.log("=>(index.hbs:377) toastInstance", toastInstance);
