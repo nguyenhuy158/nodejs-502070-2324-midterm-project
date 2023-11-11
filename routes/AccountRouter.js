@@ -5,7 +5,6 @@ const accountController = require("../controllers/accountController");
 const customValidator = require("../middlewares/customValidator");
 const { doubleCsrf } = require("csrf-csrf");
 
-
 router.use(
     session({
         secret: process.env.SECRET_KEY,
