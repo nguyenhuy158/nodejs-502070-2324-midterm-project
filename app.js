@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const flash = require("connect-flash");
+const { instrument } = require("@socket.io/admin-ui");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -9,8 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*:*",
-        methods: ["GET", "POST"]
+        origin: ["https://admin.socket.io/"],
     }
 });
 
@@ -126,6 +126,9 @@ io.on("connection", (socket) => {
     });
 });
 
+
+
+instrument(io, { auth: false });
 
 const PORT = process.env.PORT || 8080;
 const IP = process.env.IP || '0.0.0.0';
