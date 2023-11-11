@@ -122,19 +122,12 @@ userSchema.methods.isAdmin = function () {
     return this.role === process.env.ROLE_ADMIN;
 };
 
-
 userSchema.methods.validPassword = async function (password) {
-    try {
-        console.log("=>(user.js:66) password", password);
-        console.log("=>(user.js:68) this.password", this.password);
-        console.log("=>[user.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
-        return await bcrypt.compare(password, this.password);
-
-    } catch (error) {
-        throw error;
-    }
+    // console.log("=>(user.js:66) password", password);
+    // console.log("=>(user.js:68) this.password", this.password);
+    // console.log("=>[user.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
+    return await bcrypt.compare(password, this.password);
 };
-
 
 userSchema.virtual("createdAtFormatted")
     .get(function () {

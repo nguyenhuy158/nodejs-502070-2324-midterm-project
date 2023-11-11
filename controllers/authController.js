@@ -102,14 +102,14 @@ exports.passwordReset = async (req, res, next) => {
         req.flash("success", "Reset success, please check mail to login.");
         res.redirect("/login");
     } catch (error) {
-        console.log("=>(authController.js:104) error", error);
+        // console.log("=>(authController.js:104) error", error);
         next(error);
     }
 };
 
 exports.emailConfirm = async (req, res, next) => {
     const token = req.query.token;
-    console.log("=>(authController.js:70) token", token);
+    // console.log("=>(authController.js:70) token", token);
     
     if (token) {
         try {
@@ -126,7 +126,7 @@ exports.emailConfirm = async (req, res, next) => {
             }
             
             req.login(salesperson, async (err) => {
-                console.log("=>(authController.js:138) err", err);
+                // console.log("=>(authController.js:138) err", err);
                 if (err) {
                     return next(err);
                 }
@@ -207,10 +207,10 @@ exports.checkUser = async function (req, res, next) {
                     // req.app.locals.user = user;
                     //
                     const token = user.generateAccessJWT();
-                    console.log("=>(authController.js:123) token", token);
-                    console.log("=>(authController.js:155) res.cookie", res.cookies);
+                    // console.log("=>(authController.js:123) token", token);
+                    // console.log("=>(authController.js:155) res.cookie", res.cookies);
                     res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
-                    console.log("=>(authController.js:155) res.cookie", res.cookies);
+                    // console.log("=>(authController.js:155) res.cookie", res.cookies);
                     return res.redirect("/");
                 }
             } else {
@@ -254,7 +254,7 @@ exports.getRegister = async function (req, res, next) {
 };
 
 exports.changePassword = async function (req, res, next) {
-    console.log("=>(authController.js:257) req.user.isPasswordReset", req.user.isPasswordReset);
+    // console.log("=>(authController.js:257) req.user.isPasswordReset", req.user.isPasswordReset);
     if (req.user.isPasswordReset) return res.render("pages/auth/change-password", { isReset: true });
     return res.render("pages/auth/change-password");
 };
@@ -287,7 +287,7 @@ exports.postChangePassword = async function (req, res, next) {
         req.flash("success", "Change password success: Password changed.");
         res.redirect("/");
     } catch (error) {
-        console.log("=>(authController.js:285) error", error);
+        // console.log("=>(authController.js:285) error", error);
         next(error);
     }
 };

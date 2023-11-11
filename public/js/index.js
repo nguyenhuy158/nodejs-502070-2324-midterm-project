@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
+
 const userNameInput = $('#userNameInput');
 const submitNameButton = $('#submitName');
 const yourRemoteName = $('#yourRemoteName');
@@ -27,7 +28,7 @@ $(() => {
         console.log('Connected to the signaling server with id', socket.id);
         showToast('success', 'Connected to the signaling server');
 
-        yourUserIdContainer.innerText = `Your User ID: ${socket.id}`;
+        yourUserIdContainer.text(`Your User ID: ${socket.id}`);
         id = socket.id;
     });
 
@@ -162,10 +163,6 @@ $(() => {
         }
     });
 
-    socket.on('your-name', (userName) => {
-        yourLocalName.text(`Name: ${userName}`);
-    });
-
     socket.on('connect_error', (err) => {
         console.log(`connect_error due to `, err);
         console.log(`connect_error due to ${err.message}`);
@@ -181,22 +178,54 @@ $(() => {
         socket.emit('get-active-list');
     });
 
-    socket.on('active-list', (data) => {
+
+    // Function to remove active users
+    function removeActiveUsers(data) {
+        console.log(`🚀 🚀 file: index.js:183 🚀 socket.on 🚀 data`, data);
+        $.each(data, function (key) {
+            let li = listActiveList.find('li').filter(function () {
+                return $(this).text().trim() === key;
+            });
+            li.remove();
+        });
+    }
+
+    // Function to add new active users
+    function addNewActiveUsers(data) {
+        console.log(`🚀 🚀 file: index.js:183 🚀 socket.on 🚀 data`, data);
+        $.each(data, function (key, value) {
+            const li = $(`<li class="list-group-item text-truncate btn-call" role="button" data-id=${value}>`).text(`${key}`);
+            listActiveList.append(li);
+        });
+
+        assignCallButtonEvent();
+    }
+
+    // Function to update the active user list
+    function updateActiveList(data) {
         console.log(`🚀 🚀 file: index.js:189 🚀 socket.on 🚀 data`, data);
         listActiveList.empty();
 
         $.each(data, function (key, value) {
-            showToast('success', 'Active list loaded');
-            const li = $('<li class="list-group-item text-truncate btn-call" role="button">').text(`${key}`);
+            const li = $(`<li class="list-group-item text-truncate btn-call" role="button" data-id=${value}>`).text(`${key}`);
             listActiveList.append(li);
         });
 
+        assignCallButtonEvent();
+    }
+
+    // Function to assign click event to call button
+    function assignCallButtonEvent() {
         $('.btn-call').off('click').on('click', async function () {
             console.log($(this).text());
 
             const name = $(this).text();
             await makeCall(name);
         });
+    }
 
-    });
+    // Socket event listeners
+    socket.on('remove-active', removeActiveUsers);
+    socket.on('new-active', addNewActiveUsers);
+    socket.on('active-list', updateActiveList);
 });

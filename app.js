@@ -24,7 +24,7 @@ const connectDb = require("./middlewares/db");
 const { generateUserId } = require('./middlewares/utils');
 
 
-const users = [];
+const users = {};
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
@@ -42,27 +42,26 @@ app.use(indexRouter);
 
 io.on("connection", (socket) => {
 
-    const requestHeaders = socket.handshake.headers;
-    console.log(`🚀 🚀 file: app.js:40 🚀 io.on 🚀 requestHeaders`, requestHeaders);
-    console.log(`🚀 🚀 file: app.js:42 🚀 io.on 🚀 requestHeaders.host`, requestHeaders.host);
+    // const requestHeaders = socket.handshake.headers;
+    // console.log(`🚀 🚀 file: app.js:40 🚀 io.on 🚀 requestHeaders`, requestHeaders);
+    // console.log(`🚀 🚀 file: app.js:42 🚀 io.on 🚀 requestHeaders.host`, requestHeaders.host);
 
     let userId = socket.id;
-    users[userId] = socket.id;
-    console.log(`🚀 🚀 file: app.js:51 🚀 io.on 🚀 users`, users);
-
-    socket.emit("your-id", userId);
-
-    socket.broadcast.emit('active-list', users);
-    socket.emit('active-list', { users });
+    users[socket.id] = socket.id;
 
     socket.on("set-username", (userName) => {
+
         const tempVal = users[userId];
         delete users[userId];
         userId = userName;
         users[userId] = tempVal;
-        console.log(`${userName} user connected`);
-        console.log("=>users", users);
-        socket.emit("your-name", userName);
+
+        socket.broadcast.emit('new-active', Object.assign({}, { [userId]: socket.id }));
+
+        const otherUser = Object.fromEntries(
+            Object.entries(users).filter(([key, value]) => key !== userId && value !== userId)
+        );
+        socket.emit('active-list', otherUser);
     });
 
     socket.on("get-active-list", () => {
@@ -120,8 +119,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log(`${userId} user disconnected`);
         delete users[userId];
+        socket.broadcast.emit('remove-active', Object.assign({}, { [userId]: socket.id }));
     });
 
     socket.on('chat-message', (data) => {

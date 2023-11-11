@@ -16,8 +16,8 @@ async function createAccount(name, email, password) {
 
 exports.postRegister = async (req, res) => {
     const result = validationResult(req);
-    console.log(`=>(AccountRouter.js:99) result`, result);
-    console.log(`=>(AccountRouter.js:99) result.errors.length`, result.errors.length);
+    // console.log(`=>(AccountRouter.js:99) result`, result);
+    // console.log(`=>(AccountRouter.js:99) result.errors.length`, result.errors.length);
 
     let name = req.body.name;
     let email = req.body.email;
@@ -26,12 +26,12 @@ exports.postRegister = async (req, res) => {
     if (result.errors.length === 0) {
 
         const savedUser = await createAccount(name, email, password);
-        console.log("🚀 ~ file: index.js:50 ~ router.post ~ savedUser:", savedUser);
+        // console.log("🚀 ~ file: index.js:50 ~ router.post ~ savedUser:", savedUser);
         if (savedUser) {
             return res.redirect("/login");
         }
     } else {
-        console.log(`=>(AccountRouter.js:123) result.errors[0]`, result.errors[0]);
+        // console.log(`=>(AccountRouter.js:123) result.errors[0]`, result.errors[0]);
         return res.render("register", {
             ...{
                 name,
@@ -46,23 +46,23 @@ exports.postRegister = async (req, res) => {
 
 exports.postLogin = async (req, res) => {
     const result = validationResult(req);
-    console.log(`=>(AccountRouter.js:72) req.body`, req.body);
+    // console.log(`=>(AccountRouter.js:72) req.body`, req.body);
 
     if (result.errors.length === 0) {
         let email = req.body.email;
         let password = req.body.password;
 
 
-        console.log(`=>(accountController.js:56) email`, email);
-        console.log(`=>(accountController.js:57) password`, password);
+        // console.log(`=>(accountController.js:56) email`, email);
+        // console.log(`=>(accountController.js:57) password`, password);
         const user = await User.findOne({ email: email });
-        console.log(`=>(accountController.js:58) user`, user);
+        // console.log(`=>(accountController.js:58) user`, user);
 
         if (user) {
             const isPasswordValid = await user.validPassword(password);
-            console.log(`=>(accountController.js:62) isPasswordValid`, isPasswordValid);
+            // console.log(`=>(accountController.js:62) isPasswordValid`, isPasswordValid);
             if (isPasswordValid) {
-                console.log(`🚀 🚀 file: accountController.js:67 🚀 exports.postLogin= 🚀 user`, user);
+                // console.log(`🚀 🚀 file: accountController.js:67 🚀 exports.postLogin= 🚀 user`, user);
                 req.session.user = user;
                 req.session.loggedin = true;
                 req.session.email = email;
@@ -82,7 +82,7 @@ exports.postLogin = async (req, res) => {
 
 exports.getLogout = (req, res) => {
     req.session.destroy((err) => {
-        console.log(`🚀 🚀 file: accountController.js:85 🚀 req.session.destroy 🚀 err`, err);
+        // console.log(`🚀 🚀 file: accountController.js:85 🚀 req.session.destroy 🚀 err`, err);
         res.clearCookie("connect.sid");
         res.redirect("/logout-success");
     });
@@ -137,13 +137,13 @@ exports.postForgetPassword = async (req, res, next) => {
         );
         res.redirect('/login');
     } catch (error) {
-        console.log('=>(authController.js:104) error', error);
+        // console.log('=>(authController.js:104) error', error);
         next(error);
     }
 };
 
 exports.isNotAuthenticated = (req, res, next) => {
-    console.log("[LOGIN] -> ");
+    // console.log("[LOGIN] -> ");
     if (req.session.loggedin) {
         res.redirect("/");
     } else {
@@ -153,7 +153,7 @@ exports.isNotAuthenticated = (req, res, next) => {
 
 exports.emailConfirm = async (req, res, next) => {
     const token = req.query.token;
-    console.log('=>(authController.js:70) token', token);
+    // console.log('=>(authController.js:70) token', token);
 
     if (token) {
         try {
@@ -176,7 +176,7 @@ exports.emailConfirm = async (req, res, next) => {
             }
 
             req.login(salesperson, async (err) => {
-                console.log('=>(authController.js:138) err', err);
+                // console.log('=>(authController.js:138) err', err);
                 if (err) {
                     return next(err);
                 }

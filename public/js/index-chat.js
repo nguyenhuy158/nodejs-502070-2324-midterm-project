@@ -23,8 +23,7 @@ $(() => {
             showToast('success', 'User info loaded');
 
             socket.emit('set-username', data.username);
-            // setInterval(function () {
-            // }, 3000);
+            $('#yourLocalName').text(`Name: ${data.username}`);
         },
         error: function (error) {
             console.log(`🚀 🚀 file: index-chat.js:10 🚀 error`, error);
