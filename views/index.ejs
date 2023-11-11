@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
         <link rel="stylesheet" href="/css/index.css" />
+        
         <script src="/js/toast.js"></script>
     </head>
 
@@ -108,13 +109,16 @@
                 <!-- chat form -->
                 <div class="col-3">
                     <div class="card">
+
                         <div class="card-body">
                             <div id="chatBox" class="no-scrollbar" style="height: 320px; overflow-y: scroll">
                                 <!-- Chat messages will be inserted here -->
                             </div>
                         </div>
+
                         <div class="card-footer">
                             <div class="input-group">
+                                <!-- input type message -->
                                 <input
                                     type="text"
                                     id="chatInput"
@@ -122,11 +126,13 @@
                                     placeholder="Type a message..."
                                     autocomplete="off"
                                 />
+                                <!-- button send message -->
                                 <button id="sendButton" class="btn btn-primary input-group-append">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -154,5 +160,6 @@
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/index.js"></script>
         <script src="/js/index-chat.js"></script>
+        <script src="/js/index-networkstatus.js"></script>
     </body>
 </html>

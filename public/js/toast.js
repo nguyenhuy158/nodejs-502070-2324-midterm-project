@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 function showToast(type, message) {
     const toast = $(`
@@ -26,8 +27,7 @@ function showToast(type, message) {
 
     toastInstance.show();
 
-    $(toastInstance)
-        .on("hidden.bs.toast", function () {
-            toast.remove();
-        });
+    $(toastInstance).on("hidden.bs.toast", function () {
+        toast.remove();
+    });
 }

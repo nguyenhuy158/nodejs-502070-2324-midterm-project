@@ -1,4 +1,18 @@
 /* eslint-disable no-undef */
+
+function displayMessage(message, sender, timeSent, isMe = false) {
+    $('#chatBox').append(`
+        <div class="p-3 my-2 rounded bg-light border">
+            <strong>${sender}</strong>
+            <p class="mb-0">${message}</p>
+            <small>${timeSent}</small>
+        </div>
+    `);
+
+    $('#chatInput').val(isMe ? '' : $('#chatInput').val());
+
+    $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+}
 $(() => {
 
     $.ajax({
@@ -18,21 +32,22 @@ $(() => {
         }
     });
 
+    socket.on('chat-message', (data) => {
+        displayMessage(data.message, data.sender, data.timeSent);
+    });
+
     function sendMessage() {
         const message = $('#chatInput').val();
-        const sender = 'Your Name'; // Replace with the actual sender's name
-        const timeSent = new Date().toLocaleTimeString(); // Get the current time
+        const sender = 'Your Name';
+        const timeSent = new Date().toLocaleTimeString();
 
-        $('#chatBox').append(`
-            <div class="p-3 my-2 rounded bg-light border">
-                <strong>${sender}</strong>
-                <p class="mb-0">${message}</p>
-                <small>${timeSent}</small>
-            </div>
-        `);
-        $('#chatInput').val('');
+        socket.emit('chat-message', {
+            message,
+            sender,
+            timeSent
+        });
 
-        $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+        displayMessage(message, sender, timeSent, true);
     }
 
     $('#sendButton').on('click', sendMessage);

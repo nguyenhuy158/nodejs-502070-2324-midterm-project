@@ -119,6 +119,11 @@ io.on("connection", (socket) => {
         console.log(`${userId} user disconnected`);
         delete users[userId];
     });
+
+    socket.on('chat-message', (data) => {
+        console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
+        socket.broadcast.emit('chat-message', data);
+    });
 });
 
 

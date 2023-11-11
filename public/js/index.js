@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
 const userNameInput = $('#userNameInput');
@@ -212,20 +213,4 @@ $(() => {
         clearInterval(intervalId);
     }, 30000);
 
-
-    // handle offline event
-    function updateOnlineStatus() {
-        if (navigator.onLine) {
-            $('#offlineMessage').hide();
-            $('#content').show();
-        } else {
-            $('#offlineMessage').show();
-            $('#content').hide();
-        }
-    }
-
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-
-    updateOnlineStatus();
 });
