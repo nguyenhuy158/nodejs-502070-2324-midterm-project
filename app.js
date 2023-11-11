@@ -10,7 +10,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["https://admin.socket.io/"],
+        origin: ["https://admin.socket.io"],
+        credentials: true
     }
 });
 
@@ -128,7 +129,9 @@ io.on("connection", (socket) => {
 
 
 
-instrument(io, { auth: false });
+instrument(io, {
+    auth: false
+});
 
 const PORT = process.env.PORT || 8080;
 const IP = process.env.IP || '0.0.0.0';
