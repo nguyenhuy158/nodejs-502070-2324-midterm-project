@@ -26,6 +26,9 @@ $(() => {
     socket.on('connect', () => {
         console.log('Connected to the signaling server with id', socket.id);
         showToast('success', 'Connected to the signaling server');
+
+        yourUserIdContainer.innerText = `Your User ID: ${socket.id}`;
+        id = socket.id;
     });
 
     $('#offlineMessage').hide();
@@ -45,13 +48,6 @@ $(() => {
     });
     // trigger the click event on the button
     btnLoadLocalSteam.trigger('click');
-
-    // Handle the 'your-id' event to get and display the user's ID
-    socket.on('your-id', (userId) => {
-        console.log(`🚀 🚀 file: index.js:44 🚀 socket.on 🚀 userId`, userId);
-        yourUserIdContainer.innerText = `Your User ID: ${userId}`;
-        id = userId;
-    });
 
     // Create a new WebRTC peer connection
     async function createPeerConnection() {
@@ -186,6 +182,7 @@ $(() => {
     });
 
     socket.on('active-list', (data) => {
+        console.log(`🚀 🚀 file: index.js:189 🚀 socket.on 🚀 data`, data);
         listActiveList.empty();
 
         $.each(data, function (key, value) {
@@ -202,15 +199,4 @@ $(() => {
         });
 
     });
-
-    // Start emitting the event every 3 seconds
-    const intervalId = setInterval(() => {
-        socket.emit('get-active-list');
-    }, 5000);
-
-    // Stop emitting the event after 30 seconds
-    setTimeout(() => {
-        clearInterval(intervalId);
-    }, 30000);
-
 });

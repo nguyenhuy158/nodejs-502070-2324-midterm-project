@@ -24,7 +24,7 @@ const connectDb = require("./middlewares/db");
 const { generateUserId } = require('./middlewares/utils');
 
 
-const users = {};
+const users = [];
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
@@ -47,11 +47,13 @@ io.on("connection", (socket) => {
     console.log(`🚀 🚀 file: app.js:42 🚀 io.on 🚀 requestHeaders.host`, requestHeaders.host);
 
     let userId = socket.id;
-    console.log(`${userId} user connected`);
     users[userId] = socket.id;
     console.log(`🚀 🚀 file: app.js:51 🚀 io.on 🚀 users`, users);
 
     socket.emit("your-id", userId);
+
+    socket.broadcast.emit('active-list', users);
+    socket.emit('active-list', { users });
 
     socket.on("set-username", (userName) => {
         const tempVal = users[userId];
@@ -134,7 +136,7 @@ instrument(io, {
     auth: {
         type: "basic",
         username: "admin",
-        password: "$2a$10$Zek90ZcKamw4C3XW6Y28KuLxdyFcywscn2o7KWBO3T0Za.oWORs.6" // "changeit" encrypted with bcrypt
+        password: "$2a$10$Zek90ZcKamw4C3XW6Y28KuLxdyFcywscn2o7KWBO3T0Za.oWORs.6"
     },
     serverId: `${require("os").hostname()}#${process.pid}`
 });

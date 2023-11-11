@@ -1,6 +1,5 @@
 {
     "scripts": {
-        "prestart": "echo 'Welcome to develope callmate application' && yarn install",
         "start": "node app.js",
         "dev": "nodemon app.js"
     },
