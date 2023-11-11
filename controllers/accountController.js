@@ -1,11 +1,8 @@
 const User = require("../models/user");
+const { generateToken, sendEmail } = require('../utils/utils');
 
-const {
-    query,
-    body,
-    param,
-    validationResult
-} = require("express-validator");
+
+const { query, body, param, validationResult } = require("express-validator");
 
 async function createAccount(name, email, password) {
     const user = new User({
@@ -17,7 +14,7 @@ async function createAccount(name, email, password) {
     return savedUser;
 }
 
-exports.postRegister = async (req, res, next) => {
+exports.postRegister = async (req, res) => {
     const result = validationResult(req);
     console.log(`=>(AccountRouter.js:99) result`, result);
     console.log(`=>(AccountRouter.js:99) result.errors.length`, result.errors.length);
@@ -85,6 +82,7 @@ exports.postLogin = async (req, res) => {
 
 exports.getLogout = (req, res) => {
     req.session.destroy((err) => {
+        console.log(`🚀 🚀 file: accountController.js:85 🚀 req.session.destroy 🚀 err`, err);
         res.clearCookie("connect.sid");
         res.redirect("/logout-success");
     });
@@ -94,17 +92,56 @@ exports.getLogoutSuccess = (req, res) => {
     res.render("logout");
 };
 
-exports.getRegister = (req, res, next) => {
+exports.getRegister = (req, res) => {
     res.render("register");
 };
 
-exports.getLogin = (req, res, next) => {
+exports.getLogin = (req, res) => {
     res.render("login", { csrf: req.csrfToken() });
 };
 
-exports.getForgetPassword = (req, res, next) => {
-    res.render('forget-password');
+exports.getForgetPassword = (req, res) => {
+    res.render("forget-password");
 };
+
+exports.postForgetPassword = async (req, res, next) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        const resetToken = generateToken();
+        const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+        user.token = resetToken;
+        user.tokenExpiration = resetTokenExpires;
+        user.isPasswordReset = true;
+        user.isFirstLogin = false;
+        await user.save();
+
+        const resetLink = `${req.protocol + '://' + req.get('host')
+            }/email-confirm?token=${resetToken}`;
+        const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: email,
+            subject: 'Password Reset Request',
+            text:
+                `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n` +
+                `Please click on the following link, or paste this into your browser to reset your password:\n\n` +
+                resetLink,
+        };
+        sendEmail(req, user, resetToken, mailOptions);
+        req.flash(
+            'success',
+            'Reset success, please check mail to login (if email exist).',
+        );
+        res.redirect('/login');
+    } catch (error) {
+        console.log('=>(authController.js:104) error', error);
+        next(error);
+    }
+};
+
 exports.isNotAuthenticated = (req, res, next) => {
     console.log("[LOGIN] -> ");
     if (req.session.loggedin) {
