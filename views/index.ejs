@@ -26,6 +26,8 @@
     </head>
 
     <body>
+        <%- include('./flash.ejs') %>
+
         <div class="container text-center my-4">
             <h1>CallMate Caller</h1>
             <h3 id="yourUserIdContainer" hidden></h3>
@@ -39,7 +41,6 @@
             <!-- Success Toast -->
             <!-- Error Toast -->
         </div>
-
 
         <div id="content" class="container-fluid">
             <div class="row">
@@ -60,7 +61,7 @@
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Select stream
+                                Select features
                             </button>
                             <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton" id="dropdownMenu">
                                 <li><a class="dropdown-item" href="/logout">Logout</a></li>

@@ -1,0 +1,48 @@
+<!-- flash.ejs -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <!-- info -->
+    <% if (typeof message !== 'undefined' && message.info) { %>
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img class="rounded me-3" src="/TechHut.png" width="20" height="20" alt="" />
+            <strong class="me-auto">TechHut</strong>
+            <small></small>
+            <button class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-info"><%= message.info %></div>
+    </div>
+    <% } %>
+    <!-- success -->
+    <% if (typeof message !== 'undefined' && message.success) { %>
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img class="rounded me-3" src="/TechHut.png" width="20" height="20" alt="" />
+            <strong class="me-auto">TechHut</strong>
+            <small></small>
+            <button class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-success"><%= message.info %></div>
+    </div>
+    <% } %>
+    <!-- error -->
+    <% if (typeof message !== 'undefined' && message.error) { %>
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img class="rounded me-3" src="/TechHut.png" width="20" height="20" alt="" />
+            <strong class="me-auto">TechHut</strong>
+            <small></small>
+            <button class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-danger"><%= message.info %></div>
+    </div>
+    <% } %>
+</div>
+
+<script>
+    setTimeout(() => {
+        $('.toast').each((index, value) => {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+            toastBootstrap.show()
+        })
+    }, 1000)
+</script>
