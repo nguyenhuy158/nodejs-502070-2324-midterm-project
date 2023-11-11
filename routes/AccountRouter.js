@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const session = require("express-session");
-const AccountController = require("../controllers/accountController");
+const accountController = require("../controllers/accountController");
 const customValidator = require("../middlewares/customValidator");
 const { doubleCsrf } = require("csrf-csrf");
 
@@ -21,20 +21,22 @@ const doubleCsrfOptions = {
 };
 const { invalidCsrfTokenError, generateToken, validateRequest, doubleCsrfProtection } = doubleCsrf(doubleCsrfOptions);
 
-router.get("/login", AccountController.isNotAuthenticated, doubleCsrfProtection, AccountController.getLogin);
+router.get("/login", accountController.isNotAuthenticated, doubleCsrfProtection, accountController.getLogin);
 
-router.post("/login", customValidator.postLogin, doubleCsrfProtection, AccountController.postLogin);
+router.post("/login", customValidator.postLogin, doubleCsrfProtection, accountController.postLogin);
 
-router.get("/register", AccountController.isNotAuthenticated, AccountController.getRegister);
+router.get("/register", accountController.isNotAuthenticated, accountController.getRegister);
 
-router.post("/register", customValidator.postRegister, AccountController.postRegister);
+router.post("/register", customValidator.postRegister, accountController.postRegister);
 
-router.get("/forget-password", AccountController.isNotAuthenticated, AccountController.getForgetPassword);
+router.get("/forget-password", accountController.isNotAuthenticated, accountController.getForgetPassword);
 
-router.post("/forget-password", customValidator.postForgetPassword, AccountController.postForgetPassword);
+router.post("/forget-password", customValidator.postForgetPassword, accountController.postForgetPassword);
 
-router.get("/logout", AccountController.getLogout);
+router.get("/email-confirm", accountController.emailConfirm);
 
-router.get("/logout-success", AccountController.getLogoutSuccess);
+router.get("/logout", accountController.getLogout);
+
+router.get("/logout-success", accountController.getLogoutSuccess);
 
 module.exports = router;
