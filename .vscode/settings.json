@@ -241,7 +241,7 @@
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.location": "top",
     "workbench.colorTheme": "Default Light Modern",
-    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreview": true,
     "workbench.editor.pinnedTabsOnSeparateRow": true,
     "workbench.editor.restoreViewState": false,
     "workbench.editor.showTabs": "multiple",

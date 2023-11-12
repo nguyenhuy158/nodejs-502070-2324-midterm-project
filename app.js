@@ -112,7 +112,7 @@ io.on("connection", (socket) => {
         if (targetUserId !== null) {
             const targetSocketId = users[targetUserId];
             if (targetSocketId) {
-                io.to(targetSocketId)
+                socket.to(targetSocketId)
                     .emit("ice-candidate", candidate, userId);
             } else {
                 socket.emit("user-not-found", targetUserId);
@@ -133,6 +133,16 @@ io.on("connection", (socket) => {
     socket.on('chat-message', (data) => {
         console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
         socket.broadcast.emit('chat-message', data);
+    });
+
+    socket.on('end-call', (data) => {
+        console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
+        const targetSocketId = users[data];
+        if (targetSocketId) {
+            socket.to(targetSocketId).emit('end-call', data);
+        } else {
+            socket.emit("user-not-found", data);
+        }
     });
 });
 

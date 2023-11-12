@@ -20,8 +20,10 @@ const listActiveList = $('#active-list');
 let id;
 let localStream;
 let peerConnection;
-let targetUsername;
+let targetPeople;
+let isAlreadyCalling = false;
 const socket = io();
+
 
 $(() => {
     socket.on('connect', () => {
@@ -86,6 +88,8 @@ $(() => {
     }
 
     async function makeCall(targetUsername) {
+        targetPeople = targetUsername;
+
         await createPeerConnection(targetUsername);
 
         // // Create an SDP offer
@@ -108,7 +112,7 @@ $(() => {
             console.log(`offer`, offer);
             await peerConnection.setLocalDescription(offer);
 
-        // Send the offer to the other peer
+            // Send the offer to the other peer
             socket.emit('offer', peerConnection.localDescription, targetUsername);
         } catch (error) {
             console.error('Error creating offer:', error);
@@ -117,14 +121,25 @@ $(() => {
 
     // Handle the "Start Call" button click event
     startCallButton.on('click', async () => {
-        targetUsername = prompt('enter partner name:');
-        await makeCall(targetUsername);
+        targetPeople = prompt('enter partner name:');
+        await makeCall(targetPeople);
     });
 
     // Handle the "End Call" button click event
     endCallButton.on('click', () => {
         if (peerConnection) {
             peerConnection.close();
+            peerConnection = null;
+            remoteVideo.srcObject = null;
+            socket.emit('end-call', targetPeople);
+        }
+    });
+
+    socket.on('end-call', (targetUserId) => {
+        console.log(`end-call: => ${targetUserId}`);
+        if (peerConnection) {
+            peerConnection.close();
+            peerConnection = null;
             remoteVideo.srcObject = null;
         }
     });
@@ -142,8 +157,12 @@ $(() => {
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
 
-            // Send the answer to the other peer
-            socket.emit('answer', peerConnection.localDescription, callerUsername);
+            if (!isAlreadyCalling) {
+                isAlreadyCalling = true;
+
+                // Send the answer to the other peer
+                socket.emit('answer', peerConnection.localDescription, callerUsername);
+            }
         } catch (error) {
             console.error('Error handling offer:', error);
         }
@@ -162,22 +181,18 @@ $(() => {
     });
 
     // Handle incoming ICE candidates from the other peer
-    socket.on('ice-candidate', (candidate) => {
+    socket.on('ice-candidate', async (candidate) => {
         console.log(`🚀 candidate`, candidate);
         if (peerConnection) {
-            // Add the ICE candidate to the peer connection
-            peerConnection.addIceCandidate(candidate);
+            // Check if the remote description is set
+            if (peerConnection.remoteDescription) {
+                // Add the ICE candidate to the peer connection
+                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+                console.log('Remote description is not set.');
+            }
         } else {
             console.log('peerConnection is undefined or null.');
-        }
-    });
-
-    // Event handler for the "Submit Name" button click event
-    submitNameButton.on('click', () => {
-        const userName = userNameInput.val().trim();
-        if (userName !== '') {
-            socket.emit('set-username', userName);
-            userNameInput.parent().hide();
         }
     });
 
@@ -195,7 +210,6 @@ $(() => {
     btnLoadActiveList.on('click', () => {
         socket.emit('get-active-list');
     });
-
 
     // Function to remove active users
     function removeActiveUsers(data) {
@@ -246,4 +260,71 @@ $(() => {
     socket.on('remove-active', removeActiveUsers);
     socket.on('new-active', addNewActiveUsers);
     socket.on('active-list', updateActiveList);
+});
+
+
+
+/* eslint-disable no-undef */
+
+let username = 'Anonymous';
+
+function displayMessage(message, sender, timeSent, isMe = false) {
+    $('#chatBox').append(`
+        <div class="p-3 my-2 rounded bg-${isMe ? 'info' : 'light'} text-${isMe ? 'white' : 'dark'} border">
+            <strong>${sender}</strong>
+            <p class="mb-0">${message}</p>
+            <small>${timeSent}</small>
+        </div>
+    `);
+
+    $('#chatInput').val(isMe ? '' : $('#chatInput').val());
+
+    $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+}
+
+$(() => {
+
+    $.ajax({
+        url: '/api/current-user',
+        method: 'GET',
+        success: function (data) {
+            console.log(`🚀 🚀 file: index-chat.js:7 🚀 data`, data);
+            showToast('success', 'User info loaded');
+
+            username = data.username;
+            socket.emit('set-username', data.username);
+            $('#yourLocalName').text(`Name: ${data.username}`);
+        },
+        error: function (error) {
+            console.log(`🚀 🚀 file: index-chat.js:10 🚀 error`, error);
+            showToast('error', error.responseJSON?.message || 'Error loading user info');
+        }
+    });
+
+    socket.on('chat-message', (data) => {
+        displayMessage(data.message, data.sender, data.timeSent);
+    });
+
+    function sendMessage() {
+        const message = $('#chatInput').val();
+        const sender = username;
+        const timeSent = new Date().toLocaleTimeString();
+
+        socket.emit('chat-message', {
+            message,
+            sender,
+            timeSent
+        });
+
+        displayMessage(message, sender, timeSent, true);
+    }
+
+    $('#sendButton').on('click', sendMessage);
+
+    $('#chatInput').on('keypress', function (e) {
+        if (e.which == 13) {
+            sendMessage();
+            e.preventDefault();
+        }
+    });
 });
