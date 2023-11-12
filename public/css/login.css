@@ -207,3 +207,38 @@ body{
 .container.active .toggle-right{
     transform: translateX(200%);
 }
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
+
+    .sign-in,
+    .sign-up {
+        width: 100%;
+    }
+
+    .toggle-container {
+        display: none;
+    }
+
+    .container.active .toggle-container {
+        transform: translateX(0);
+        border-radius: 0;
+    }
+
+    .form-container {
+        position: static;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .sign-up {
+        opacity: 1;
+        z-index: 5;
+        animation: none; /* Remove the animation on smaller screens */
+    }
+    .container input {
+        margin: 12px 0; /* Adjust the top and bottom margin for more space between lines */
+        padding: 15px 15px; /* Adjust the padding for more space inside the input fields */
+    }
+}
