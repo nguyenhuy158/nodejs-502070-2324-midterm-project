@@ -20,7 +20,7 @@ const listActiveList = $('#active-list');
 let id;
 let localStream;
 let peerConnection;
-let targetSocketId;
+let targetUsername;
 const socket = io();
 
 $(() => {
@@ -51,17 +51,16 @@ $(() => {
     btnLoadLocalSteam.trigger('click');
 
     // Create a new WebRTC peer connection
-    async function createPeerConnection() {
+    async function createPeerConnection(targetUsername) {
         var peerConfiguration = {};
 
-        await (async () => {
-            const response = await fetch(
-                'https://callmate.metered.live/api/v1/turn/credentials?apiKey=3bf717e4817d41a4378051971e5079829755',
-            );
-            const iceServers = await response.json();
-            peerConfiguration.iceServers = iceServers;
-            console.log(`🚀 🚀 file: index.js:57 🚀 await 🚀 peerConfiguration.iceServers`, peerConfiguration.iceServers);
-        })();
+        const response = await fetch(
+            'https://callmate.metered.live/api/v1/turn/credentials?apiKey=3bf717e4817d41a4378051971e5079829755',
+        );
+        const iceServers = await response.json();
+        peerConfiguration.iceServers = iceServers;
+        console.log(`peerConfiguration.iceServers`, peerConfiguration.iceServers);
+
 
         peerConnection = new RTCPeerConnection(peerConfiguration);
         console.log(`🚀 🚀 file: index.ejs:88 🚀 createPeerConnection 🚀 peerConnection`, peerConnection);
@@ -78,35 +77,48 @@ $(() => {
 
         // Handle ICE candidate events by sending them to the other peer
         peerConnection.onicecandidate = (event) => {
+            console.log(`🚀 event`, event);
+            console.log(`🚀 event.candidate`, event.candidate);
             if (event.candidate) {
-                socket.emit('ice-candidate', event.candidate, targetSocketId);
+                socket.emit('ice-candidate', event.candidate, targetUsername);
             }
         };
     }
 
-    async function makeCall(targetSocketId) {
-        await createPeerConnection();
+    async function makeCall(targetUsername) {
+        await createPeerConnection(targetUsername);
 
+        // // Create an SDP offer
+        // peerConnection
+        //     .createOffer()
+        //     .then((offer) => {
+        //         console.log(`offer`, offer);
+        //         return peerConnection.setLocalDescription(offer);
+        //     })
+        //     .then(() => {
+        //         // Send the offer to the other peer
+        //         socket.emit('offer', peerConnection.localDescription, targetUsername);
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error creating offer:', error);
+        //     });
         // Create an SDP offer
-        peerConnection
-            .createOffer()
-            .then((offer) => {
-                console.log(`🚀 🚀 file: index.js:107 🚀 .then 🚀 offer`, offer);
-                return peerConnection.setLocalDescription(offer);
-            })
-            .then(() => {
-                // Send the offer to the other peer
-                socket.emit('offer', peerConnection.localDescription, targetSocketId);
-            })
-            .catch((error) => {
-                console.error('Error creating offer:', error);
-            });
+        try {
+            const offer = await peerConnection.createOffer();
+            console.log(`offer`, offer);
+            await peerConnection.setLocalDescription(offer);
+
+        // Send the offer to the other peer
+            socket.emit('offer', peerConnection.localDescription, targetUsername);
+        } catch (error) {
+            console.error('Error creating offer:', error);
+        }
     }
 
     // Handle the "Start Call" button click event
     startCallButton.on('click', async () => {
-        targetSocketId = prompt('enter partner name:');
-        await makeCall(targetSocketId);
+        targetUsername = prompt('enter partner name:');
+        await makeCall(targetUsername);
     });
 
     // Handle the "End Call" button click event
@@ -118,12 +130,12 @@ $(() => {
     });
 
     // Handle incoming offers from the other peer
-    socket.on('offer', async (offer, sourceSocketId) => {
-        console.log(`🚀 🚀 file: index.js:129 🚀 socket.on 🚀 sourceSocketId`, sourceSocketId);
-        console.log(`🚀 🚀 file: index.js:144 🚀 socket.on 🚀 offer`, offer);
+    socket.on('offer', async (offer, callerUsername) => {
+        console.log(`🚀 sourceSocketId`, callerUsername);
+        console.log(`🚀 offer`, offer);
         try {
             // Create a peer connection
-            await createPeerConnection();
+            await createPeerConnection(callerUsername);
 
             // Set the remote description and create an answer
             await peerConnection.setRemoteDescription(offer);
@@ -131,15 +143,16 @@ $(() => {
             await peerConnection.setLocalDescription(answer);
 
             // Send the answer to the other peer
-            socket.emit('answer', peerConnection.localDescription, sourceSocketId);
+            socket.emit('answer', peerConnection.localDescription, callerUsername);
         } catch (error) {
             console.error('Error handling offer:', error);
         }
     });
 
     // Handle incoming answers from the other peer
-    socket.on('answer', async (answer) => {
-        console.log(`🚀 🚀 file: index.js:156 🚀 socket.on 🚀 answer`, answer);
+    socket.on('answer', async (answer, targetUsername) => {
+        console.log(`🚀 targetUsername`, targetUsername);
+        console.log(`🚀 answer`, answer);
         try {
             // Set the remote description
             await peerConnection.setRemoteDescription(answer);
@@ -150,8 +163,13 @@ $(() => {
 
     // Handle incoming ICE candidates from the other peer
     socket.on('ice-candidate', (candidate) => {
-        // Add the ICE candidate to the peer connection
-        peerConnection.addIceCandidate(candidate);
+        console.log(`🚀 candidate`, candidate);
+        if (peerConnection) {
+            // Add the ICE candidate to the peer connection
+            peerConnection.addIceCandidate(candidate);
+        } else {
+            console.log('peerConnection is undefined or null.');
+        }
     });
 
     // Event handler for the "Submit Name" button click event
@@ -181,7 +199,7 @@ $(() => {
 
     // Function to remove active users
     function removeActiveUsers(data) {
-        console.log(`🚀 🚀 file: index.js:183 🚀 socket.on 🚀 data`, data);
+        console.log(`🚀 data`, data);
         $.each(data, function (key) {
             let li = listActiveList.find('li').filter(function () {
                 return $(this).text().trim() === key;
@@ -192,7 +210,7 @@ $(() => {
 
     // Function to add new active users
     function addNewActiveUsers(data) {
-        console.log(`🚀 🚀 file: index.js:183 🚀 socket.on 🚀 data`, data);
+        console.log(`🚀 data`, data);
         $.each(data, function (key, value) {
             const li = $(`<li class="list-group-item text-truncate btn-call" role="button" data-id=${value}>`).text(`${key}`);
             listActiveList.append(li);
@@ -203,7 +221,7 @@ $(() => {
 
     // Function to update the active user list
     function updateActiveList(data) {
-        console.log(`🚀 🚀 file: index.js:189 🚀 socket.on 🚀 data`, data);
+        console.log(`🚀 data`, data);
         listActiveList.empty();
 
         $.each(data, function (key, value) {

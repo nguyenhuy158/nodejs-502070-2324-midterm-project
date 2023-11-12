@@ -75,23 +75,30 @@ io.on("connection", (socket) => {
         socket.emit("active-list", objCopy);
     });
 
-    socket.on("offer", (offer, targetUserId) => {
-        console.log(`offer: ${userId} => ${targetUserId}`);
-        const targetSocketId = users[targetUserId];
+    socket.on("offer", (offer, targetUserName) => {
+        console.log(`offer: ${userId} => ${targetUserName}`);
+        const targetSocketId = users[targetUserName];
+
+        console.log(`targetSocketId`, targetSocketId);
+        console.log(`userId`, userId);
+
         if (targetSocketId) {
-            io.to(targetSocketId)
+            socket.to(targetSocketId)
                 .emit("offer", offer, userId);
         } else {
-            socket.emit("user-not-found", targetUserId);
+            socket.emit("user-not-found", targetUserName);
         }
     });
 
     socket.on("answer", (answer, targetUserId) => {
         console.log(`answer: ${userId} => ${targetUserId}`);
-
         const targetSocketId = users[targetUserId];
+
+        console.log(`targetSocketId`, targetSocketId);
+        console.log(`userId`, userId);
+
         if (targetSocketId) {
-            io.to(targetSocketId)
+            socket.to(targetSocketId)
                 .emit("answer", answer, userId);
         } else {
             socket.emit("user-not-found", targetUserId);
