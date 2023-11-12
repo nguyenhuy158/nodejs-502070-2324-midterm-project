@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 
+let username = 'Anonymous';
+
 function displayMessage(message, sender, timeSent, isMe = false) {
     $('#chatBox').append(`
-        <div class="p-3 my-2 rounded bg-light border">
+        <div class="p-3 my-2 rounded bg-${isMe ? 'info' : 'light'} text-${isMe ? 'white' : 'dark'} border">
             <strong>${sender}</strong>
             <p class="mb-0">${message}</p>
             <small>${timeSent}</small>
@@ -13,6 +15,7 @@ function displayMessage(message, sender, timeSent, isMe = false) {
 
     $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
 }
+
 $(() => {
 
     $.ajax({
@@ -22,6 +25,7 @@ $(() => {
             console.log(`🚀 🚀 file: index-chat.js:7 🚀 data`, data);
             showToast('success', 'User info loaded');
 
+            username = data.username;
             socket.emit('set-username', data.username);
             $('#yourLocalName').text(`Name: ${data.username}`);
         },
@@ -37,7 +41,7 @@ $(() => {
 
     function sendMessage() {
         const message = $('#chatInput').val();
-        const sender = 'Your Name';
+        const sender = username;
         const timeSent = new Date().toLocaleTimeString();
 
         socket.emit('chat-message', {
