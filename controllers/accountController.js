@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const { generateToken, sendEmail } = require('../utils/utils');
-const moment = require('morgan')
+const moment = require('morgan');
 
 const { query, body, param, validationResult } = require("express-validator");
 
@@ -16,30 +16,21 @@ async function createAccount(name, email, password) {
 
 exports.postRegister = async (req, res) => {
     const result = validationResult(req);
-    // console.log(`=>(AccountRouter.js:99) result`, result);
-    // console.log(`=>(AccountRouter.js:99) result.errors.length`, result.errors.length);
 
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
-    let passwordConfirmation = req.body.passwordConfirmation;
     if (result.errors.length === 0) {
-
         const savedUser = await createAccount(name, email, password);
-        // console.log("🚀 ~ file: index.js:50 ~ router.post ~ savedUser:", savedUser);
         if (savedUser) {
-            return res.redirect("/login");
+            return res.json({ error: false, message: 'User created successfully' });
+        } else {
+            return res.json({ error: true, message: 'User creation failed' });
         }
     } else {
-        // console.log(`=>(AccountRouter.js:123) result.errors[0]`, result.errors[0]);
-        return res.render("register", {
-            ...{
-                name,
-                email,
-                password,
-                passwordConfirmation
-            },
-            error: result.errors[0].msg
+        return res.json({
+            error: true,
+            message: result.errors[0].msg
         });
     }
 };
