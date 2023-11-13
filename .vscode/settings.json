@@ -1,10 +1,5 @@
 {
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact"
-    ],
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
     "editor.rulers": [
         {
             "column": 4,
@@ -17,7 +12,7 @@
         {
             "column": 100,
             "color": "#d128b2"
-        },
+        }
     ],
     "editor.guides.bracketPairs": true,
     "editor.renderWhitespace": "all",
@@ -37,14 +32,12 @@
         "*.lock": true,
         "setting.json": true
     },
-    "auto-rename-tag.activationOnLanguage": [
-        "*"
-    ],
+    "auto-rename-tag.activationOnLanguage": ["*"],
     "html2pug": {
         "tabs": false,
         "fragment": true,
         "doubleQuotes": true,
-        "commas": true,
+        "commas": true
     },
     "advancedNewFile.exclude": {
         "node_modules": true,
@@ -54,11 +47,7 @@
         "dev": true,
         "dist": true
     },
-    "advancedNewFile.convenienceOptions": [
-        "last",
-        "current",
-        "root"
-    ],
+    "advancedNewFile.convenienceOptions": ["last", "current", "root"],
     "git-graph.defaultColumnVisibility": {
         "Date": true,
         "Author": true,
@@ -240,7 +229,7 @@
     "window.titleSeparator": "👻",
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.location": "top",
-    "workbench.colorTheme": "Default Light Modern",
+    "workbench.colorTheme": "Dracula Soft",
     "workbench.editor.enablePreview": true,
     "workbench.editor.pinnedTabsOnSeparateRow": true,
     "workbench.editor.restoreViewState": false,
@@ -267,7 +256,7 @@
     },
     "[html]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
+    }
     // "editor.defaultFormatter": "GitHub.copilot",
     // "editor.defaultFoldingRangeProvider": "GitHub.copilot",
     // "editor.cursorBlinking": "smooth",

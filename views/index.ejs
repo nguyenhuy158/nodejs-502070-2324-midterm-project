@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Real-Time Caller</title>
+        <title>CallMate</title>
 
         <%-include('./partials/head.ejs')%>
 
@@ -11,11 +11,15 @@
 
     <body>
         <%- include('./flash.ejs') %>
-
-        <div class="container text-center my-4">
-            <h1>CallMate Caller</h1>
+        <header>
+            <img src="callmate-logo.png" alt="CallMate Logo">
+            <h1>CallMate</h1>
             <h6 id="yourUserIdContainer"></h6>
-        </div>
+        </header>
+        <!-- <div class="container text-center my-4">
+            <h1>CallMate</h1>
+            <h6 id="yourUserIdContainer"></h6>
+        </div> -->
 
         <div id="offlineMessage" class="text-center h3">Please connect to the internet to use this website.</div>
 
@@ -90,7 +94,7 @@
                 </div>
 
                 <!-- chat form -->
-                <div class="col-3">
+                <div class="col-3" id="chat-form-container">
                     <div class="card">
                         <div class="card-body">
                             <div id="chatBox" class="no-scrollbar" style="height: 320px; overflow-y: scroll">
