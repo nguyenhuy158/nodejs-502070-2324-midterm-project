@@ -55,6 +55,7 @@ navbar .logo {
     padding: 0 120px;
     margin-top: 80px;
     width: 100%;
+    align-items: center;
 }
 
 .main .create-join {
@@ -144,16 +145,35 @@ navbar .logo {
     border-bottom: 3px solid #d31c1c;
 }
 
-.main .create-join .joinroom {
-    margin-top: 30px;
-    width: 100%;
-    text-align: right;
+.main .create-join .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 20px;
     font-size: 22px;
-    font-weight: bold;
-    color: #232931;
+        font-weight: bold;
+            color: #232931;
+    justify-content: flex-end;
+    }
+    
+    .main .create-join .row .joinroom {
+        width: fit-content;
+        padding: 10px 20px;
+    }
+    
+    .main .create-join .row .logout {
+        display: flex;
+        flex-wrap: nowrap;
+        width: fit-content;
+        color: #232931;
+        padding: 10px 20px;
+        font-size: 22px;
+        text-decoration: none;
+        font-weight: bold;
 }
 
-.main .create-join .joinroom:hover {
+.main .create-join .joinroom:hover,
+.main .create-join .logout:hover {
     cursor: pointer;
     text-decoration: underline;
     color: #c088da;
