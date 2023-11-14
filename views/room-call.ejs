@@ -5,17 +5,17 @@
 
         <%-include('./partials/head.ejs')%>
 
-        <link rel="stylesheet" href="/css/index.css" />
+        <link rel="stylesheet" href="/css/room-call.css" />
         <script src="/js/toast.js"></script>
     </head>
 
     <body>
         <%- include('./flash.ejs') %>
-        <header>
+        <!-- <header>
             <img src="/callmate-logo.png" alt="CallMate Logo">
             <h1>CallMate</h1>
             <h6 id="yourUserIdContainer"></h6>
-        </header>
+        </header> -->
         <!-- <div class="container text-center my-4">
             <h1>CallMate</h1>
             <h6 id="yourUserIdContainer"></h6>
@@ -41,7 +41,7 @@
                         </form> -->
 
                         <!-- add select dropdown bootstrap select feature -->
-                        <div class="dropdown w-100">
+                        <!-- <div class="dropdown w-100">
                             <button
                                 class="btn btn-primary dropdown-toggle w-100"
                                 type="button"
@@ -56,7 +56,7 @@
                                 <li><a class="dropdown-item" href="#">Feature coming ...</a></li>
                                 <li><a class="dropdown-item" href="#">Feature coming ...</a></li>
                             </ul>
-                        </div>
+                        </div> -->
 
                         <button class="btn btn-primary" id="load-local-stream">Load stream</button>
                         <button class="btn btn-primary" id="load-active-list">Reload user active</button>
@@ -141,7 +141,7 @@
         </footer>
 
         <script>
-            const roomName = "<%= roomName %>";
+            const roomName = '<%= roomName %>'
         </script>
         <!-- Include the WebRTC adapter and socket.io library -->
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
