@@ -40,11 +40,7 @@ createButton.addEventListener('click', (e) => {
     }, 500);
 
     //const name = nameField.value;
-<<<<<<< Updated upstream
     location.href = `/room/${uuidv4()}`;
-=======
-    location.href = `/room-call` + `?room=${uuidv4()}`;
->>>>>>> Stashed changes
 });
 
 joinBut.addEventListener('click', (e) => {
@@ -54,11 +50,7 @@ joinBut.addEventListener('click', (e) => {
         return;
     }
     const code = codeCont.value;
-<<<<<<< Updated upstream
     location.href = `/room/${code}`;
-=======
-    location.href = `/room-call` + `?room=${code}`;
->>>>>>> Stashed changes
 });
 
 codeCont.addEventListener('change', (e) => {
