@@ -41,10 +41,7 @@ connectDb();
 app.use(logRequestDetails);
 app.use(indexRouter);
 
-app.get('/room/:roomName', (req, res) => {
-    const roomName = req.params.roomName;
-    res.render('room', { roomName });
-});
+
 
 io.on("connection", (socket) => {
 
