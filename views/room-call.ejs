@@ -10,9 +10,9 @@
     </head>
 
     <body>
-        <%- include('./flash.ejs') %>0
+        <%- include('./flash.ejs') %>
         <header>
-            <img src="callmate-logo.png" alt="CallMate Logo">
+            <img src="/callmate-logo.png" alt="CallMate Logo">
             <h1>CallMate</h1>
             <h6 id="yourUserIdContainer"></h6>
         </header>
@@ -140,6 +140,9 @@
             </div>
         </footer>
 
+        <script>
+            const roomName = "<%= roomName %>";
+        </script>
         <!-- Include the WebRTC adapter and socket.io library -->
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="/socket.io/socket.io.js"></script>

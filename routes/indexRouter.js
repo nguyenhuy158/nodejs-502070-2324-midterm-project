@@ -7,10 +7,7 @@ const indexController = require('../controllers/indexController');
 
 router.use('', accountRouter);
 router.get("/", indexController.isLoggedIn, indexController.home);
-router.get('/room/:roomName', (req, res) => {
-    const roomName = req.params.roomName;
-    res.render('room-call', { roomName });
-});
+router.get('/room/:roomName', indexController.isLoggedIn, indexController.room);
 router.use(/^\/(api|rest)/, indexController.isLoggedIn, apiRouter);
 
 // error handlers middleware

@@ -67,15 +67,24 @@ io.on("connection", (socket) => {
         socket.emit('active-list', otherUser);
     });
 
-    socket.on("get-active-list", () => {
-        console.log(`get-active-list: ${userId}`);
-        const objCopy = { ...users };
+    socket.on("get-active-list", (roomName = '') => {
+        try {
+            console.log(`get-active-list: ${userId}`);
+            const usersInRoom = getUsersInRoom(roomName);
+            console.log(`usersInRoom`, usersInRoom);
 
-        if (objCopy.hasOwnProperty(userId)) {
-            delete objCopy[userId];
+            const objCopy = { ...usersInRoom };
+
+            if (objCopy.hasOwnProperty(userId)) {
+                delete objCopy[userId];
+            }
+
+            socket.emit("active-list", objCopy);
+        } catch (error) {
+            console.error(`Error in get-active-list: ${error}`);
+            // You can also emit an error event to the client
+            socket.emit("error", { message: 'An error occurred in get-active-list' });
         }
-
-        socket.emit("active-list", objCopy);
     });
 
     socket.on("offer", (offer, targetUserName) => {
@@ -155,8 +164,37 @@ io.on("connection", (socket) => {
         // Redirect the user to the 'room-call.ejs' page
         socket.emit('redirectToRoom', '/room');
     });
-});
 
+    socket.on('join', (room) => {
+        socket.join(room);
+        socket.to(room).emit('userJoined', socket.id);
+    });
+
+    function getUsersInRoom(room) {
+        console.log(`🚀 🚀 file: app.js:168 🚀 getUsersInRoom 🚀 room`, room);
+        console.log(`🚀 🚀 file: app.js:170 🚀 getUsersInRoom 🚀 io.sockets.adapter.rooms`, io.sockets.adapter.rooms);
+        let socketsInRoom = io.sockets.adapter.rooms.get(room);
+        console.log(`🚀 🚀 file: app.js:171 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
+        console.log(`🚀 🚀 file: app.js:173 🚀 getUsersInRoom 🚀 users`, users);
+        if (!socketsInRoom) {
+            return [];
+        }
+
+        socketsInRoom = Array.from(socketsInRoom);
+        console.log(`🚀 🚀 file: app.js:178 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
+        console.log(`🚀 🚀 file: app.js:181 🚀 getUsersInRoom 🚀 users`, users);
+
+        const filteredUsers = Object.fromEntries(
+            Object.entries(users).filter(([key, value]) => {
+                return socketsInRoom.includes(value);
+            })
+        );
+
+        console.log(filteredUsers);
+
+        return filteredUsers;
+    }
+});
 
 
 instrument(io, {

@@ -57,6 +57,11 @@ exports.home = async (req, res) => {
     // });
 };
 
+exports.room = (req, res) => {
+    const roomName = req.params.roomName;
+    res.render('room-call', { roomName });
+};
+
 exports.about = (req, res) => {
     res.render("pages/about", { navLink: "About" });
 };

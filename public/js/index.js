@@ -33,8 +33,11 @@ $(() => {
         yourUserIdContainer.text(`Your User ID: ${socket.id}`);
         id = socket.id;
     });
-
     $('#offlineMessage').hide();
+
+    console.log(`🚀 🚀 file: index.js:39 🚀 roomName`, roomName);
+    socket.emit('join', roomName);
+
 
     // Handle the "Load Local Stream" button click event
     btnLoadLocalSteam.on('click', async function requestUserMedia() {
@@ -208,7 +211,7 @@ $(() => {
     });
 
     btnLoadActiveList.on('click', () => {
-        socket.emit('get-active-list');
+        socket.emit('get-active-list', roomName);
     });
 
     // Function to remove active users
@@ -269,6 +272,12 @@ $(() => {
 
     socket.on('redirectToRoom', (url) => {
         window.location.href = url;
+    });
+
+    socket.on("error", (error) => {
+        console.error(`Error received from client: ${error.message}`);
+        // Handle the error here
+        toastr.error(`Error received from client: ${error.message}`);
     });
 });
 
