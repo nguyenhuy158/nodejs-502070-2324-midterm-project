@@ -233,7 +233,6 @@
     "workbench.editor.enablePreview": true,
     "workbench.editor.pinnedTabsOnSeparateRow": true,
     "workbench.editor.restoreViewState": false,
-    "workbench.editor.showTabs": "multiple",
     "workbench.hover.delay": 10,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.settings.openDefaultKeybindings": false,

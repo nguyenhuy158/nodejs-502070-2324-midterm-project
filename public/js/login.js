@@ -29,10 +29,10 @@ $(() => {
 			success: (result) => {
 				console.log(`🚀 result`, result);
 				console.log(`🚀 result.message`, result.message);
-				showToast(result.error, result.message);
 				if (!result.error) {
 					e.target.reset();
 				}
+
 			},
 			error: (error) => {
 				console.log(`🚀 🚀 file: login.js:38 🚀 error`, error);

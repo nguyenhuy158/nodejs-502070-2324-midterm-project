@@ -1,8 +1,15 @@
-const {body} = require("express-validator");
+const { body } = require("express-validator");
 const User = require("../models/user");
 
 module.exports = {
-	postForgetPassword: [],
+	postForgetPassword: [
+		body('email')
+			.trim()
+			.notEmpty()
+			.withMessage('Email cannot be empty!')
+			.isEmail()
+			.withMessage('Not a valid e-mail address')
+	],
 	postLogin: [
 		body('email')
 			.trim()
