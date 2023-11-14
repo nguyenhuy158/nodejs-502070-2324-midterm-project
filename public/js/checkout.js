@@ -20,7 +20,7 @@ function loadInfoCart() {
         type: 'GET',
         success: (response) => {
             console.log(`🚀 🚀 file: 🚀 response`, response.cart);
-            showToast('success', response.message);
+            toastr.success(response.message);
 
             if (response.cart?.products) {
                 response.cart?.products.forEach(p => {
@@ -39,7 +39,7 @@ function loadInfoCart() {
         },
         error: (error) => {
             console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
-            showToast('error', error.responseJSON?.message);
+            toastr.error(error.responseJSON?.message);
         }
     });
 }
@@ -50,7 +50,7 @@ function loadInfoCustomer() {
     const validPhoneNumberPattern = /^0\d{9}$/;
 
     if (!validPhoneNumberPattern.test(phone)) {
-        showToast('error', 'Invalid phone number format');
+        toastr.error('Invalid phone number format');
         return;
     }
 
@@ -61,16 +61,16 @@ function loadInfoCustomer() {
             const customer = response.customer;
 
             if (customer) {
-                showToast('success', response.message);
+                toastr.success(response.message);
 
                 $(`input[name="fullName"]`).val(customer.fullName);
                 $(`input[name="address"]`).val(customer.address);
             } else {
-                showToast('error', response.message);
+                toastr.error(response.message);
             }
         },
         error: function (error) {
-            showToast('error', error.responseJSON?.message);
+            toastr.error(error.responseJSON?.message);
         }
     });
 }
@@ -88,11 +88,11 @@ $(() => {
             },
             success: (response) => {
                 console.log(`🚀 🚀 file: 🚀 response`, response);
-                showToast('success', response.message);
+                toastr.success(response.message);
             },
             error: (error) => {
                 console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
-                showToast('error', error.responseJSON?.message);
+                toastr.error(error.responseJSON?.message);
             }
         });
     });

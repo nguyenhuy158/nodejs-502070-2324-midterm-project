@@ -173,10 +173,14 @@ exports.emailConfirm = async (req, res) => {
 
             // Set the user in the session
             req.session.user = salesperson;
+            req.session.loggedin = true;
+            req.session.email = salesperson.email;
+            req.session.username = salesperson.username;
 
             salesperson.token = undefined;
             salesperson.tokenExpiration = undefined;
             await salesperson.save();
+
             return res.json({
                 error: false,
                 message: 'Welcome Now you are salespeople.'

@@ -33,7 +33,7 @@ function assignEditEvent() {
             },
             error: function (error) {
                 console.log("Error:", error);
-                showToast("error", error);
+                toastr.error(error);
             }
         });
 
@@ -46,13 +46,13 @@ function assignEditEvent() {
                 type: "PUT",
                 data: formDataToJson(formData),
                 success: function (data) {
-                    showToast("success", 'Updated successfully');
+                    toastr.success('Updated successfully');
                     reloadTable();
                     editModal.modal("hide");
                 },
                 error: function (error) {
                     console.log("Error:", error);
-                    showToast("success", error);
+                    toastr.success(error);
                 }
             });
         });
@@ -82,11 +82,11 @@ function assignDeleteEvent() {
                     url: `/api/products/${productId}`,
                     type: 'DELETE',
                     success: (data) => {
-                        showToast("success", 'Deleted successfully');
+                        toastr.success('Deleted successfully');
                         reloadTable();
                     },
                     error: (error) => {
-                        showToast("error", "Delete fail! please try again!");
+                        toastr.error("Delete fail! please try again!");
                     }
                 }
             );

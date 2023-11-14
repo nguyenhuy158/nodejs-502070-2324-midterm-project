@@ -26,12 +26,19 @@
     $(() => {
         // Check for a notification in session storage
         const notification = sessionStorage.getItem('notification')
+        const notificationType = sessionStorage.getItem('notificationType')
 
         if (notification) {
             // Display the notification
-            toastr.success(notification)
-            // Remove the notification from session storage
+            if (notificationType === 'success') {
+                toastr.success(notification)
+            } else if (notificationType === 'error') {
+                toastr.error(notification)
+            }
+
+            // Remove the notification and type from session storage
             sessionStorage.removeItem('notification')
+            sessionStorage.removeItem('notificationType')
         }
     })
 </script>

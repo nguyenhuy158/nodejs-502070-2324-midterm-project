@@ -10,20 +10,23 @@ $(() => {
             type: 'POST',
             success: function (response) {
                 if (response.error) {
-                    // Store the message in session storage
+                    // Store the message and type in session storage
                     sessionStorage.setItem('notification', response.message);
+                    sessionStorage.setItem('notificationType', 'error');
                     // Redirect to /login
                     window.location.href = '/login';
                 } else {
-                    // Store the message in session storage
+                    // Store the message and type in session storage
                     sessionStorage.setItem('notification', response.message);
+                    sessionStorage.setItem('notificationType', 'success');
                     // Redirect to /
                     window.location.href = '/';
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                // Store the error message in session storage
+                // Store the error message and type in session storage
                 sessionStorage.setItem('notification', errorThrown.responseJSON?.message);
+                sessionStorage.setItem('notificationType', 'error');
                 // Redirect to /login
                 window.location.href = '/login';
             }

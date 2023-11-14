@@ -36,7 +36,7 @@ $(() => {
 			},
 			error: (error) => {
 				console.log(`🚀 🚀 file: login.js:38 🚀 error`, error);
-				showToast(error.responseJSON?.error, error.responseJSON?.message);
+				toastr.error(error.responseJSON?.message);
 			}
 		});
 	});
@@ -57,7 +57,7 @@ $(() => {
 			success: function (result) {
 				console.log(`Result:`, result);
 				console.log(`Message:`, result.message);
-				showToast(result.error, result.message);
+				toastr.success(result.message);
 				if (!result.error) {
 					e.target.reset();
 					// Redirect to another page after successful login
@@ -67,7 +67,7 @@ $(() => {
 			error: function (xhr, status, error) {
 				// Handle any errors here
 				console.log(`Error: ${error}`);
-				showToast(true, error);
+				toastr.error(error);
 			}
 		});
 	});

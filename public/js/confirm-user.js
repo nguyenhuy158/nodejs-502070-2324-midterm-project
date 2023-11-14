@@ -31,14 +31,14 @@ function handleLockUnlock(button, isLock) {
                     console.log(`🚀 ------------------------------------------------------🚀`);
                     console.log(`🚀 🚀 file: 🚀 response`, response);
                     console.log(`🚀 ------------------------------------------------------🚀`);
-                    showToast('success', response.message);
+                    toastr.success(response.message);
                     reloadTable();
                 },
                 error: (error) => {
                     console.log(`🚀 ------------------------------------------------🚀`);
                     console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
                     console.log(`🚀 ------------------------------------------------🚀`);
-                    showToast('error', error.responseJSON?.message);
+                    toastr.error(error.responseJSON?.message);
                 }
             });
         });
@@ -84,14 +84,14 @@ function assignResentEmailEvent() {
                     console.log(`🚀 ------------------------------------------------------🚀`);
                     console.log(`🚀 🚀 file: 🚀 response`, response);
                     console.log(`🚀 ------------------------------------------------------🚀`);
-                    showToast('success', response.message);
+                    toastr.success(response.message);
                     reloadTable();
                 },
                 error: (error) => {
                     console.log(`🚀 ------------------------------------------------🚀`);
                     console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
                     console.log(`🚀 ------------------------------------------------🚀`);
-                    showToast('error', error.responseJSON?.message);
+                    toastr.error(error.responseJSON?.message);
                 }
             });
         });
@@ -129,14 +129,14 @@ function assignDeleteEvent() {
                     console.log(`🚀 ------------------------------------------------------🚀`);
                     console.log(`🚀 🚀 file: 🚀 response`, response);
                     console.log(`🚀 ------------------------------------------------------🚀`);
-                    showToast('success', response.message);
+                    toastr.success(response.message);
                     reloadTable();
                 },
                 error: (error) => {
                     console.log(`🚀 ------------------------------------------------🚀`);
                     console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
                     console.log(`🚀 ------------------------------------------------🚀`);
-                    showToast('error', error.responseJSON?.message);
+                    toastr.error(error.responseJSON?.message);
                 }
             });
         });
