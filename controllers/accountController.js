@@ -68,6 +68,27 @@ exports.getLogout = (req, res) => {
     });
 };
 
+exports.getChangepassword = (req, res) => {
+    res.render("reset-password");
+};
+
+exports.postChangepassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const user = await User.findById(req.session.user._id);
+        console.log(`🚀 🚀 file: accountController.js:79 🚀 exports.postChangepassword= 🚀 user`, user);
+
+        user.password = password;
+        user.isPasswordReset = false;
+        await user.save();
+        req.session.user = user;
+        res.json({ error: false, message: 'Password updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: true, message: 'An error occurred while updating the password' });
+    }
+};
+
 exports.getLogoutSuccess = (req, res) => {
     res.render("logout");
 };
