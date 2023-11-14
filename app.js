@@ -144,6 +144,14 @@ io.on("connection", (socket) => {
             socket.emit("user-not-found", data);
         }
     });
+
+    // Join a room
+    socket.on('createRoom', (roomName) => {
+        socket.join(roomName);
+        console.log(`User joined room: ${roomName}`);
+        // Redirect the user to the 'room-call.ejs' page
+        socket.emit('redirectToRoom', '/room-call.ejs');
+    });
 });
 
 

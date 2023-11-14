@@ -4,7 +4,7 @@
         "dev": "nodemon app.js"
     },
     "nodemonConfig": {
-        "verbose": true,
+        "verbose": false,
         "ext": "js, json",
         "ignore": [
             "public/js/**"

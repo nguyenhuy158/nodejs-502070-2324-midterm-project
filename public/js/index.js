@@ -260,6 +260,16 @@ $(() => {
     socket.on('remove-active', removeActiveUsers);
     socket.on('new-active', addNewActiveUsers);
     socket.on('active-list', updateActiveList);
+
+
+    $('#createroom').on('click', () => {
+        const roomName = 'myRoom';
+        socket.emit('createRoom', roomName);
+    });
+
+    socket.on('redirectToRoom', (url) => {
+        window.location.href = url;
+    });
 });
 
 
