@@ -37,37 +37,26 @@ exports.postRegister = async (req, res) => {
 
 exports.postLogin = async (req, res) => {
     const result = validationResult(req);
-    // console.log(`=>(AccountRouter.js:72) req.body`, req.body);
 
     if (result.errors.length === 0) {
         let email = req.body.email;
         let password = req.body.password;
 
-
-        // console.log(`=>(accountController.js:56) email`, email);
-        // console.log(`=>(accountController.js:57) password`, password);
         const user = await User.findOne({ email: email });
-        // console.log(`=>(accountController.js:58) user`, user);
 
         if (user) {
             const isPasswordValid = await user.validPassword(password);
-            // console.log(`=>(accountController.js:62) isPasswordValid`, isPasswordValid);
             if (isPasswordValid) {
-                // console.log(`🚀 🚀 file: accountController.js:67 🚀 exports.postLogin= 🚀 user`, user);
                 req.session.user = user;
                 req.session.loggedin = true;
                 req.session.email = email;
                 req.session.username = user.username;
-                return res.redirect("/");
+                return res.json({ error: false, message: 'Login successful' });
             }
         }
-        return res.render("login", {
-            error: "Email or password not correct!", csrf: req.csrfToken()
-        });
+        return res.json({ error: true, message: 'Email or password not correct!' });
     } else {
-        return res.render("login", {
-            error: result.errors[0].msg, csrf: req.csrfToken()
-        });
+        return res.json({ error: true, message: result.errors[0].msg });
     }
 };
 
