@@ -22,6 +22,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDb = require("./middlewares/db");
 const { generateUserId } = require('./middlewares/utils');
+const { logRequestDetails } = require('./middlewares/access-log');
 
 
 const users = {};
@@ -37,8 +38,13 @@ app.use(flash());
 
 
 connectDb();
-
+app.use(logRequestDetails);
 app.use(indexRouter);
+
+app.get('/room/:roomName', (req, res) => {
+    const roomName = req.params.roomName;
+    res.render('room', { roomName });
+});
 
 io.on("connection", (socket) => {
 
@@ -150,7 +156,7 @@ io.on("connection", (socket) => {
         socket.join(roomName);
         console.log(`User joined room: ${roomName}`);
         // Redirect the user to the 'room-call.ejs' page
-        socket.emit('redirectToRoom', '/room-call.ejs');
+        socket.emit('redirectToRoom', '/room');
     });
 });
 

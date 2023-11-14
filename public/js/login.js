@@ -16,6 +16,7 @@ $(() => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 
+		const spinner = createAndShowSpinner();
 		$.ajax({
 			url: "/register",
 			type: "POST",
@@ -38,6 +39,8 @@ $(() => {
 				console.log(`🚀 🚀 file: login.js:38 🚀 error`, error);
 				toastr.error(error.responseJSON?.message);
 			}
+		}).always(function () {
+			spinner.stop();
 		});
 	});
 
@@ -46,6 +49,8 @@ $(() => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 
+
+		const spinner = createAndShowSpinner();
 		$.ajax({
 			url: "/login",
 			type: "POST",
@@ -69,6 +74,8 @@ $(() => {
 				console.log(`Error: ${error}`);
 				toastr.error(error);
 			}
+		}).always(function () {
+			spinner.stop();
 		});
 	});
 });
