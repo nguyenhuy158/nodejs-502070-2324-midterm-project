@@ -84,41 +84,55 @@ exports.getForgetPassword = (req, res) => {
     res.render("forget-password");
 };
 
-exports.postForgetPassword = async (req, res, next) => {
-    const { email } = req.body;
+exports.postForgetPassword = async (req, res) => {
+    const result = validationResult(req);
+    console.log(`exports.postForgetPassword= 🚀  req.body`, req.body);
 
-    try {
-        const user = await User.findOne({ email });
+    if (result.errors.length === 0) {
+        try {
+            const { email } = req.body;
+            const user = await User.findOne({ email });
+            if (user) {
+                const resetToken = generateToken();
+                const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
 
-        const resetToken = generateToken();
-        const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
+                user.token = resetToken;
+                user.tokenExpiration = resetTokenExpires;
+                user.isPasswordReset = true;
+                user.isFirstLogin = false;
+                await user.save();
 
-        user.token = resetToken;
-        user.tokenExpiration = resetTokenExpires;
-        user.isPasswordReset = true;
-        user.isFirstLogin = false;
-        await user.save();
+                const resetLink = `${req.protocol + '://' + req.get('host')
+                    }/email-confirm?token=${resetToken}`;
+                const mailOptions = {
+                    from: process.env.FROM_EMAIL,
+                    to: email,
+                    subject: 'Password Reset Request',
+                    text:
+                        `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n` +
+                        `Please click on the following link, or paste this into your browser to reset your password:\n\n` +
+                        resetLink,
+                };
+                sendEmail(req, user, resetToken, mailOptions);
 
-        const resetLink = `${req.protocol + '://' + req.get('host')
-            }/email-confirm?token=${resetToken}`;
-        const mailOptions = {
-            from: process.env.FROM_EMAIL,
-            to: email,
-            subject: 'Password Reset Request',
-            text:
-                `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n` +
-                `Please click on the following link, or paste this into your browser to reset your password:\n\n` +
-                resetLink,
-        };
-        sendEmail(req, user, resetToken, mailOptions);
-        req.flash(
-            'success',
-            'Reset success, please check mail to login (if email exist).',
-        );
-        res.redirect('/login');
-    } catch (error) {
-        // console.log('=>(authController.js:104) error', error);
-        next(error);
+                res.json({
+                    error: false,
+                    message: 'Reset success, please check mail to login.',
+                });
+            } else {
+                res.json({
+                    error: true,
+                    message: 'No user found with this email.'
+                });
+            }
+        } catch (error) {
+            res.json({
+                error: true,
+                message: 'An error occurred.' + error,
+            });
+        }
+    } else {
+        return res.json({ error: true, message: result.errors[0].msg });
     }
 };
 
@@ -131,47 +145,56 @@ exports.isNotAuthenticated = (req, res, next) => {
     }
 };
 
-exports.emailConfirm = async (req, res, next) => {
+exports.getEmailConfirm = (req, res) => {
+    res.render("email-confirm");
+};
+
+exports.emailConfirm = async (req, res) => {
     const token = req.query.token;
-    // console.log('=>(authController.js:70) token', token);
 
     if (token) {
         try {
             const salesperson = await User.findOne({ token });
 
             if (!salesperson) {
-                req.flash(
-                    'info',
-                    'Link invalid or used, please contact to admin and try again.',
-                );
-                return res.redirect('/login');
+                console.log(`🚀 🚀 file: accountController.js:154 🚀 exports.emailConfirm= 🚀 salesperson`, salesperson);
+                return res.json({
+                    error: true,
+                    message: 'Link invalid or used, please contact to admin and try again.'
+                });
             }
 
             if (salesperson && salesperson.tokenExpiration < moment()) {
-                req.flash(
-                    'info',
-                    'Link expired, please contact to admin and try again.',
-                );
-                return res.redirect('/login');
+                return res.json({
+                    error: true,
+                    message: 'Link expired, please contact to admin and try again.'
+                });
             }
 
-            req.login(salesperson, async (err) => {
-                // console.log('=>(authController.js:138) err', err);
-                if (err) {
-                    return next(err);
-                }
-                req.flash('info', 'Welcome Now you are salespeople.');
+            // Set the user in the session
+            req.session.user = salesperson;
+            req.session.loggedin = true;
+            req.session.email = salesperson.email;
+            req.session.username = salesperson.username;
 
-                salesperson.token = undefined;
-                salesperson.tokenExpiration = undefined;
-                await salesperson.save();
-                return res.redirect('/');
+            salesperson.token = undefined;
+            salesperson.tokenExpiration = undefined;
+            await salesperson.save();
+
+            return res.json({
+                error: false,
+                message: 'Welcome Now you are salespeople.'
             });
         } catch (error) {
-            req.flash('error', 'An error occurred while logging in.');
-            next(error);
+            return res.json({
+                error: true,
+                message: 'An error occurred while logging in.'
+            });
         }
     } else {
-        return res.redirect('/login');
+        return res.json({
+            error: true,
+            message: 'No token provided.'
+        });
     }
 };

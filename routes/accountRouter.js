@@ -32,7 +32,8 @@ router.get("/forget-password", accountController.isNotAuthenticated, accountCont
 
 router.post("/forget-password", customValidator.postForgetPassword, accountController.postForgetPassword);
 
-router.get("/email-confirm", accountController.emailConfirm);
+router.get("/email-confirm", accountController.getEmailConfirm);
+router.post("/email-confirm", accountController.emailConfirm);
 
 router.get("/logout", accountController.getLogout);
 

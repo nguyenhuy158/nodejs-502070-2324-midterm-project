@@ -28,7 +28,7 @@ const socket = io();
 $(() => {
     socket.on('connect', () => {
         console.log('Connected to the signaling server with id', socket.id);
-        showToast('success', 'Connected to the signaling server');
+        toastr.success('Connected to the signaling server');
 
         yourUserIdContainer.text(`Your User ID: ${socket.id}`);
         id = socket.id;
@@ -204,7 +204,7 @@ $(() => {
     // Handle the 'user-not-found' event
     socket.on('user-not-found', (targetUserId) => {
         const message = `User with ID ${targetUserId} not found`;
-        showToast('error', message);
+        toastr.error(message);
     });
 
     btnLoadActiveList.on('click', () => {
@@ -299,7 +299,7 @@ $(() => {
         method: 'GET',
         success: function (data) {
             console.log(`🚀 🚀 file: index-chat.js:7 🚀 data`, data);
-            showToast('success', 'User info loaded');
+            toastr.success('User info loaded');
 
             username = data.username;
             socket.emit('set-username', data.username);
@@ -307,7 +307,7 @@ $(() => {
         },
         error: function (error) {
             console.log(`🚀 🚀 file: index-chat.js:10 🚀 error`, error);
-            showToast('error', error.responseJSON?.message || 'Error loading user info');
+            toastr.error(error.responseJSON?.message || 'Error loading user info');
         }
     });
 

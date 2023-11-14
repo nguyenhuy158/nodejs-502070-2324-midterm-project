@@ -13,14 +13,14 @@ $(() => {
                 console.log(`🚀 ------------------------------------------------------🚀`);
                 console.log(`🚀 🚀 file: create-account.js:11 🚀 response`, response);
                 console.log(`🚀 ------------------------------------------------------🚀`);
-                showToast('success', response.message);
+                toastr.success(response.message);
                 this.reset();
             },
             error: (error) => {
                 console.log(`🚀 ------------------------------------------------🚀`);
                 console.log(`🚀 🚀 file: create-account.js:12 🚀 error`, error.responseJSON);
                 console.log(`🚀 ------------------------------------------------🚀`);
-                showToast('error', error.responseJSON?.message);
+                toastr.error(error.responseJSON?.message);
             }
         });
     });
