@@ -112,7 +112,7 @@ navbar .logo {
     border-radius: 10px;
     background-color: white;
     border: 2px solid #d088da;
-    color: #4ecca3;
+    color: #9f66a7;
 }
 
 .main .create-join .createroom-clicked:focus {
@@ -235,7 +235,7 @@ navbar .logo {
     cursor: pointer;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
     .main {
         flex-direction: column;
     }
