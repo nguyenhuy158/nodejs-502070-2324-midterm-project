@@ -4,6 +4,7 @@ const session = require("express-session");
 const accountController = require("../controllers/accountController");
 const customValidator = require("../middlewares/customValidator");
 const { doubleCsrf } = require("csrf-csrf");
+const indexController = require('../controllers/indexController');
 
 router.use(
     session({
@@ -33,9 +34,14 @@ router.get("/forget-password", accountController.isNotAuthenticated, accountCont
 router.post("/forget-password", customValidator.postForgetPassword, accountController.postForgetPassword);
 
 router.get("/email-confirm", accountController.getEmailConfirm);
+
 router.post("/email-confirm", accountController.emailConfirm);
 
 router.get("/logout", accountController.getLogout);
+
+router.get("/reset-password", indexController.isLoggedIn, accountController.getChangepassword);
+
+router.post("/reset-password", indexController.isLoggedIn, customValidator.postChangePassword, accountController.postChangepassword);
 
 router.get("/logout-success", accountController.getLogoutSuccess);
 
