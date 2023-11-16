@@ -21,7 +21,7 @@
             <small></small>
             <button class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body text-success"><%= message.info %></div>
+        <div class="toast-body text-success"><%= message.success %></div>
     </div>
     <% } %>
     <!-- error -->
@@ -33,9 +33,10 @@
             <small></small>
             <button class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body text-danger"><%= message.info %></div>
+        <div class="toast-body bg-danger text-danger"><%= message.error %></div>
     </div>
-    <% } %>
+    <% } %>  
+    <!-- TODO-config for toast message in correct type when get error (red background) -->
 </div>
 
 <script>

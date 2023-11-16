@@ -290,6 +290,8 @@ exports.checkResetLogin = (req, res, next) => {
         console.log(`🚀 🚀 file: indexController.js:290 🚀 user.isPasswordReset`, user.isPasswordReset);
         req.flash("info", "You need to change password to continue use system.");
         return res.redirect("/reset-password");
+        //TODO - error when click login button but redirect to reset password page
+        //       not redirect to room-call page
     }
     next();
 };
