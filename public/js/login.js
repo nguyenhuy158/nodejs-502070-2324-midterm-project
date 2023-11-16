@@ -62,10 +62,12 @@ $(() => {
 			success: function (result) {
 				console.log(`Result:`, result);
 				console.log(`Message:`, result.message);
-				toastr.success(result.message);
-				if (!result.error) {
+				if (result.error) {
+					toastr.error(result.message);
+				}
+				else {
+					toastr.success(result.message);
 					e.target.reset();
-					// Redirect to another page after successful login
 					window.location.href = '/';
 				}
 			},
