@@ -23,6 +23,8 @@ const path = require("path");
 const connectDb = require("./middlewares/db");
 const { generateUserId } = require('./middlewares/utils');
 const { logRequestDetails } = require('./middlewares/access-log');
+const session = require("express-session");
+const MongoStore = require('connect-mongo');
 
 
 const users = {};
@@ -35,6 +37,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIES_SECRET));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(flash());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    // milliseconds * seconds * minutes * hours * days
+    // 1000 * 60 * 60 * 24 * 10 = 10 days
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 10 },
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    resave: true,
+    saveUninitialized: true
+}));
 
 
 connectDb();
