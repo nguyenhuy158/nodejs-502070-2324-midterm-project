@@ -44,7 +44,10 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 * 24 * 10 },
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    name: 'callmate.sid',
+    httpOnly: true,
+    secure: true,
 }));
 
 
