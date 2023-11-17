@@ -1,8 +1,13 @@
-//Content Loaded
+// video call funciton
+
+// TODO: can not display video call
+
+
+
+
+
+// Chat form function 
 window.addEventListener("DOMContentLoaded", (e) => {
-    // var header = document.querySelector(".header");
-    // var chatRoom = document.querySelector(".chat-room");
-    // var typeArea = document.querySelector(".type-area");
     var btnAdd = document.querySelector(".button-add");
     var others = document.querySelector(".others");
     var emojiBox = document.querySelector(".emoji-button .emoji-box");
