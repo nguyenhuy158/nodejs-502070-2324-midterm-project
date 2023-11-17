@@ -84,6 +84,7 @@ cam.addEventListener('click', () => {
     }
 });
 
+// TODO: click button mic will turn off the cam too
 mic.addEventListener('click', () => {
     if (micAllowed) {
         mediaConstraints = { video: camAllowed, audio: false };

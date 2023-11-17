@@ -29,8 +29,18 @@ header img {
     margin-right: 10px;
 }
 
-header h1 {
+header .logo {
+    display: flex;
+    align-items: center;
+}
+
+header .logo h3 {
     display: inline;
+    margin-bottom: 0;
+    }
+    
+    header h6 {
+        margin-bottom: 0;
 }
 .mr-1 {
     margin-right: 10px;
@@ -64,13 +74,6 @@ body {
     background-color: #fff;
 }
 
-navbar .logo {
-    font-size: 28px;
-    color: #393e46;
-    font-weight: bold;
-    padding: 0 12%;
-    margin-top: 32px;
-}
 
 .main {
     display: flex;

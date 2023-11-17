@@ -13,8 +13,10 @@
     <body>
         <%- include('./flash.ejs') %>
         <header>
-            <img src="callmate-logo.png" alt="CallMate Logo">
-            <h1>CallMate</h1>
+            <div class="logo">
+                <img src="callmate-logo.png" alt="CallMate Logo" />
+                <h3>CallMate</h3>
+            </div>
             <h6 id="yourUserIdContainer"></h6>
         </header>
         <!-- <div class="container text-center my-4">
@@ -26,10 +28,19 @@
 
         <div class="main">
             <div class="create-join">
-                <div class="text"><div class="head">Create Meetings in one-click.</div>
-                </div>
-                <button id="createroom" class="createroom-butt unselectable">Create Room</button><br>
-                <input autocomplete="off" type="text" name="room" spellcheck="false" placeholder="Enter Room Code" id="roomcode" class="roomcode"><br>
+                <div class="text"><div class="head">Create Meetings in one-click.</div></div>
+                <button id="createroom" class="createroom-butt unselectable">Create Room</button>
+                <br />
+                <input
+                    autocomplete="off"
+                    type="text"
+                    name="room"
+                    spellcheck="false"
+                    placeholder="Enter Room Code"
+                    id="roomcode"
+                    class="roomcode"
+                />
+                <br />
                 <div class="row">
                     <div class="joinroom unselectable" id="joinroom">Join Room</div>
                     <a class="logout" href="/logout">Logout</a>

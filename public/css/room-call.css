@@ -37,6 +37,7 @@ body {
 #content .row .col .feature {
     width: 100%;
     text-align: center;
+    display: none;
 }
 
 #content .stream-management {
