@@ -1,5 +1,10 @@
 {
-    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
     "editor.rulers": [
         {
             "column": 4,
@@ -22,7 +27,9 @@
         "node_modules/": true,
         "*.log": true,
         "*.lock": true,
-        "setting.json": true
+        "setting.json": true,
+        "public/js/plugins/*": true,
+        "public/css/plugins/*": true,
     },
     "search.exclude": {
         ".idea/": true,
@@ -30,9 +37,13 @@
         "node_modules/": true,
         "*.log": true,
         "*.lock": true,
-        "setting.json": true
+        "setting.json": false,
+        "public/js/plugins/*": true,
+        "public/css/plugins/*": true,
     },
-    "auto-rename-tag.activationOnLanguage": ["*"],
+    "auto-rename-tag.activationOnLanguage": [
+        "*"
+    ],
     "html2pug": {
         "tabs": false,
         "fragment": true,
@@ -47,7 +58,11 @@
         "dev": true,
         "dist": true
     },
-    "advancedNewFile.convenienceOptions": ["last", "current", "root"],
+    "advancedNewFile.convenienceOptions": [
+        "last",
+        "current",
+        "root"
+    ],
     "git-graph.defaultColumnVisibility": {
         "Date": true,
         "Author": true,
