@@ -290,16 +290,19 @@ let username = 'Anonymous';
 
 function displayMessage(message, sender, timeSent, isMe = false) {
     $('#chatBox').append(`
-        <div class="p-3 my-2 rounded bg-${isMe ? 'info' : 'light'} text-${isMe ? 'white' : 'dark'} border">
-            <strong>${sender}</strong>
-            <p class="mb-0">${message}</p>
-            <small>${timeSent}</small>
+        <div class="message ${isMe ? 'message-right' : 'message-left'}">
+            <div class="bubble ${isMe ? 'bubble-dark' : 'bubble-light'}">
+                <strong>${sender}</strong>
+                <br>
+                ${message}
+                <!-- <div><small>${timeSent}</small></div> -->
+            </div>
         </div>
     `);
 
     $('#chatInput').val(isMe ? '' : $('#chatInput').val());
 
-    $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+    $('.card-body').scrollTop($('.card-body>#chatBox')[0].scrollHeight);
 }
 
 $(() => {
@@ -342,6 +345,7 @@ $(() => {
     $('#sendButton').on('click', sendMessage);
 
     $('#chatInput').on('keypress', function (e) {
+        console.log(`🚀 🚀 file: index.js:345 🚀 e`, e);
         if (e.which == 13) {
             sendMessage();
             e.preventDefault();

@@ -316,11 +316,10 @@ button {
 }
 
 .chat-box .chat-room {
-    min-height: 300px;
+    min-height: 100%;
     background-color: #f7f9fb;
     padding: 0px 15px;
     box-shadow: inset 0px 2px rgba(0, 0, 0, 0.2);
-    height: 100%;
 }
 
 .chat-box .chat-room .message {
