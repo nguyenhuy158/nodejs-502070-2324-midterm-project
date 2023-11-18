@@ -1,6 +1,7 @@
 const fs = require("fs");
 
-autoViews = [];
+const autoViews = [];
+
 exports.autoViews = (req, res, next) => {
     const queryPath = req.path.toLowerCase().trim();
     const path = "./views/pages/auto" + queryPath + ".pug";

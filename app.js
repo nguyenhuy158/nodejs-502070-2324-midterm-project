@@ -16,12 +16,11 @@ const io = new Server(server, {
     }
 });
 
-const indexRouter = require("./routes/indexRouter");
+const indexRouter = require("./routes/index-router");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDb = require("./middlewares/db");
-const { generateUserId } = require('./middlewares/utils');
 const { logRequestDetails } = require('./middlewares/access-log');
 const session = require("express-session");
 const MongoStore = require('connect-mongo');

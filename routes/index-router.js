@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const accountRouter = require('./accountRouter');
-const apiRouter = require('./apiRouter');
-const indexController = require('../controllers/indexController');
+const accountRouter = require('./account-router');
+const apiRouter = require('./api-router');
+const indexController = require('../controllers/index-controller');
 
 
 router.use('', accountRouter);

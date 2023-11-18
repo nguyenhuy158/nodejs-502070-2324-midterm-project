@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const session = require("express-session");
-const accountController = require("../controllers/accountController");
-const customValidator = require("../middlewares/customValidator");
+const accountController = require("../controllers/account-controller");
+const customValidator = require("../middlewares/custom-validator");
 const { doubleCsrf } = require("csrf-csrf");
-const indexController = require('../controllers/indexController');
+const indexController = require('../controllers/index-controller');
 
 router.use(
     session({

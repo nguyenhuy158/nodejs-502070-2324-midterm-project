@@ -35,8 +35,9 @@ $(() => {
     });
     $('#offlineMessage').hide();
 
-    console.log(`🚀 🚀 file: index.js:39 🚀 roomName`, roomName);
-    socket.emit('join', roomName);
+    if (roomName !== undefined && roomName !== null && roomName !== '') {
+        socket.emit('join', roomName);
+    }
 
 
     // Handle the "Load Local Stream" button click event

@@ -21,6 +21,7 @@ window.addEventListener("DOMContentLoaded", (e) => {
     btnAdd.addEventListener("click", (e) => {
         others.classList.add("others-show");
     });
+
     //Emoji onclick event
     emojiButton.addEventListener("click", (e) => {
         emojiBox.classList.add("emoji-show");

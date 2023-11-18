@@ -35,15 +35,6 @@
         </div>
         <div class="toast-body bg-danger text-danger"><%= message.error %></div>
     </div>
-    <% } %>  
+    <% } %>
     <!-- TODO-config for toast message in correct type when get error (red background) -->
 </div>
-
-<script>
-    setTimeout(() => {
-        $('.toast').each((index, value) => {
-            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
-            toastBootstrap.show()
-        })
-    }, 1000)
-</script>

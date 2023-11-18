@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { formatTimestamp } = require("../middlewares/format");
+const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
@@ -147,6 +147,10 @@ userSchema.methods.generateAccessJWT = function () {
         expiresIn: "20m",
     });
 };
+
+userSchema.methods.display = function () {
+    return `${this.fullName} (${this.username})`;
+}
 
 userSchema.plugin(passportLocalMongoose);
 
