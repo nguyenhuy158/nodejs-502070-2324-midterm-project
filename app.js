@@ -5,6 +5,7 @@ const { instrument } = require("@socket.io/admin-ui");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const { generateId } = require('./utils/utils');
 
 const app = express();
 const server = http.createServer(app);
@@ -175,7 +176,7 @@ io.on("connection", (socket) => {
         socket.join(roomName);
         console.log(`User joined room: ${roomName}`);
         // Redirect the user to the 'room-call.ejs' page
-        socket.emit('redirectToRoom', '/room');
+        socket.emit('redirectToRoom', `/room/${generateId()}`);
     });
 
     socket.on('join', (room) => {

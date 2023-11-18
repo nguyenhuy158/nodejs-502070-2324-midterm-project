@@ -76,11 +76,9 @@ exports.checkResetLogin = (req, res, next) => {
     const user = req.session.user;
     console.log(`🚀 🚀 file: indexController.js:288 🚀 user`, user);
     if (user && user.isPasswordReset) {
-        console.log(`🚀 🚀 file: indexController.js:290 🚀 user.isPasswordReset`, user.isPasswordReset);
         req.flash("info", "You need to change password to continue use system.");
+
         return res.redirect("/reset-password");
-        //TODO - error when click login button but redirect to reset password page
-        //       not redirect to room-call page
     }
     next();
 };

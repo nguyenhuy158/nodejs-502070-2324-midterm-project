@@ -82,3 +82,8 @@ exports.removeImageByUrl = async function (imageUrl) {
 };
 
 
+exports.generateId = function () {
+    return 'xxx-xxx-xxx'.replace(/[x]/g, function (c) {
+        return String.fromCharCode(Math.random() * 26 + 'a'.charCodeAt(0));
+    });
+};
