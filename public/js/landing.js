@@ -64,7 +64,14 @@ codeCont.addEventListener('change', (e) => {
 cam.addEventListener('click', () => {
     if (camAllowed) {
         mediaConstraints = { video: false, audio: micAllowed };
-        videoCont.srcObject = null;
+        if (micAllowed) {
+            navigator.mediaDevices.getUserMedia(mediaConstraints)
+                .then(localstream => {
+                    videoCont.srcObject = localstream;
+                });
+        } else {
+            videoCont.srcObject = null;
+        }
 
         cam.classList = "nodevice";
         cam.innerHTML = `<i class="fas fa-video-slash"></i>`;
@@ -84,11 +91,17 @@ cam.addEventListener('click', () => {
     }
 });
 
-// TODO: click button mic will turn off the cam too
 mic.addEventListener('click', () => {
     if (micAllowed) {
         mediaConstraints = { video: camAllowed, audio: false };
-        videoCont.srcObject = null;
+        if (camAllowed) {
+            navigator.mediaDevices.getUserMedia(mediaConstraints)
+                .then(localstream => {
+                    videoCont.srcObject = localstream;
+                });
+        } else {
+            videoCont.srcObject = null;
+        }
 
         mic.classList = "nodevice";
         mic.innerHTML = `<i class="fas fa-microphone-slash"></i>`;
