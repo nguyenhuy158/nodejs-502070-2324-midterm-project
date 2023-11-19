@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-
 const userNameInput = $('#userNameInput');
 const submitNameButton = $('#submitName');
 const yourRemoteName = $('#yourRemoteName');
@@ -26,6 +25,9 @@ const socket = io();
 
 
 $(() => {
+    $('#offlineMessage').hide();
+
+
     socket.on('connect', () => {
         console.log('Connected to the signaling server with id', socket.id);
         toastr.success('Connected to the signaling server');
@@ -33,7 +35,7 @@ $(() => {
         yourUserIdContainer.text(`Your User ID: ${socket.id}`);
         id = socket.id;
     });
-    $('#offlineMessage').hide();
+
 
     if (roomName !== undefined && roomName !== null && roomName !== '') {
         socket.emit('join', roomName);
@@ -282,9 +284,6 @@ $(() => {
     });
 });
 
-
-
-/* eslint-disable no-undef */
 
 let username = 'Anonymous';
 
