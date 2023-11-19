@@ -158,7 +158,7 @@ io.on("connection", (socket) => {
 
     socket.on('chat-message', (data) => {
         console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
-        socket.broadcast.emit('chat-message', data);
+        socket.to(data.roomName).emit('chat-message', data);
     });
 
     socket.on('end-call', (data) => {

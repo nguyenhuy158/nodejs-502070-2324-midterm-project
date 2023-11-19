@@ -334,6 +334,7 @@ $(() => {
         const timeSent = new Date().toLocaleTimeString();
 
         socket.emit('chat-message', {
+            roomName,
             message,
             sender,
             timeSent

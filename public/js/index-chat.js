@@ -44,7 +44,5 @@ $(document).ready(function () {
 });
 
 
-// TODO 1: The chat form can't get the message of the input
-
 
 // TODO 2: When click Other button, can't turn off by clicking it again. Button Emoji also have the same error 
