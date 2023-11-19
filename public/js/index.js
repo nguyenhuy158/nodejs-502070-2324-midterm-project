@@ -27,7 +27,6 @@ const socket = io();
 $(() => {
     $('#offlineMessage').hide();
 
-
     socket.on('connect', () => {
         console.log('Connected to the signaling server with id', socket.id);
         toastr.success('Connected to the signaling server');
@@ -41,9 +40,8 @@ $(() => {
         socket.emit('join', roomName);
     }
 
-
     // Handle the "Load Local Stream" button click event
-    btnLoadLocalSteam.on('click', async function requestUserMedia() {
+    (async function requestUserMedia() {
         let stream = null;
         try {
             stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -54,9 +52,8 @@ $(() => {
         } catch (err) {
             console.error('Failed to get media stream:', err);
         }
-    });
-    // trigger the click event on the button
-    btnLoadLocalSteam.trigger('click');
+    })();
+
 
     // Create a new WebRTC peer connection
     async function createPeerConnection(targetUsername) {
