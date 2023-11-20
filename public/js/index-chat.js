@@ -6,19 +6,6 @@
 
 // Chat form function 
 $(document).ready(function () {
-    // Chat form function
-    var $btnAdd = $(".button-add");
-    var $others = $(".others");
-    var $emojiBox = $(".emoji-button .emoji-box");
-    var $emojis = $(".emoji-box span");
-    var $inputText = $("#inputText");
-    var $btnSend = $(".button-send");
-    var $messageArea = $(".message.message-right");
-
-    // Button Add onclick event
-    $btnAdd.click(function () {
-        $others.toggleClass("others-show");
-    });
 
     // Emoji onclick event
     $('#showIcons').click(function () {
@@ -30,22 +17,7 @@ $(document).ready(function () {
         $('#chatInput').val($('#chatInput').val() + selectedIcon);
     });
 
-    // Button Send onclick event
-    $btnSend.click(function () {
-        var mess = $inputText.val();
-        var $bubble = $("<div>").addClass("bubble bubble-dark").text(mess);
-        $messageArea.append($bubble);
-        $inputText.val("");
-    });
-
-    // Emojis onclick event
-    $emojis.click(function (e) {
-        e.stopPropagation();
-        $emojiBox.removeClass("emoji-show");
-        $others.removeClass("others-show");
-        $inputText.val($inputText.val() + $(this).text());
-    });
-
+    // Cancel button call
     $('.cutcall').on('click', function () {
         Swal.fire({
             title: 'Are you sure?',
@@ -61,12 +33,7 @@ $(document).ready(function () {
         });
     });
 
-    // window.addEventListener('beforeunload', function (e) {
-    //     var confirmationMessage = 'Are you sure you want to leave?';
-    //     (e || window.event).returnValue = confirmationMessage;
-    //     return confirmationMessage;
-    // });
-
+    // Copy room ID
     $('#roomName').on('click', function () {
         const copyText = $(this).data('id');
 
@@ -86,6 +53,48 @@ $(document).ready(function () {
                     text: 'Something went wrong!',
                 });
             });
+    });
+
+    // Handle chat form
+    $.ajax({
+        url: '/api/current-user',
+        method: 'GET',
+        success: function (data) {
+            username = data.username;
+            socket.emit('set-username', data.username);
+        },
+        error: function (error) {
+            console.log(`🚀 error`, error);
+        }
+    });
+
+    socket.on('chat-message', (data) => {
+        displayMessage(data.message, data.sender, data.timeSent);
+    });
+
+    function sendMessage() {
+        const message = $('#chatInput').val();
+        const sender = username;
+        const timeSent = new Date().toLocaleTimeString();
+
+        socket.emit('chat-message', {
+            roomName,
+            message,
+            sender,
+            timeSent
+        });
+
+        displayMessage(message, sender, timeSent, true);
+    }
+
+    $('#sendButton').on('click', sendMessage);
+
+    $('#chatInput').on('keypress', function (e) {
+        const message = $('#chatInput').val();
+        if (e.which == 13 && message.trim() !== '') {
+            sendMessage();
+            e.preventDefault();
+        }
     });
 });
 

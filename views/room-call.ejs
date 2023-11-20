@@ -70,8 +70,10 @@
                                     playsinline
                                     class="video-frame"
                                 ></video>
-                                <div class="nametag" id="myname"> <%= username %> </div>
-                                <div class="mute-icon d-none" id="mymuteicon"><i class="fas fa-microphone-slash"></i></div>
+                                <div class="nametag" id="myname"><%= username %></div>
+                                <div class="mute-icon d-none" id="mymuteicon">
+                                    <i class="fas fa-microphone-slash"></i>
+                                </div>
                                 <div class="video-off d-none" id="myvideooff">Video Off</div>
                             </div>
                         </div>
@@ -231,8 +233,10 @@
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
+            const roomName = '<%= roomName %>'
             const roomId = '<%= roomName %>'
             const socket = io()
+            let username = '<%= username %>'
         </script>
         <script defer src="/js/index.js"></script>
         <script defer src="/js/index-chat.js"></script>
