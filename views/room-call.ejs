@@ -59,7 +59,14 @@
                                 <video id="localVideo" muted autoplay playsinline class="video-frame"></video>
                                 <!-- create video tag for remote -->
                                 <video
-                                    style="position: absolute; left: 0%; width: 300px; min-height: 9px; height: auto; margin: 5px 0 0 5px;"
+                                    style="
+                                        position: absolute;
+                                        left: 0%;
+                                        width: 300px;
+                                        min-height: 9px;
+                                        height: auto;
+                                        margin: 5px 0 0 5px;
+                                    "
                                     id="remoteVideo"
                                     autoplay
                                     playsinline
@@ -125,24 +132,29 @@
                         <div class="header">
                             <span class="title">Chat Box</span>
                         </div>
+
+                        <!-- chat box -->
                         <div class="card-body overflow-auto">
                             <div id="chatBox" class="chat-room overflow-auto">
-                                <!-- CHAT BOX HERE -->
+                                <!-- CHAT MESSAGE BOX HERE -->
                             </div>
                         </div>
+
                         <div class="card-footer">
                             <div class="type-area">
+                                <!-- input message -->
                                 <div class="input-wrapper">
                                     <input
                                         type="text"
                                         id="chatInput"
-                                        class="form-control"
+                                        class="form-control emoji-input"
                                         placeholder="Type messages here..."
-                                        autocomplete="on"
+                                        autocomplete="off"
                                     />
                                 </div>
-                                <span class="button-add">
-                                    <i class="fas fa-plus-circle"></i>
+
+                                <!-- emoji -->
+                                <!-- <span class="button-add">
                                     <div class="others">
                                         <span class="emoji-button">
                                             <i class="far fa-laugh"></i>
@@ -165,7 +177,37 @@
                                             <i class="fas fa-paperclip"></i>
                                         </span>
                                     </div>
-                                </span>
+                                </span> -->
+                                <div class="icon-box">
+                                    <button id="showIcons" class="button-add">
+                                        <i class="fa-regular fa-face-smile"></i>
+                                    </button>
+                                    <div class="icon-list">
+                                        <div class="icon-list-row">
+                                            <button class="icon" data-icon="😊">😊</button>
+                                            <button class="icon" data-icon="🌟">🌟</button>
+                                            <button class="icon" data-icon="🎉">🎉</button>
+                                            <button class="icon" data-icon="🚀">🚀</button>
+                                            <button class="icon" data-icon="❤️">❤️</button>
+                                        </div>
+                                        <div class="icon-list-row">
+                                            <button class="icon" data-icon="🌈">🌈</button>
+                                            <button class="icon" data-icon="🌺">🌺</button>
+                                            <button class="icon" data-icon="🍀">🍀</button>
+                                            <button class="icon" data-icon="🌞">🌞</button>
+                                            <button class="icon" data-icon="🎈">🎈</button>
+                                        </div>
+                                        <div class="icon-list-row">
+                                            <button class="icon" data-icon="🚲">🚲</button>
+                                            <button class="icon" data-icon="🌟">🌟</button>
+                                            <button class="icon" data-icon="🎨">🎨</button>
+                                            <button class="icon" data-icon="🎸">🎸</button>
+                                            <button class="icon" data-icon="⚓️">⚓️</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- button send message -->
                                 <button id="sendButton" class="button-send">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"

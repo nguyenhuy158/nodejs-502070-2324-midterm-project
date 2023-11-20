@@ -115,53 +115,53 @@ button {
 
     .video-frame {
         background-color: #353b48;
-            height: 100%;
-            min-height: 200px;
-            width: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        
-        .nametag {
-            color: white;
-            bottom: 10px;
-            position: absolute;
-            left: 10px;
-            bottom: 10px;
-        }
-        
-        .video-off {
-            color: white;
-            bottom: 10px;
-            position: absolute;
-            font-weight: bold;
-            top: 40%;
-            left: 0;
-            right: 0;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .mute-icon {
-            color: #d63434;
-            bottom: 10px;
-            position: absolute;
-            right: 10px;
-            font-size: 20px;
-            bottom: 10px;
-        }
-        }
-        
-        .container-room .left-cont .video-cont-single {
-            height: 75vh;
-        }
-        
-        .container-room .left-cont .video-cont-single .video-box {
-            background-color: #353b48;
-            height: 100%;
-            min-height: 200px;
-            width: 100%;
-            border-radius: 5px;
+        height: 100%;
+        min-height: 200px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .nametag {
+        color: white;
+        bottom: 10px;
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+    }
+
+    .video-off {
+        color: white;
+        bottom: 10px;
+        position: absolute;
+        font-weight: bold;
+        top: 40%;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .mute-icon {
+        color: #d63434;
+        bottom: 10px;
+        position: absolute;
+        right: 10px;
+        font-size: 20px;
+        bottom: 10px;
+    }
+}
+
+.container-room .left-cont .video-cont-single {
+    height: 75vh;
+}
+
+.container-room .left-cont .video-cont-single .video-box {
+    background-color: #353b48;
+    height: 100%;
+    min-height: 200px;
+    width: 100%;
+    border-radius: 5px;
     position: relative;
 }
 
@@ -199,35 +199,35 @@ button {
     bottom: 10px;
     position: absolute;
     right: 10px;
-        font-size: 20px;
-        bottom: 10px;
-    }
-    
-    .container-room .left-cont .footer {
-        position: relative;
-    }
-    
-    .container-room .left-cont .footer .utils {
+    font-size: 20px;
+    bottom: 10px;
+}
+
+.container-room .left-cont .footer {
+    position: relative;
+}
+
+.container-room .left-cont .footer .utils {
     text-align: center;
     margin: 0 auto;
-        display: flex;
-        margin-top: 50px;
-        width: 260px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        padding: 10px;
-        justify-content: center;
+    display: flex;
+    margin-top: 50px;
+    width: 260px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    justify-content: center;
 }
 
 .container-room .left-cont .footer .utils .audio {
     background-color: #4ecca3;
     text-align: center;
     color: white;
-        padding: 10px;
-        height: 40px;
-        width: 40px;
-        border-radius: 100px;
-        transition: background-color 0.3s;
+    padding: 10px;
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
+    transition: background-color 0.3s;
 }
 
 .container-room .left-cont .footer .utils .audio:hover {
@@ -290,10 +290,10 @@ button {
 
 .card-body {
     height: 100%;
-    }
-    
-    .card {
-        height: 100%;
+}
+
+.card {
+    height: 100%;
 }
 
 .chat-box {
@@ -363,6 +363,7 @@ button {
 .chat-box .type-area {
     display: flex;
     flex-direction: row;
+    align-items: center;
     height: 65px;
     background-color: #f7f9fb;
     border-radius: 0 0 20px 20px;
@@ -384,6 +385,8 @@ button {
 
 .chat-box .type-area .button-add {
     display: flex;
+    border: none;
+    background: none;
     align-items: center;
     position: relative;
     margin-right: 8px;
@@ -444,7 +447,6 @@ button {
     height: 20px;
 }
 
-
 .chat-box .type-area .button-send {
     background-color: #f7f9fb;
     width: 65px;
@@ -455,13 +457,14 @@ button {
 }
 
 .chat-box .type-area .button-send:hover {
+    height: 100%;
     background-color: #be79df;
     color: #fff;
 }
 
 .chat-box .type-area .button-send svg {
     width: 25px;
-        height: 25px;
+    height: 25px;
 }
 /* -------------------- END CHAT FORM --------------------*/
 
@@ -506,4 +509,33 @@ button {
     #content {
         padding: 10px;
     }
+}
+
+.icon-box {
+    position: relative;
+    display: inline-block;
+}
+
+.icon-list {
+    display: none;
+    position: absolute;
+    top: -300%;
+    left: -50%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    transform: translate(-50%, -50%);
+    flex-wrap: wrap;
+    border-radius: 10px;
+}
+
+.icon-list button {
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.icon-list-row {
+    display: flex;
 }

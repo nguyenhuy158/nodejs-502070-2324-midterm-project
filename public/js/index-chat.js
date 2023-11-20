@@ -22,8 +22,13 @@ $(document).ready(function () {
     });
 
     // Emoji onclick event
-    $emojiButton.click(function () {
-        $emojiBox.toggleClass("emoji-show");
+    $('#showIcons').click(function () {
+        $('.icon-list').css('display', 'flex');
+    });
+    $('.icon').click(function () {
+        const selectedIcon = $(this).data('icon');
+        $('.icon-list').hide();
+        $('#chatInput').val($('#chatInput').val() + selectedIcon);
     });
 
     // Button Send onclick event
@@ -55,6 +60,17 @@ $(document).ready(function () {
                 window.location.href = '/';
             }
         });
+    });
+
+    const emojiInput = $('#chatInput');
+    const emojiPicker = new EmojiPicker();
+
+    emojiInput.on('focus', function () {
+        emojiPicker.onEmojiSelected = function (emoji) {
+            emojiInput.value += emoji;
+        };
+
+        emojiPicker.showPicker(emojiInput);
     });
 });
 
