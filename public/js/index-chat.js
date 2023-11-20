@@ -55,6 +55,19 @@ $(document).ready(function () {
             });
     });
 
+    // mute mic
+    $('.utils .audio').on('click', function () {
+        $('#mute-mic-icon').toggleClass('d-none');
+        $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
+    });
+
+    // mute camera
+    $('.utils .novideo').on('click', function () {
+        // TODO: add icon mute cam
+        $('#mute-cam-icon').toggleClass('d-none');
+        $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
+    });
+
     // Handle chat form
     $.ajax({
         url: '/api/current-user',
