@@ -24,6 +24,22 @@ navigator.mediaDevices.getUserMedia(mediaConstraints)
         videoCont.srcObject = localstream;
     });
 
+$('.logout').on('click', function (e) {
+    e.preventDefault();
+
+    Swal.fire({
+        title: 'Are you sure to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, see ya!',
+        cancelButtonText: 'No, just kidding!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/logout';
+        }
+    });
+});
+
 createButton.addEventListener('click', (e) => {
     e.preventDefault();
 

@@ -62,9 +62,9 @@ exports.postLogin = async (req, res) => {
 
 exports.getLogout = (req, res) => {
     req.session.destroy((err) => {
-        // console.log(`🚀 🚀 file: accountController.js:85 🚀 req.session.destroy 🚀 err`, err);
+        console.log(`🚀 🚀 file: accountController.js:85 🚀 req.session.destroy 🚀 err`, err);
         res.clearCookie("connect.sid");
-        res.redirect("/logout-success");
+        res.redirect("/login");
     });
 };
 
