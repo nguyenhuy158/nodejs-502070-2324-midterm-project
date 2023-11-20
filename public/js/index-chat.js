@@ -62,15 +62,10 @@ $(document).ready(function () {
         });
     });
 
-    const emojiInput = $('#chatInput');
-    const emojiPicker = new EmojiPicker();
-
-    emojiInput.on('focus', function () {
-        emojiPicker.onEmojiSelected = function (emoji) {
-            emojiInput.value += emoji;
-        };
-
-        emojiPicker.showPicker(emojiInput);
+    window.addEventListener('beforeunload', function (e) {
+        var confirmationMessage = 'Are you sure you want to leave?';
+        (e || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
     });
 });
 
