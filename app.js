@@ -121,9 +121,6 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        // delete users[userId];
-        // socket.broadcast.emit('remove-active', Object.assign({}, { [userId]: socket.id }));
-
         // Xóa thông tin người dùng khi ngắt kết nối
         const roomId = Object.keys(rooms).find((roomId) =>
             rooms[roomId].members.includes(socket.id)
@@ -154,7 +151,6 @@ io.on("connection", (socket) => {
     socket.on('createRoom', (roomName) => {
         socket.join(roomName);
         console.log(`User joined room: ${roomName}`);
-        // Redirect the user to the 'room-call.ejs' page
         socket.emit('redirectToRoom', `/room/${generateId()}`);
     });
 
@@ -176,8 +172,6 @@ io.on("connection", (socket) => {
             // Redirect user to another page
             socket.emit('room-full');
         }
-    // socket.join(room);
-    // socket.to(room).emit('userJoined', socket.id);
     });
 
     function getUsersInRoom(room) {
@@ -206,7 +200,7 @@ io.on("connection", (socket) => {
     }
 });
 
-
+// admin.socket.io
 instrument(io, {
     auth: {
         type: "basic",
