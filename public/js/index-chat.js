@@ -10,7 +10,6 @@ $(document).ready(function () {
     var $btnAdd = $(".button-add");
     var $others = $(".others");
     var $emojiBox = $(".emoji-button .emoji-box");
-    var $emojiButton = $(".others .emoji-button");
     var $emojis = $(".emoji-box span");
     var $inputText = $("#inputText");
     var $btnSend = $(".button-send");
@@ -67,6 +66,27 @@ $(document).ready(function () {
     //     (e || window.event).returnValue = confirmationMessage;
     //     return confirmationMessage;
     // });
+
+    $('#roomName').on('click', function () {
+        const copyText = $(this).data('id');
+
+        navigator.clipboard.writeText(copyText)
+            .then(function () {
+                console.log("Text successfully copied to clipboard");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Room ID copied to clipboard',
+                });
+            }).catch(function (err) {
+                console.error("Unable to copy text to clipboard", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                });
+            });
+    });
 });
 
 

@@ -36,20 +36,12 @@ exports.sentMail = (req, res) => {
 };
 
 exports.home = async (req, res) => {
-
     res.render("index");
-
-    // res.render("pages/home", {
-    //     title: "Home",
-    //     app_name: process.env.APP_NAME,
-    //     products: await Product.find({})
-    //         .limit(3)
-    // });
 };
 
 exports.room = (req, res) => {
     const roomName = req.params.roomName;
-    res.render('room-call', { roomName });
+    res.render('room-call', { roomName, username: req.session.username });
 };
 
 exports.about = (req, res) => {

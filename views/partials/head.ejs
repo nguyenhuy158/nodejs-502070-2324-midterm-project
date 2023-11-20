@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/css/plugins/bootstrap.min.css" />
 <link rel="stylesheet" href="/css/plugins/toastr.min.css" />
 <link rel="stylesheet" href="/css/plugins/spin.css" />
-<link rel="stylesheet" href="/css/plugins/sweetalert2.min.css">
+<link rel="stylesheet" href="/css/plugins/sweetalert2.min.css" />
 
 <script src="/js/plugins/jquery-3.7.0.js"></script>
 <script src="/js/plugins/bootstrap.bundle.min.js"></script>
@@ -15,6 +15,8 @@
 <script src="/js/plugins/spin.umd.js"></script>
 <script src="/js/plugins/spin.js" type="module"></script>
 <script src="/js/plugins/sweetalert2.min.js"></script>
+<script src="/js/plugins/popper.min.js"></script>
+<script src="/js/plugins/tippy-bundle.umd.min.js"></script>
 
 <!-- show flash from session storage -->
 <script>
@@ -73,4 +75,19 @@
         showMethod: 'fadeIn',
         hideMethod: 'fadeOut',
     }
+</script>
+
+<script>
+    // tooltip area
+    $(() => {
+        tippy('#roomName', {
+            content: 'Click copy to clipboard!',
+        })
+        tippy('#showIcons', {
+            content: 'Emoji box!',
+        })
+        tippy('#sendButton', {
+            content: 'Sent message!',
+        })
+    })
 </script>

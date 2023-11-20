@@ -8,17 +8,15 @@
         <link rel="stylesheet" href="/css/room-call.css" />
     </head>
 
-    <body>
+    <body class="position-relative">
         <%- include('./flash.ejs') %>
-        <!-- <header>
-            <img src="/callmate-logo.png" alt="CallMate Logo">
-            <h1>CallMate</h1>
-            <h6 id="yourUserIdContainer"></h6>
-        </header> -->
-        <!-- <div class="container text-center my-4">
-            <h1>CallMate</h1>
-            <h6 id="yourUserIdContainer"></h6>
-        </div> -->
+        <span
+            class="position-absolute top-0 start-0 z-3 px-3 py-2 rounded bg-light text-black pointer user-select-none"
+            data-id="<%= roomName %>"
+            id="roomName"
+        >
+            Code: <%= roomName %>
+        </span>
 
         <div id="offlineMessage" class="text-center h3">Please connect to the internet to use this website.</div>
 
@@ -72,9 +70,9 @@
                                     playsinline
                                     class="video-frame"
                                 ></video>
-                                <div class="nametag" id="myname">yourname</div>
-                                <div class="mute-icon" id="mymuteicon"><i class="fas fa-microphone-slash"></i></div>
-                                <div class="video-off" id="myvideooff">Video Off</div>
+                                <div class="nametag" id="myname"> <%= username %> </div>
+                                <div class="mute-icon d-none" id="mymuteicon"><i class="fas fa-microphone-slash"></i></div>
+                                <div class="video-off d-none" id="myvideooff">Video Off</div>
                             </div>
                         </div>
 
@@ -233,7 +231,6 @@
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            const roomName = '<%= roomName %>'
             const roomId = '<%= roomName %>'
             const socket = io()
         </script>

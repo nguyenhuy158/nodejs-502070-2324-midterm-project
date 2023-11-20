@@ -175,11 +175,11 @@ button {
 }
 
 .container-room .left-cont .video-cont-single .video-box .nametag {
+    left: 5%;
+    bottom: 0;
+    transform: translate(-50%, 100%);
     color: white;
-    bottom: 10px;
     position: absolute;
-    left: 10px;
-    bottom: 10px;
 }
 
 .container-room .left-cont .video-cont-single .video-box .video-off {
@@ -538,4 +538,8 @@ button {
 
 .icon-list-row {
     display: flex;
+}
+
+.pointer {
+    cursor: pointer;
 }
