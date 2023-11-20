@@ -28,10 +28,12 @@ const MongoStore = require('connect-mongo');
 
 
 const users = {};
+const rooms = {};
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
 app.use(logger("dev"));
+app.disable("x-powered-by");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIES_SECRET));
@@ -101,49 +103,16 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("offer", (offer, targetUserName) => {
-        console.log(`offer: ${userId} => ${targetUserName}`);
-        const targetSocketId = users[targetUserName];
-
-        console.log(`targetSocketId`, targetSocketId);
-        console.log(`userId`, userId);
-
-        if (targetSocketId) {
-            socket.to(targetSocketId)
-                .emit("offer", offer, userId);
-        } else {
-            socket.emit("user-not-found", targetUserName);
-        }
+    socket.on('offer', (data) => {
+        io.to(data.target).emit('offer', { target: socket.id, offer: data.offer });
     });
 
-    socket.on("answer", (answer, targetUserId) => {
-        console.log(`answer: ${userId} => ${targetUserId}`);
-        const targetSocketId = users[targetUserId];
-
-        console.log(`targetSocketId`, targetSocketId);
-        console.log(`userId`, userId);
-
-        if (targetSocketId) {
-            socket.to(targetSocketId)
-                .emit("answer", answer, userId);
-        } else {
-            socket.emit("user-not-found", targetUserId);
-        }
+    socket.on('answer', (data) => {
+        io.to(data.target).emit('answer', data.answer);
     });
 
-    socket.on("ice-candidate", (candidate, targetUserId) => {
-        console.log(`ice-candidate: ${userId} => ${targetUserId}`);
-
-
-        if (targetUserId !== null) {
-            const targetSocketId = users[targetUserId];
-            if (targetSocketId) {
-                socket.to(targetSocketId)
-                    .emit("ice-candidate", candidate, userId);
-            } else {
-                socket.emit("user-not-found", targetUserId);
-            }
-        }
+    socket.on('ice-candidate', (data) => {
+        io.to(data.target).emit('ice-candidate', data.candidate);
     });
 
     socket.on("connect_error", (err) => {
@@ -152,8 +121,18 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        delete users[userId];
-        socket.broadcast.emit('remove-active', Object.assign({}, { [userId]: socket.id }));
+        // delete users[userId];
+        // socket.broadcast.emit('remove-active', Object.assign({}, { [userId]: socket.id }));
+
+        // Xóa thông tin người dùng khi ngắt kết nối
+        const roomId = Object.keys(rooms).find((roomId) =>
+            rooms[roomId].members.includes(socket.id)
+        );
+        if (roomId) {
+            rooms[roomId].members.splice(rooms[roomId].members.indexOf(socket.id), 1);
+            socket.broadcast.to(roomId).emit('user-disconnected', socket.id);
+            socket.broadcast.to(roomId).emit('end-call');
+        }
     });
 
     socket.on('chat-message', (data) => {
@@ -161,14 +140,14 @@ io.on("connection", (socket) => {
         socket.to(data.roomName).emit('chat-message', data);
     });
 
-    socket.on('end-call', (data) => {
-        console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
-        const targetSocketId = users[data];
-        if (targetSocketId) {
-            socket.to(targetSocketId).emit('end-call', data);
-        } else {
-            socket.emit("user-not-found", data);
-        }
+    socket.on('end-call', (remoteUserId) => {
+        io.to(remoteUserId).emit('end-call');
+    });
+
+    socket.on('ready-call', (roomId) => {
+        console.log('ready to call');
+        console.log(rooms);
+        socket.to(roomId).emit('ready-call');
     });
 
     // Join a room
@@ -179,9 +158,26 @@ io.on("connection", (socket) => {
         socket.emit('redirectToRoom', `/room/${generateId()}`);
     });
 
-    socket.on('join', (room) => {
-        socket.join(room);
-        socket.to(room).emit('userJoined', socket.id);
+    socket.on('join-room', (roomId) => {
+        console.log(`🚀 rooms`, rooms);
+        if (!rooms[roomId]) {
+            rooms[roomId] = { members: [] };
+        }
+        if (rooms[roomId].members.length < 2) {
+            socket.join(roomId);
+            socket.to(roomId).emit('new-user', socket.id);
+
+            rooms[roomId].members.push(socket.id);
+            console.log(`🚀 ~ socket.on ~ rooms:`, rooms);
+
+            // Gửi thông tin thành viên trong phòng cho client
+            socket.emit('all-users', rooms[roomId].members);
+        } else {
+            // Redirect user to another page
+            socket.emit('room-full');
+        }
+    // socket.join(room);
+    // socket.to(room).emit('userJoined', socket.id);
     });
 
     function getUsersInRoom(room) {

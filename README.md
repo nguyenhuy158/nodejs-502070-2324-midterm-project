@@ -82,3 +82,76 @@ Use the application to make real-time calls using WebRTC.
 If two computers are on the same network, calls can be made. However, if they are on different networks, calls between them may not work.
 
 # End
+
+
+```
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  // Handle signaling logic here
+  socket.on('offer', (data) => {
+    io.to(data.target).emit('offer', data.offer);
+  });
+
+  socket.on('answer', (data) => {
+    io.to(data.target).emit('answer', data.answer);
+  });
+
+  socket.on('ice-candidate', (data) => {
+    io.to(data.target).emit('ice-candidate', data.candidate);
+  });
+});
+
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+
+```
+
+```
+<!-- Include necessary scripts like socket.io and adapter.js -->
+
+<script>
+  const socket = io.connect('http://localhost:3000');
+  const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+  const peerConnection = new RTCPeerConnection(configuration);
+
+  // Handle ice candidate events
+  peerConnection.onicecandidate = (event) => {
+    if (event.candidate) {
+      socket.emit('ice-candidate', {
+        target: remoteUserId,
+        candidate: event.candidate,
+      });
+    }
+  };
+
+  // Handle incoming offer
+  socket.on('offer', (offer) => {
+    peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    peerConnection.createAnswer().then((answer) => {
+      return peerConnection.setLocalDescription(answer);
+    }).then(() => {
+      socket.emit('answer', { target: remoteUserId, answer: peerConnection.localDescription });
+    });
+  });
+
+  // Handle incoming answer
+  socket.on('answer', (answer) => {
+    peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+  });
+
+  // Handle incoming ice candidate
+  socket.on('ice-candidate', (candidate) => {
+    peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+  });
+
+  // Add your code to get user media, create offer, and start the call
+</script>
+```

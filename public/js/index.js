@@ -23,9 +23,42 @@ let targetPeople;
 let isAlreadyCalling = false;
 const socket = io();
 
-
 $(() => {
     $('#offlineMessage').hide();
+    const configuration = {
+        iceServers: [
+            { urls: 'stun:stun.relay.metered.ca:80' },
+            {
+                urls: 'turn:a.relay.metered.ca:80',
+                username: 'f53cdafbffcc24c341620211',
+                credential: 'IsJ63Gjfyd9x25La',
+            },
+            {
+                urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+                username: 'f53cdafbffcc24c341620211',
+                credential: 'IsJ63Gjfyd9x25La',
+            },
+            {
+                urls: 'turn:a.relay.metered.ca:443',
+                username: 'f53cdafbffcc24c341620211',
+                credential: 'IsJ63Gjfyd9x25La',
+            },
+            {
+                urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+                username: 'f53cdafbffcc24c341620211',
+                credential: 'IsJ63Gjfyd9x25La',
+            },
+        ],
+    };
+    let peerConnection;
+    let remoteUserId;
+
+    socket.on('room-full', () => {
+        toastr.error('room is full');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    });
 
     socket.on('connect', () => {
         console.log('Connected to the signaling server with id', socket.id);
@@ -37,79 +70,93 @@ $(() => {
 
 
     if (roomName !== undefined && roomName !== null && roomName !== '') {
-        socket.emit('join', roomName);
+        socket.emit('join-room', roomName);
     }
 
-    // Handle the "Load Local Stream" button click event
-    (async function requestUserMedia() {
-        let stream = null;
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    socket.on('offer', async (data) => {
+        const offer = data.offer;
+        remoteUserId = data.target;
 
-            localStream = stream;
-            localVideo.srcObject = stream;
+        peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        peerConnection
+            .createAnswer()
+            .then((answer) => {
+                return peerConnection.setLocalDescription(answer);
+            })
+            .then(() => {
+                socket.emit('answer', {
+                    target: remoteUserId,
+                    answer: peerConnection.localDescription,
+                });
+            });
+    });
 
-        } catch (err) {
-            console.error('Failed to get media stream:', err);
-        }
-    })();
+    socket.on('answer', (answer) => {
+        peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    });
 
+    socket.on('ice-candidate', (candidate) => {
+        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    });
 
-    // Create a new WebRTC peer connection
     async function createPeerConnection(targetUsername) {
-        var peerConfiguration = {};
-
-        const response = await fetch(
-            'https://callmate.metered.live/api/v1/turn/credentials?apiKey=3bf717e4817d41a4378051971e5079829755',
-        );
-        const iceServers = await response.json();
-        peerConfiguration.iceServers = iceServers;
-        console.log(`peerConfiguration.iceServers`, peerConfiguration.iceServers);
-
-
-        peerConnection = new RTCPeerConnection(peerConfiguration);
-        console.log(`🚀 🚀 file: index.ejs:88 🚀 createPeerConnection 🚀 peerConnection`, peerConnection);
-
-        // Add the local stream to the peer connection
-        localStream.getTracks().forEach((track) => {
-            peerConnection.addTrack(track, localStream);
-        });
-
-        // Handle remote video stream when it arrives
-        peerConnection.ontrack = (event) => {
-            remoteVideo.srcObject = event.streams[0];
-        };
-
-        // Handle ICE candidate events by sending them to the other peer
+        console.log(`preCall - createPeerConnection`);
+        peerConnection = null;
+        peerConnection = new RTCPeerConnection(configuration);
         peerConnection.onicecandidate = (event) => {
-            console.log(`🚀 event`, event);
-            console.log(`🚀 event.candidate`, event.candidate);
             if (event.candidate) {
-                socket.emit('ice-candidate', event.candidate, targetUsername);
+                socket.emit('ice-candidate', {
+                    target: remoteUserId,
+                    candidate: event.candidate,
+                });
             }
         };
+        peerConnection.ontrack = function ({ streams: [stream] }) {
+            if (remoteVideo) {
+                remoteVideo.srcObject = stream;
+            }
+        };
+        let localMediaStream = localVideo.srcObject;
+        if (!localMediaStream) {
+            localMediaStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true,
+            });
+            localVideo.srcObject = localMediaStream;
+        }
+        peerConnection.addStream(localMediaStream);
+
+        if (!remoteUserId) {
+            console.log('emit ready to call');
+            socket.emit('ready-call', roomId);
+        }
     }
+
+    socket.on('new-user', (userId) => {
+        remoteUserId = userId;
+    });
+
+    socket.on('ready-call', async () => {
+        console.log('socket.on ready call');
+
+        try {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            socket.emit('offer', { target: remoteUserId, offer: offer });
+        } catch (error) {
+            console.error('Error starting the call:', error);
+        }
+    });
+
+    (async () => {
+        await createPeerConnection();
+    })();
 
     async function makeCall(targetUsername) {
         targetPeople = targetUsername;
 
         await createPeerConnection(targetUsername);
 
-        // // Create an SDP offer
-        // peerConnection
-        //     .createOffer()
-        //     .then((offer) => {
-        //         console.log(`offer`, offer);
-        //         return peerConnection.setLocalDescription(offer);
-        //     })
-        //     .then(() => {
-        //         // Send the offer to the other peer
-        //         socket.emit('offer', peerConnection.localDescription, targetUsername);
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error creating offer:', error);
-        //     });
-        // Create an SDP offer
         try {
             const offer = await peerConnection.createOffer();
             console.log(`offer`, offer);
@@ -138,64 +185,13 @@ $(() => {
         }
     });
 
-    socket.on('end-call', (targetUserId) => {
-        console.log(`end-call: => ${targetUserId}`);
-        if (peerConnection) {
-            peerConnection.close();
-            peerConnection = null;
+    socket.on('end-call', async () => {
+        try {
             remoteVideo.srcObject = null;
-        }
-    });
-
-    // Handle incoming offers from the other peer
-    socket.on('offer', async (offer, callerUsername) => {
-        console.log(`🚀 sourceSocketId`, callerUsername);
-        console.log(`🚀 offer`, offer);
-        try {
-            // Create a peer connection
-            await createPeerConnection(callerUsername);
-
-            // Set the remote description and create an answer
-            await peerConnection.setRemoteDescription(offer);
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-
-            if (!isAlreadyCalling) {
-                isAlreadyCalling = true;
-
-                // Send the answer to the other peer
-                socket.emit('answer', peerConnection.localDescription, callerUsername);
-            }
+            peerConnection.close();
+            await createPeerConnection();
         } catch (error) {
-            console.error('Error handling offer:', error);
-        }
-    });
-
-    // Handle incoming answers from the other peer
-    socket.on('answer', async (answer, targetUsername) => {
-        console.log(`🚀 targetUsername`, targetUsername);
-        console.log(`🚀 answer`, answer);
-        try {
-            // Set the remote description
-            await peerConnection.setRemoteDescription(answer);
-        } catch (error) {
-            console.error('Error handling answer:', error);
-        }
-    });
-
-    // Handle incoming ICE candidates from the other peer
-    socket.on('ice-candidate', async (candidate) => {
-        console.log(`🚀 candidate`, candidate);
-        if (peerConnection) {
-            // Check if the remote description is set
-            if (peerConnection.remoteDescription) {
-                // Add the ICE candidate to the peer connection
-                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-            } else {
-                console.log('Remote description is not set.');
-            }
-        } else {
-            console.log('peerConnection is undefined or null.');
+            console.error('Error ending the call:', error);
         }
     });
 
