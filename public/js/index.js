@@ -53,7 +53,13 @@ $(() => {
     let remoteUserId;
 
     socket.on('room-full', () => {
-        toastr.error('room is full');
+        toastr.error('Room is full, please create new room or enter other room id');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    });
+    socket.on('room-not-found', () => {
+        toastr.error('Room not exist, please create new room or enter new room id');
         setTimeout(() => {
             window.location.href = '/';
         }, 1000);
@@ -70,6 +76,7 @@ $(() => {
         yourUserIdContainer.text(`Your User ID: ${socket.id}`);
         id = socket.id;
     });
+
 
     if (roomName !== undefined && roomName !== null && roomName !== '') {
         socket.emit('join-room', roomName);

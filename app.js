@@ -150,13 +150,26 @@ io.on("connection", (socket) => {
     // Join a room
     socket.on('createRoom', () => {
         console.log(`User createRoom`);
-        socket.emit('redirectToRoom', `/room/${generateId()}`);
+        let roomId = generateId();
+        while (rooms[roomId]) {
+            roomId = generateId();
+        }
+        rooms[roomId] = { members: [] };
+        socket.emit('redirectToRoom', `/room/${roomId}`);
+    });
+
+    socket.on('join', (roomId) => {
+        if (!rooms[roomId]) {
+            return socket.emit('room-not-found');
+        }
+        return socket.emit('redirectToRoom', `/room/${roomId}`);
     });
 
     socket.on('join-room', (roomId) => {
+        console.log(`🚀 roomId`, roomId);
         console.log(`🚀 rooms`, rooms);
         if (!rooms[roomId]) {
-            rooms[roomId] = { members: [] };
+            return socket.emit('room-not-found');
         }
         if (rooms[roomId].members.length < 2) {
             socket.join(roomId);

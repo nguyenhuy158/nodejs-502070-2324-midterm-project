@@ -42,10 +42,11 @@ createButton.addEventListener('click', (e) => {
 
     setTimeout(() => {
         socket.emit('createRoom');
-        socket.on('redirectToRoom', (url) => {
-            window.location.href = url;
-        });
     }, 1000);
+});
+
+socket.on('redirectToRoom', (url) => {
+    window.location.href = url;
 });
 
 joinBut.addEventListener('click', (e) => {
@@ -63,7 +64,11 @@ joinBut.addEventListener('click', (e) => {
     }
 
     const code = codeCont.value;
-    location.href = `/room/${code}`;
+    socket.emit('join', code);
+
+    socket.on('room-not-found', () => {
+        toastr.error('Room not exist, please create new room or enter new room id');
+    });
 });
 
 $('#roomcode').on('keypress', function (e) {

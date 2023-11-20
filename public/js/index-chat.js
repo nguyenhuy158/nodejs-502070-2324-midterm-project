@@ -62,11 +62,11 @@ $(document).ready(function () {
         });
     });
 
-    window.addEventListener('beforeunload', function (e) {
-        var confirmationMessage = 'Are you sure you want to leave?';
-        (e || window.event).returnValue = confirmationMessage;
-        return confirmationMessage;
-    });
+    // window.addEventListener('beforeunload', function (e) {
+    //     var confirmationMessage = 'Are you sure you want to leave?';
+    //     (e || window.event).returnValue = confirmationMessage;
+    //     return confirmationMessage;
+    // });
 });
 
 
