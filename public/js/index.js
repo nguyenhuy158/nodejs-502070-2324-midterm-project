@@ -21,7 +21,6 @@ let localStream;
 let peerConnection;
 let targetPeople;
 let isAlreadyCalling = false;
-const socket = io();
 
 $(() => {
     $('#offlineMessage').hide();
@@ -174,15 +173,6 @@ $(() => {
     socket.on('user-not-found', (targetUserId) => {
         const message = `User with ID ${targetUserId} not found`;
         toastr.error(message);
-    });
-
-    $('#createroom').on('click', () => {
-        const roomName = 'myRoom';
-        socket.emit('createRoom', roomName);
-    });
-
-    socket.on('redirectToRoom', (url) => {
-        window.location.href = url;
     });
 
 });

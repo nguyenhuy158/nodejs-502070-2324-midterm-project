@@ -148,9 +148,8 @@ io.on("connection", (socket) => {
     });
 
     // Join a room
-    socket.on('createRoom', (roomName) => {
-        socket.join(roomName);
-        console.log(`User joined room: ${roomName}`);
+    socket.on('createRoom', () => {
+        console.log(`User createRoom`);
         socket.emit('redirectToRoom', `/room/${generateId()}`);
     });
 

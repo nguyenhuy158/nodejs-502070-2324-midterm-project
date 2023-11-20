@@ -1,9 +1,18 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+function isValidCode(code) {
+    var pattern = /^[a-z]{3}-[a-z]{3}-[a-z]{3}$/;
+
+    return pattern.test(code);
+}
+
 const createButton = document.querySelector("#createroom");
 const videoCont = document.querySelector('.video-self');
 const codeCont = document.querySelector('#roomcode');
 const joinBut = document.querySelector('#joinroom');
 const mic = document.querySelector('#mic');
 const cam = document.querySelector('#webcam');
+const createroomtext = 'Creating Room...';
 
 let micAllowed = true;
 let camAllowed = true;
@@ -15,10 +24,7 @@ navigator.mediaDevices.getUserMedia(mediaConstraints)
         videoCont.srcObject = localstream;
     });
 
-const createroomtext = 'Creating Room...';
-
 createButton.addEventListener('click', (e) => {
-
     e.preventDefault();
 
     createButton.disabled = true;
@@ -33,16 +39,39 @@ createButton.addEventListener('click', (e) => {
             createButton.innerHTML = createroomtext.substring(0, createButton.innerHTML.length - 3);
         }
     }, 500);
+
+    setTimeout(() => {
+        socket.emit('createRoom');
+        socket.on('redirectToRoom', (url) => {
+            window.location.href = url;
+        });
+    }, 1000);
 });
 
 joinBut.addEventListener('click', (e) => {
     e.preventDefault();
     if (codeCont.value.trim() == "") {
         codeCont.classList.add('roomcode-error');
+        toastr.error('Please enter room code');
+        $('#roomcode').focus();
         return;
     }
+    if (!isValidCode(codeCont.value.trim())) {
+        toastr.error('Invalid room code');
+        $('#roomcode').focus();
+        return;
+    }
+
     const code = codeCont.value;
     location.href = `/room/${code}`;
+});
+
+$('#roomcode').on('keypress', function (e) {
+    // check enter key
+    if (e.which === 13) {
+        e.preventDefault();
+        joinBut.click();
+    }
 });
 
 codeCont.addEventListener('change', (e) => {

@@ -41,6 +41,21 @@ $(document).ready(function () {
         $others.removeClass("others-show");
         $inputText.val($inputText.val() + $(this).text());
     });
+
+    $('.cutcall').on('click', function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to leave this page.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, leave!',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/';
+            }
+        });
+    });
 });
 
 
