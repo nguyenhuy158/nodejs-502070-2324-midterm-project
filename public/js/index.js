@@ -71,7 +71,7 @@ $(() => {
     });
     socket.on('connect', () => {
         console.log('Connected to the signaling server with id', socket.id);
-        toastr.success('Connected to the signaling server');
+        displayMessage(`Connected to signaling server`, '🤖🤖🤖');
 
         yourUserIdContainer.text(`Your User ID: ${socket.id}`);
         id = socket.id;
@@ -80,6 +80,7 @@ $(() => {
 
     if (roomName !== undefined && roomName !== null && roomName !== '') {
         socket.emit('join-room', roomName);
+        // displayMessage(`Join room ${roomName} success`, '🤖🤖🤖');
     }
 
     socket.on('offer', async (data) => {
@@ -184,9 +185,6 @@ $(() => {
 
 });
 
-
-let username = 'Anonymous';
-
 function displayMessage(message, sender, timeSent, isMe = false) {
     $('#chatBox').append(`
         <div class="message ${isMe ? 'message-right' : 'message-left'}">
@@ -203,52 +201,3 @@ function displayMessage(message, sender, timeSent, isMe = false) {
 
     $('.card-body').scrollTop($('.card-body>#chatBox')[0].scrollHeight);
 }
-
-$(() => {
-
-    $.ajax({
-        url: '/api/current-user',
-        method: 'GET',
-        success: function (data) {
-            console.log(`🚀 🚀 file: index-chat.js:7 🚀 data`, data);
-            toastr.success('User info loaded');
-
-            username = data.username;
-            socket.emit('set-username', data.username);
-            $('#yourLocalName').text(`Name: ${data.username}`);
-        },
-        error: function (error) {
-            console.log(`🚀 🚀 file: index-chat.js:10 🚀 error`, error);
-            toastr.error(error.responseJSON?.message || 'Error loading user info');
-        }
-    });
-
-    socket.on('chat-message', (data) => {
-        displayMessage(data.message, data.sender, data.timeSent);
-    });
-
-    function sendMessage() {
-        const message = $('#chatInput').val();
-        const sender = username;
-        const timeSent = new Date().toLocaleTimeString();
-
-        socket.emit('chat-message', {
-            roomName,
-            message,
-            sender,
-            timeSent
-        });
-
-        displayMessage(message, sender, timeSent, true);
-    }
-
-    $('#sendButton').on('click', sendMessage);
-
-    $('#chatInput').on('keypress', function (e) {
-        console.log(`🚀 🚀 file: index.js:345 🚀 e`, e);
-        if (e.which == 13) {
-            sendMessage();
-            e.preventDefault();
-        }
-    });
-});

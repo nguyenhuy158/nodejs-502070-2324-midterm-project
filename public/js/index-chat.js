@@ -77,24 +77,65 @@ $(document).ready(function () {
         const sender = username;
         const timeSent = new Date().toLocaleTimeString();
 
-        socket.emit('chat-message', {
-            roomName,
-            message,
-            sender,
-            timeSent
-        });
-
-        displayMessage(message, sender, timeSent, true);
+        if (message.trim() !== '') {
+            socket.emit('chat-message', {
+                roomName,
+                message,
+                sender,
+                timeSent
+            });
+            displayMessage(message, sender, timeSent, true);
+        }
     }
 
     $('#sendButton').on('click', sendMessage);
 
     $('#chatInput').on('keypress', function (e) {
-        const message = $('#chatInput').val();
-        if (e.which == 13 && message.trim() !== '') {
+        if (e.which == 13) {
             sendMessage();
             e.preventDefault();
         }
+    });
+
+    // invite friend
+    $('#invite').on('click', function () {
+        Swal.fire({
+            title: "Enter username to invite",
+            input: "text",
+            inputAttributes: {
+                autocapitalize: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Invite",
+            showLoaderOnConfirm: true,
+            preConfirm: async (inviteUsername) => {
+                try {
+                    // TODO: change to invite url
+                    const response = await fetch('/api/current-user', {
+                        method: 'GET',
+                    });
+                    console.log(`🚀 response`, response);
+
+                    if (!response.ok) {
+                        return Swal.showValidationMessage(response.statusText);
+                    }
+                    return inviteUsername;
+                } catch (error) {
+                    console.log(`🚀 error`, error);
+
+                    Swal.showValidationMessage(error + inviteUsername);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(`🚀 result`, result);
+
+                Swal.fire({
+                    title: `Invite ${result.value} successfully!`,
+                });
+            }
+        });
     });
 });
 
