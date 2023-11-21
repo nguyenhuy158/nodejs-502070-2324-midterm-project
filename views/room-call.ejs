@@ -57,20 +57,7 @@
                             <div class="video-box">
                                 <video id="localVideo" muted autoplay playsinline class="video-frame"></video>
                                 <!-- create video tag for remote -->
-                                <video
-                                    style="
-                                        position: absolute;
-                                        left: 0%;
-                                        width: 300px;
-                                        min-height: 9px;
-                                        height: auto;
-                                        margin: 8px 0 0 8px;
-                                    "
-                                    id="remoteVideo"
-                                    autoplay
-                                    playsinline
-                                    class="video-frame"
-                                ></video>
+                                <video id="remoteVideo" autoplay playsinline class="video-frame video-remote"></video>
                                 <div class="nametag" id="myname"><%= username %></div>
                                 <div class="mute-icon d-none" id="mute-mic-icon">
                                     <i class="fas fa-microphone-slash"></i>

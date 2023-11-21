@@ -82,6 +82,17 @@ button {
     position: relative;
 }
 
+#remoteVideo.video-remote,
+#localVideo.video-remote {
+    z-index: 1;
+    position: absolute;
+    left: 0%;
+    width: 300px;
+    min-height: 9px;
+    height: auto;
+    margin: 8px 0 0 8px;
+}
+
 .container-room .left-cont .video-cont .video-box {
     background-color: #353b48;
     height: 100%;

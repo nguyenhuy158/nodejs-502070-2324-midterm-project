@@ -168,6 +168,9 @@ $(() => {
     socket.on('end-call', async () => {
         try {
             remoteVideo.srcObject = null;
+            // swap video tag
+            $('#localVideo').removeClass('video-remote');
+            $('#remoteVideo').addClass('video-remote');
             peerConnection.close();
             await createPeerConnection();
         } catch (error) {
@@ -184,6 +187,19 @@ $(() => {
     socket.on('user-not-found', (targetUserId) => {
         const message = `User with ID ${targetUserId} not found`;
         toastr.error(message);
+    });
+
+    // local/remove video
+    $('#remoteVideo').on('loadedmetadata', function () {
+        // console.log('Video metadata đã được tải.');
+        // console.log('Độ phân giải: ' + this.videoWidth + 'x' + this.videoHeight);
+    });
+    // Lắng nghe sự kiện error cho video
+    $('#remoteVideo').on('loadeddata', function () {
+        // console.log('Dữ liệu video đã được tải.');
+        // swap video tag
+        $('#remoteVideo').removeClass('video-remote');
+        $('#localVideo').addClass('video-remote');
     });
 
 });
