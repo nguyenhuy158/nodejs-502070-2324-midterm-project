@@ -36,6 +36,7 @@ $('.logout').on('click', function (e) {
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = '/logout';
+            localStorage.clear();
         }
     });
 });
