@@ -10,8 +10,14 @@
     font-family: "Open Sans", sans-serif;
 }
 
+body{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 header {
-    background-color: #916de4;
+    background-color: #ba88fe;
     color: #fff;
     padding: 15px;
     text-align: center;
@@ -42,6 +48,12 @@ header .logo h3 {
     header h6 {
         margin-bottom: 0;
 }
+
+.bell{
+    font-weight: bold;
+    font-size: 18px;
+}
+
 .mr-1 {
     margin-right: 10px;
 }
@@ -105,13 +117,13 @@ body {
     margin-top: 60px;
     font-size: 24px;
     font-weight: bold;
-    background-color: #8466cc;
+    background-color: #ba88fe;
     color: white;
     text-align: center;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
-    border: 2px solid #9a5faa;
+    border: 2px solid #fff;
     transition: 0.3s;
 }
 
@@ -137,7 +149,7 @@ body {
     border-radius: 10px;
     background-color: white;
     border: 2px solid #d088da;
-    color: #9f66a7;
+    color: #ba88fe;
 }
 
 .main .create-join .createroom-clicked:focus {
@@ -201,7 +213,7 @@ body {
 .main .create-join .logout:hover {
     cursor: pointer;
     text-decoration: underline;
-    color: #c088da;
+    color: #ba88fe;
 }
 
 .main .video-cont {
@@ -217,6 +229,7 @@ body {
     background-color: #393e46;
     border-radius: 10px;
     object-fit: cover;
+    transform: scaleX(-1);
 }
 
 .main .video-cont .settings {
@@ -231,7 +244,7 @@ body {
 }
 
 .main .video-cont .settings .device {
-    background-color: #8466cc;
+    background-color: #c672f7;
     border-radius: 100px;
     padding: 8px 10px;
     width: 40px;
@@ -241,7 +254,7 @@ body {
 }
 
 .main .video-cont .settings .device:hover {
-    background-color: #88a8da;
+    background-color: #4359db;
     cursor: pointer;
 }
 

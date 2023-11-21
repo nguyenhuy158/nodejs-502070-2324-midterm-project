@@ -189,9 +189,12 @@ $(() => {
 });
 
 function displayMessage(message, sender, timeSent, isMe = false) {
+    // format date now to hh:mm:ss AM
+    console.log(`🚀 🚀 file: index.js:194 🚀 displayMessage 🚀 timeSent`, timeSent);
+    timeSent = timeSent || moment(Date.now()).format('hh:mm:ss A');
     $('#chatBox').append(`
         <div class="message ${isMe ? 'message-right' : 'message-left'}">
-            <strong>${sender}</strong>
+            <strong>${sender}<small>${timeSent}</small></strong>
             <div class="bubble ${isMe ? 'bubble-dark' : 'bubble-light'}">
                 ${message}
                 <!-- <div><small>${timeSent}</small></div> -->

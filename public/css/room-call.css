@@ -141,6 +141,7 @@ button {
     width: 100%;
     object-fit: cover;
     border-radius: 5px;
+    transform: scaleX(-1);
 }
 
 .container-room .left-cont .video-cont-single .video-box .nametag {
@@ -202,11 +203,11 @@ button {
 
 .container-room .left-cont .footer .utils .audio:hover {
     cursor: pointer;
-    background-color: #393e46;
+    background-color: #88a8da;
 }
 
 .container-room .left-cont .footer .utils .novideo {
-    background-color: #4ecca3;
+    background-color: #cc4e4e;
     height: 40px;
     width: 40px;
     border-radius: 100px;
@@ -236,7 +237,7 @@ button {
 
 .container-room .left-cont .footer .utils .novideo:hover {
     cursor: pointer;
-    background-color: #393e46;
+    background-color: #88a8da;
 }
 
 /* -------------------- END MAIN VIDEO STYLE --------------------*/
@@ -302,46 +303,69 @@ button {
     align-items: flex-start;
 }
 
-.chat-box .chat-room .message-left strong{
-    margin: 5px 0 8px 0;
+.chat-box .chat-room .message-left strong {
+    margin: 8px 0 10px;
+    font-size: 15px;
+}
+
+.chat-box .chat-room .message-left small {
+    margin-left: 5px;
+    color: #bbb;
 }
 
 .chat-box .chat-room .message-left .bubble {
     border-radius: 5px;
     position: relative;
+    min-width: 50px;
+    text-align: center;
 }
 
 .chat-box .chat-room .message-left .bubble::before {
     content: "";
     position: absolute;
     top: -9px;
-    left: 7%;
+    left: 15px;
     border-style: solid;
     border-width: 0 10px 10px 10px;
-    border-color: transparent transparent #fbcffc transparent;
+    border-color: transparent transparent #58b666 transparent;
 }
 
 .chat-box .chat-room .message-right {
     align-items: flex-end;
 }
 
-.chat-box .chat-room .message-right strong{
-    margin: 5px 17px 8px 0;
+.chat-box .chat-room .message-right strong {
+    margin: 8px 17px 10px 0;
+    font-size: 15px;
+}
+
+.chat-box .chat-room .message-right strong,
+.chat-box .chat-room .message-right small {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.chat-box .chat-room .message-right small {
+    margin-right: 5px;
+    color: #bbb;
 }
 
 .chat-box .chat-room .message-right .bubble {
     border-radius: 5px;
     position: relative;
+    min-width: 50px;
+    text-align: center;
 }
 
 .chat-box .chat-room .message-right .bubble::before {
     content: "";
     position: absolute;
     top: -9px;
-    right: 22%;
+    right: 15px;
     border-style: solid;
     border-width: 0 10px 10px 10px;
-    border-color: transparent transparent #be79df transparent;
+    border-color: transparent transparent #6fbced transparent;
 }
 
 .chat-box .chat-room .bubble {
@@ -351,12 +375,13 @@ button {
 }
 
 .chat-box .chat-room .bubble-light {
-    background-color: #fbcffc;
+    color: #fff;
+    background-color: #58b666;
 }
 
 .chat-box .chat-room .bubble-dark {
     color: #fff;
-    background-color: #be79df;
+    background-color: #6fbced;
 }
 
 .chat-box .chat-room strong {
@@ -364,14 +389,14 @@ button {
     font-weight: normal;
 }
 
-
 .chat-box .type-area {
     display: flex;
     flex-direction: row;
     align-items: center;
     height: 65px;
-    background-color: #f7f9fb;
+    background-color: #fff;
     border-radius: 0 0 20px 20px;
+    background: none;
 }
 
 .chat-box .type-area .input-wrapper {
@@ -386,7 +411,12 @@ button {
     height: 100%;
     width: 275px;
     font-size: 14px;
-    background-color: #f7f9fb;
+    padding: 6px 12px;
+    background-color: transparent;
+}
+
+.type-area .icon-box {
+    justify-content: center;
 }
 
 .chat-box .type-area .button-add {
@@ -408,51 +438,6 @@ button {
     color: #7ce8f7;
 }
 
-.chat-box .type-area .button-add .others {
-    display: flex;
-    padding: 10px 15px;
-    background-color: #fff;
-    position: absolute;
-    top: 5px;
-    z-index: -1;
-    right: -52px;
-    border-radius: 999px;
-    box-shadow: 0 0 25px -5px lightgray;
-    transition: 0.3s all ease-out;
-}
-
-.chat-box .type-area .button-add .others span i {
-    font-size: 20px;
-    color: #be79df;
-}
-
-.chat-box .type-area .button-add .others span.image-button {
-    margin: 0 25px;
-}
-
-.chat-box .type-area .button-add .others .emoji-button {
-    position: relative;
-}
-
-.chat-box .type-area .button-add .others .emoji-button .emoji-box {
-    display: none;
-    position: absolute;
-    width: 0px;
-    height: 0px;
-    top: 0px;
-    right: 0px;
-    transition: 0.3s all ease-out;
-}
-
-.chat-box .type-area .button-add .others .emoji-button .emoji-box span {
-    user-select: none;
-    cursor: pointer;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    width: 20px;
-    height: 20px;
-}
-
 .chat-box .type-area .button-send {
     background-color: #f7f9fb;
     width: 65px;
@@ -464,7 +449,7 @@ button {
 
 .chat-box .type-area .button-send:hover {
     height: 100%;
-    background-color: #be79df;
+    background-color: #6fbced;
     color: #fff;
 }
 
