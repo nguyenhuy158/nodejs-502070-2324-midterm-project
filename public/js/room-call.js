@@ -74,6 +74,14 @@ $(() => {
         $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
     });
 
+    // handle mute mic or mute camera from localStorage
+    if (localStorage.getItem('micAllowed') == 'true') {
+        $('.utils .audio').trigger('click');
+    }
+    if (localStorage.getItem('camAllowed') == 'true') {
+        $('.utils .novideo').trigger('click');
+    }
+
     // Handle chat form
     $.ajax({
         url: '/api/current-user',

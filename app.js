@@ -43,10 +43,11 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    // milliseconds * seconds * minutes * hours * days
-    // 1000 * 60 * 60 * 24 * 10 = 10 days
     cookie: { maxAge: 1000 * 60 * 60 * 24 * 10 },
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        ttl: 1000 * 60 * 60 * 24 * 10
+    }),
     resave: true,
     saveUninitialized: true,
     name: 'callmate.sid',

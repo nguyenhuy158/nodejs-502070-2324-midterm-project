@@ -131,6 +131,7 @@ cam.addEventListener('click', () => {
         camAllowed = true;
 
     }
+    localStorage.setItem('camAllowed', camAllowed);
 });
 
 mic.addEventListener('click', () => {
@@ -161,6 +162,7 @@ mic.addEventListener('click', () => {
         micAllowed = true;
 
     }
+    localStorage.setItem('micAllowed', micAllowed);
 });
 
 $(() => {
