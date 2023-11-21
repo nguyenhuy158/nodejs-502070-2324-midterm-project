@@ -420,7 +420,7 @@ button {
     outline: none;
     border: none;
     height: 100%;
-    width: 275px;
+    width: 100%;
     font-size: 14px;
     padding: 6px 12px;
     background-color: transparent;
@@ -430,21 +430,28 @@ button {
     justify-content: center;
 }
 
+.chat-box .type-area .button-upload,
 .chat-box .type-area .button-add {
     display: flex;
     border: none;
     background: none;
     align-items: center;
     position: relative;
-    margin-right: 8px;
+    margin-right: 5px;
 }
 
+.chat-box .type-area .button-upload i,
 .chat-box .type-area .button-add i {
-    font-size: 30px;
+    font-size: 24px;
     color: rgb(24, 112, 199);
     cursor: pointer;
 }
 
+.chat-box .type-area .button-add i {
+    margin-left: 8px;
+}
+
+.chat-box .type-area .button-upload i:hover,
 .chat-box .type-area .button-add i:hover {
     color: #7ce8f7;
 }
