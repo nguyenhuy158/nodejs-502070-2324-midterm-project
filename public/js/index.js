@@ -1,257 +1,189 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+function isValidCode(code) {
+    var pattern = /^[a-z]{3}-[a-z]{3}-[a-z]{3}$/;
 
-const userNameInput = $('#userNameInput');
-const submitNameButton = $('#submitName');
-const yourRemoteName = $('#yourRemoteName');
-const yourLocalName = $('#yourLocalName');
-
-const localVideo = document.querySelector('#localVideo');
-const remoteVideo = document.querySelector('#remoteVideo');
-const startCallButton = $('#startCall');
-const endCallButton = $('#endCall');
-const yourUserIdContainer = $('#yourUserIdContainer');
-const btnLoadActiveList = $('#load-active-list');
-const btnLoadLocalSteam = $('#load-local-stream');
-const listActiveList = $('#active-list');
-
-
-let id;
-let localStream;
-let peerConnection;
-let targetPeople;
-let isAlreadyCalling = false;
-let remoteUserId;
-let audioSender;
-let videoSender;
-
-// mute audio
-function muteAudio() {
-    if (peerConnection.getSenders().length === 0) return;
-    if (audioSender === undefined) return;
-    audioSender.track.enabled = false;
-}
-// unmute audio
-function unmuteAudio() {
-    if (peerConnection.getSenders().length === 0) return;
-    if (audioSender === undefined) return;
-    audioSender.track.enabled = true;
-}
-// mute video
-function muteVideo() {
-    if (peerConnection.getSenders().length === 0) return;
-    if (videoSender === undefined) return;
-    videoSender.track.enabled = false;
-}
-// Mute video
-function unmuteVideo() {
-    if (peerConnection.getSenders().length === 0) return;
-    if (videoSender === undefined) return;
-    videoSender.track.enabled = true;
+    return pattern.test(code);
 }
 
+const createButton = document.querySelector("#createroom");
+const videoCont = document.querySelector('.video-self');
+const codeCont = document.querySelector('#roomcode');
+const joinBut = document.querySelector('#joinroom');
+const mic = document.querySelector('#mic');
+const cam = document.querySelector('#webcam');
+const createroomtext = 'Creating Room...';
 
+let micAllowed = true;
+let camAllowed = true;
 
-$(() => {
-    $('#offlineMessage').hide();
-    const configuration = {
-        iceServers: [
-            { urls: 'stun:stun.relay.metered.ca:80' },
-            {
-                urls: 'turn:a.relay.metered.ca:80',
-                username: 'f53cdafbffcc24c341620211',
-                credential: 'IsJ63Gjfyd9x25La',
-            },
-            {
-                urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-                username: 'f53cdafbffcc24c341620211',
-                credential: 'IsJ63Gjfyd9x25La',
-            },
-            {
-                urls: 'turn:a.relay.metered.ca:443',
-                username: 'f53cdafbffcc24c341620211',
-                credential: 'IsJ63Gjfyd9x25La',
-            },
-            {
-                urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-                username: 'f53cdafbffcc24c341620211',
-                credential: 'IsJ63Gjfyd9x25La',
-            },
-        ],
-    };
-    // let peerConnection;
-    // let remoteUserId;
+let mediaConstraints = { video: true, audio: true };
 
-    socket.on('room-full', () => {
-        toastr.error('Room is full, please create new room or enter other room id');
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 1000);
-    });
-    socket.on('room-not-found', () => {
-        toastr.error('Room not exist, please create new room or enter new room id');
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 1000);
+navigator.mediaDevices.getUserMedia(mediaConstraints)
+    .then(localstream => {
+        videoCont.srcObject = localstream;
     });
 
-    socket.on("connect_error", (err) => {
-        console.log(`connect_error due to `, err);
-        console.log(`connect_error due to ${err.message}`);
-    });
-    socket.on('connect', () => {
-        console.log('Connected to the signaling server with id', socket.id);
-        displayMessage(`Connected to signaling server`, '🤖🤖🤖');
+$('.logout').on('click', function (e) {
+    e.preventDefault();
 
-        yourUserIdContainer.text(`Your User ID: ${socket.id}`);
-        id = socket.id;
-    });
-
-
-    if (roomName !== undefined && roomName !== null && roomName !== '') {
-        socket.emit('join-room', roomName);
-        // displayMessage(`Join room ${roomName} success`, '🤖🤖🤖');
-    }
-
-    socket.on('offer', async (data) => {
-        const offer = data.offer;
-        remoteUserId = data.target;
-
-        peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        peerConnection
-            .createAnswer()
-            .then((answer) => {
-                return peerConnection.setLocalDescription(answer);
-            })
-            .then(() => {
-                socket.emit('answer', {
-                    target: remoteUserId,
-                    answer: peerConnection.localDescription,
-                });
-            });
-    });
-
-    socket.on('answer', (answer) => {
-        peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    });
-
-    socket.on('ice-candidate', (candidate) => {
-        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    });
-
-    async function createPeerConnection() {
-        console.log(`preCall - createPeerConnection`);
-        peerConnection = null;
-        peerConnection = new RTCPeerConnection(configuration);
-        peerConnection.onicecandidate = (event) => {
-            if (event.candidate) {
-                socket.emit('ice-candidate', {
-                    target: remoteUserId,
-                    candidate: event.candidate,
-                });
-            }
-        };
-        peerConnection.ontrack = function ({ streams: [stream] }) {
-            if (remoteVideo) {
-                remoteVideo.srcObject = stream;
-            }
-        };
-        let localMediaStream = localVideo.srcObject;
-        if (!localMediaStream) {
-            localMediaStream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true,
-            });
-            localVideo.srcObject = localMediaStream;
-        }
-        peerConnection.addStream(localMediaStream);
-
-        audioSender = peerConnection.getSenders().find(sender => sender.track.kind === 'audio');
-        videoSender = peerConnection.getSenders().find(sender => sender.track.kind === 'video');
-
-        if (!remoteUserId) {
-            console.log('emit ready to call');
-            socket.emit('ready-call', roomId);
-        }
-    }
-
-    socket.on('new-user', (data) => {
-        const { newUserId, newUsername } = data;
-        remoteUserId = newUserId;
-        // console.log('new-user', data);
-        displayMessage(`${newUsername} joined the room`, '🤖🤖🤖');
-    });
-
-    socket.on('ready-call', async () => {
-        console.log('socket.on ready call');
-
-        try {
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
-            socket.emit('offer', { target: remoteUserId, offer: offer });
-        } catch (error) {
-            console.error('Error starting the call:', error);
+    Swal.fire({
+        title: 'Are you sure to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, see ya!',
+        cancelButtonText: 'No, just kidding!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/logout';
+            localStorage.clear();
         }
     });
-
-    (async () => {
-        await createPeerConnection();
-    })();
-
-    socket.on('end-call', async () => {
-        try {
-            remoteVideo.srcObject = null;
-            // swap video tag
-            $('#localVideo').removeClass('video-remote');
-            $('#remoteVideo').addClass('video-remote');
-            peerConnection.close();
-            await createPeerConnection();
-        } catch (error) {
-            console.error('Error ending the call:', error);
-        }
-    });
-
-    socket.on('connect_error', (err) => {
-        console.log(`connect_error due to `, err);
-        console.log(`connect_error due to ${err.message}`);
-    });
-
-    // Handle the 'user-not-found' event
-    socket.on('user-not-found', (targetUserId) => {
-        const message = `User with ID ${targetUserId} not found`;
-        toastr.error(message);
-    });
-
-    // local/remove video
-    $('#remoteVideo').on('loadedmetadata', function () {
-        // console.log('Video metadata đã được tải.');
-        // console.log('Độ phân giải: ' + this.videoWidth + 'x' + this.videoHeight);
-    });
-    // Lắng nghe sự kiện error cho video
-    $('#remoteVideo').on('loadeddata', function () {
-        // console.log('Dữ liệu video đã được tải.');
-        // swap video tag
-        $('#remoteVideo').removeClass('video-remote');
-        $('#localVideo').addClass('video-remote');
-    });
-
 });
 
-function displayMessage(message, sender, timeSent, isMe = false) {
-    // format date now to hh:mm:ss AM
-    console.log(`🚀 🚀 file: index.js:194 🚀 displayMessage 🚀 timeSent`, timeSent);
-    timeSent = timeSent || moment(Date.now()).format('hh:mm:ss A');
-    $('#chatBox').append(`
-        <div class="message ${isMe ? 'message-right' : 'message-left'}">
-            <strong>${sender}<small>${timeSent}</small></strong>
-            <div class="bubble ${isMe ? 'bubble-dark' : 'bubble-light'}">
-                ${message}
-                <!-- <div><small>${timeSent}</small></div> -->
-            </div>
-        </div>
-    `);
+createButton.addEventListener('click', (e) => {
+    e.preventDefault();
 
-    $('#chatInput').val(isMe ? '' : $('#chatInput').val());
+    createButton.disabled = true;
+    createButton.innerHTML = 'Creating Room';
+    createButton.classList = 'createroom-clicked';
 
-    $('.card-body').scrollTop($('.card-body>#chatBox')[0].scrollHeight);
-}
+    setInterval(() => {
+        if (createButton.innerHTML < createroomtext) {
+            createButton.innerHTML = createroomtext.substring(0, createButton.innerHTML.length + 1);
+        }
+        else {
+            createButton.innerHTML = createroomtext.substring(0, createButton.innerHTML.length - 3);
+        }
+    }, 500);
+
+    setTimeout(() => {
+        socket.emit('createRoom');
+    }, 1000);
+});
+
+socket.on('redirectToRoom', (url) => {
+    window.location.href = url;
+});
+
+joinBut.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (codeCont.value.trim() == "") {
+        codeCont.classList.add('roomcode-error');
+        toastr.error('Please enter room code');
+        $('#roomcode').focus();
+        return;
+    }
+    if (!isValidCode(codeCont.value.trim())) {
+        toastr.error('Invalid room code');
+        $('#roomcode').focus();
+        return;
+    }
+
+    const code = codeCont.value;
+    socket.emit('join', code);
+
+    socket.on('room-not-found', () => {
+        toastr.error('Room not exist, please create new room or enter new room id');
+    });
+});
+
+$('#roomcode').on('keypress', function (e) {
+    // check enter key
+    if (e.which === 13) {
+        e.preventDefault();
+        joinBut.click();
+    }
+});
+
+codeCont.addEventListener('change', (e) => {
+    e.preventDefault();
+    if (codeCont.value.trim() !== "") {
+        codeCont.classList.remove('roomcode-error');
+        return;
+    }
+});
+
+cam.addEventListener('click', () => {
+    if (camAllowed) {
+        mediaConstraints = { video: false, audio: micAllowed };
+        if (micAllowed) {
+            navigator.mediaDevices.getUserMedia(mediaConstraints)
+                .then(localstream => {
+                    videoCont.srcObject = localstream;
+                });
+        } else {
+            videoCont.srcObject = null;
+        }
+
+        cam.classList = "nodevice";
+        cam.innerHTML = `<i class="fas fa-video-slash"></i>`;
+        camAllowed = false;
+
+    } else {
+        mediaConstraints = { video: true, audio: micAllowed };
+        navigator.mediaDevices.getUserMedia(mediaConstraints)
+            .then(localstream => {
+                videoCont.srcObject = localstream;
+            });
+
+        cam.classList = "device";
+        cam.innerHTML = `<i class="fas fa-video"></i>`;
+        camAllowed = true;
+
+    }
+    localStorage.setItem('camAllowed', camAllowed);
+});
+
+mic.addEventListener('click', () => {
+    if (micAllowed) {
+        mediaConstraints = { video: camAllowed, audio: false };
+        if (camAllowed) {
+            navigator.mediaDevices.getUserMedia(mediaConstraints)
+                .then(localstream => {
+                    videoCont.srcObject = localstream;
+                });
+        } else {
+            videoCont.srcObject = null;
+        }
+
+        mic.classList = "nodevice";
+        mic.innerHTML = `<i class="fas fa-microphone-slash"></i>`;
+        micAllowed = false;
+
+    } else {
+        mediaConstraints = { video: camAllowed, audio: true };
+        navigator.mediaDevices.getUserMedia(mediaConstraints)
+            .then(localstream => {
+                videoCont.srcObject = localstream;
+            });
+
+        mic.innerHTML = `<i class="fas fa-microphone"></i>`;
+        mic.classList = "device";
+        micAllowed = true;
+
+    }
+    localStorage.setItem('micAllowed', micAllowed);
+});
+
+$(() => {
+    socket.on('invite', (data) => {
+        console.log(`🚀 🚀 file: landing.js:168 🚀 socket.on 🚀 data`, data);
+        const { roomName, userInvited, inviteLink } = data;
+        Swal.fire({
+            title: `<strong>User ${userInvited} invite you to join room</strong>`,
+            icon: 'info',
+            html: `
+                        <div>
+                            <p>Room id: ${roomName}</p>
+                            <p>Click <a href="${inviteLink}">here</a> to join</p>
+                        </div>
+                    `,
+            focusConfirm: false,
+            confirmButtonText: 'Close!',
+            timer: 10 * 1000,
+            timerProgressBar: true,
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+        });
+    });
+});
