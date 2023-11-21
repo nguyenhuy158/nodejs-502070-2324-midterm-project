@@ -28,12 +28,13 @@ $(() => {
 				_csrf: formData.get('_csrf'),
 			},
 			success: (result) => {
-				console.log(`🚀 result`, result);
-				console.log(`🚀 result.message`, result.message);
+				console.log(`🚀 🚀 file: login.js:31 🚀 $ 🚀 result`, result);
 				if (!result.error) {
 					e.target.reset();
+					toastr.success(result.message);
+				} else {
+					toastr.error(result.message);
 				}
-
 			},
 			error: (error) => {
 				console.log(`🚀 🚀 file: login.js:38 🚀 error`, error);

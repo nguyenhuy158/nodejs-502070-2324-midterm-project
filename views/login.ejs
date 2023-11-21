@@ -18,7 +18,7 @@
                     <h1>Create Account</h1>
                     <span>Use your email for registeration</span>
                     <input type="text" placeholder="Full Name" name="name" id="name" />
-                    <input type="email" placeholder="Email" name="email" id="email" />
+                    <input type="text" placeholder="Email" name="email" id="email" />
                     <input type="password" placeholder="Password" name="password" id="password" />
                     <input
                         type="password"
@@ -35,7 +35,7 @@
                 <form action="/login" method="post" class="login-form" autocomplete="off">
                     <h1>Sign In</h1>
                     <span>Enter your email and password!</span>
-                    <input type="email" placeholder="Email" name="email" id="email" />
+                    <input type="text" placeholder="Email" name="email" id="email" />
                     <input type="password" placeholder="Password" name="password" id="password" />
                     <input name="_csrf" hidden value="<%= csrf; %>" />
                     <a href="/forget-password">Forget Your Password?</a>
