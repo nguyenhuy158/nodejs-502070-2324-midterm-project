@@ -214,14 +214,20 @@ button {
     transition: background-color 0.3s;
 }
 
+
 .container-room .left-cont .footer .utils .audio:hover,
 .container-room .left-cont .footer .utils .share-screen:hover {
     cursor: pointer;
     background-color: #88a8da;
 }
 
+.fa-microphone-slash,
+.fa-video-slash{
+    color: #cc4e4e;
+}
+
 .container-room .left-cont .footer .utils .novideo {
-    background-color: #cc4e4e;
+    background-color: #4ecca3;
     height: 40px;
     width: 40px;
     border-radius: 100px;
@@ -242,12 +248,8 @@ button {
     transition: background-color 0.3s;
 }
 
+.container-room .left-cont .footer .utils .novideo:hover,
 .container-room .left-cont .footer .utils .cutcall:hover {
-    cursor: pointer;
-    background-color: #393e46;
-}
-
-.container-room .left-cont .footer .utils .novideo:hover {
     cursor: pointer;
     background-color: #88a8da;
 }
@@ -266,9 +268,12 @@ button {
     margin: 0;
 }
 
-.card-body,
-.card-footer {
+.card-body {
     padding: 0 !important;
+}
+
+.card-footer{
+    padding: 0 10px 20px 0 !important;
 }
 
 .card-body {
