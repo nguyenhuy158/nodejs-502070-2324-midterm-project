@@ -11,9 +11,9 @@
     <body class="position-relative">
         <%- include('./flash.ejs') %>
         <span
-            class="position-absolute bottom-0 start-0 z-3 px-3 py-2 rounded bg-light text-black pointer user-select-none"
-            data-id="<%= roomName %>"
             id="roomName"
+            class="position-absolute bottom-0 start-0 z-3 px-3 py-2 m-2 rounded bg-light text-black pointer user-select-none"
+            data-id="<%= roomName %>"
         >
             Code: <%= roomName %>
         </span>
@@ -236,9 +236,10 @@
             const roomId = '<%= roomName %>'
             const socket = io()
             let username = '<%= username %>'
+            socket.emit('set-username', username)
         </script>
         <script defer src="/js/index.js"></script>
-        <script defer src="/js/index-chat.js"></script>
+        <script defer src="/js/room-call.js"></script>
         <script defer src="/js/index-networkstatus.js"></script>
     </body>
 </html>

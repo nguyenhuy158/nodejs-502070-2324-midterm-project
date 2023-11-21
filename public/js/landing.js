@@ -162,3 +162,25 @@ mic.addEventListener('click', () => {
 
     }
 });
+
+$(() => {
+    socket.on('invite', (data) => {
+        console.log(`🚀 🚀 file: landing.js:168 🚀 socket.on 🚀 data`, data);
+        const { roomName, userInvited, inviteLink } = data;
+        Swal.fire({
+            title: `<strong>User ${userInvited} invite you to join room</strong>`,
+            icon: 'info',
+            html: `
+                        <div>
+                            <p>Room id: ${roomName}</p>
+                            <p>Click <a href="${inviteLink}">here</a> to join</p>
+                        </div>
+                    `,
+            focusConfirm: false,
+            confirmButtonText: 'Close!',
+            timer: 10 * 1000,
+            timerProgressBar: true,
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+        });
+    });
+});

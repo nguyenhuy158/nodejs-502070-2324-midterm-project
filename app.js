@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require('dotenv').config();
 
 const flash = require("connect-flash");
@@ -16,6 +17,7 @@ const io = new Server(server, {
         credentials: true
     }
 });
+global._io = io;
 
 const indexRouter = require("./routes/index-router");
 const logger = require("morgan");
@@ -27,7 +29,7 @@ const session = require("express-session");
 const MongoStore = require('connect-mongo');
 
 
-const users = {};
+global._users = {};
 const rooms = {};
 
 app.set("view engine", "ejs");
@@ -65,43 +67,30 @@ io.on("connection", (socket) => {
     // console.log(`🚀 🚀 file: app.js:40 🚀 io.on 🚀 requestHeaders`, requestHeaders);
     // console.log(`🚀 🚀 file: app.js:42 🚀 io.on 🚀 requestHeaders.host`, requestHeaders.host);
 
-    let userId = socket.id;
-    users[socket.id] = socket.id;
-
     socket.on("set-username", (userName) => {
-
-        const tempVal = users[userId];
-        delete users[userId];
-        userId = userName;
-        users[userId] = tempVal;
-
-        socket.broadcast.emit('new-active', Object.assign({}, { [userId]: socket.id }));
-
-        const otherUser = Object.fromEntries(
-            Object.entries(users).filter(([key, value]) => key !== userId && value !== userId)
-        );
-        socket.emit('active-list', otherUser);
-    });
-
-    socket.on("get-active-list", (roomName = '') => {
-        try {
-            console.log(`get-active-list: ${userId}`);
-            const usersInRoom = getUsersInRoom(roomName);
-            console.log(`usersInRoom`, usersInRoom);
-
-            const objCopy = { ...usersInRoom };
-
-            if (objCopy.hasOwnProperty(userId)) {
-                delete objCopy[userId];
-            }
-
-            socket.emit("active-list", objCopy);
-        } catch (error) {
-            console.error(`Error in get-active-list: ${error}`);
-            // You can also emit an error event to the client
-            socket.emit("error", { message: 'An error occurred in get-active-list' });
+        if (_users[userName] && _users[socket.id]) {
+            return;
         }
+        _users[userName] = socket.id;
+        _users[socket.id] = userName;
     });
+
+    // socket.on("get-active-list", (roomName = '') => {
+    //     try {
+    //         console.log(`get-active-list: ${userId}`);
+    //         const usersInRoom = getUsersInRoom(roomName);
+    //         console.log(`usersInRoom`, usersInRoom);
+    //         const objCopy = { ...usersInRoom };
+    //         if (objCopy.hasOwnProperty(userId)) {
+    //             delete objCopy[userId];
+    //         }
+    //         socket.emit("active-list", objCopy);
+    //     } catch (error) {
+    //         console.error(`Error in get-active-list: ${error}`);
+    //         // You can also emit an error event to the client
+    //         socket.emit("error", { message: 'An error occurred in get-active-list' });
+    //     }
+    // });
 
     socket.on('offer', (data) => {
         io.to(data.target).emit('offer', { target: socket.id, offer: data.offer });
@@ -186,30 +175,26 @@ io.on("connection", (socket) => {
         }
     });
 
-    function getUsersInRoom(room) {
-        console.log(`🚀 🚀 file: app.js:168 🚀 getUsersInRoom 🚀 room`, room);
-        console.log(`🚀 🚀 file: app.js:170 🚀 getUsersInRoom 🚀 io.sockets.adapter.rooms`, io.sockets.adapter.rooms);
-        let socketsInRoom = io.sockets.adapter.rooms.get(room);
-        console.log(`🚀 🚀 file: app.js:171 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
-        console.log(`🚀 🚀 file: app.js:173 🚀 getUsersInRoom 🚀 users`, users);
-        if (!socketsInRoom) {
-            return [];
-        }
-
-        socketsInRoom = Array.from(socketsInRoom);
-        console.log(`🚀 🚀 file: app.js:178 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
-        console.log(`🚀 🚀 file: app.js:181 🚀 getUsersInRoom 🚀 users`, users);
-
-        const filteredUsers = Object.fromEntries(
-            Object.entries(users).filter(([key, value]) => {
-                return socketsInRoom.includes(value);
-            })
-        );
-
-        console.log(filteredUsers);
-
-        return filteredUsers;
-    }
+    // function getUsersInRoom(room) {
+    //     console.log(`🚀 🚀 file: app.js:168 🚀 getUsersInRoom 🚀 room`, room);
+    //     console.log(`🚀 🚀 file: app.js:170 🚀 getUsersInRoom 🚀 io.sockets.adapter.rooms`, io.sockets.adapter.rooms);
+    //     let socketsInRoom = io.sockets.adapter.rooms.get(room);
+    //     console.log(`🚀 🚀 file: app.js:171 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
+    //     console.log(`🚀 🚀 file: app.js:173 🚀 getUsersInRoom 🚀 users`, _users);
+    //     if (!socketsInRoom) {
+    //         return [];
+    //     }
+    //     socketsInRoom = Array.from(socketsInRoom);
+    //     console.log(`🚀 🚀 file: app.js:178 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
+    //     console.log(`🚀 🚀 file: app.js:181 🚀 getUsersInRoom 🚀 users`, _users);
+    //     const filteredUsers = Object.fromEntries(
+    //         Object.entries(users).filter(([key, value]) => {
+    //             return socketsInRoom.includes(value);
+    //         })
+    //     );
+    //     console.log(filteredUsers);
+    //     return filteredUsers;
+    // }
 });
 
 // admin.socket.io

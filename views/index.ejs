@@ -6,7 +6,6 @@
         <%-include('./partials/head.ejs')%>
 
         <link rel="stylesheet" href="/css/index.css" />
-
     </head>
 
     <body>
@@ -79,6 +78,8 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
             const socket = io()
+            let username = '<%= username %>'
+            socket.emit('set-username', username)
         </script>
         <script defer src="/js/landing.js"></script>
         <script defer src="/js/index-networkstatus.js"></script>
