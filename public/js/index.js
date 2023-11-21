@@ -188,9 +188,8 @@ $(() => {
 function displayMessage(message, sender, timeSent, isMe = false) {
     $('#chatBox').append(`
         <div class="message ${isMe ? 'message-right' : 'message-left'}">
+            <strong>${sender}</strong>
             <div class="bubble ${isMe ? 'bubble-dark' : 'bubble-light'}">
-                <strong>${sender}</strong>
-                <br>
                 ${message}
                 <!-- <div><small>${timeSent}</small></div> -->
             </div>

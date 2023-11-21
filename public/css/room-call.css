@@ -25,10 +25,9 @@ button {
     height: 100%;
 }
 
-#content .row .col{
+#content .row .col {
     padding: 0;
 }
-
 
 #video-container {
     display: flex;
@@ -40,11 +39,11 @@ button {
 }
 
 /* -------------------- FEATURE STYLE --------------------*/
-#invite{
+#invite {
     margin: 10px;
 }
 
-#roomName{
+#roomName {
     margin: 50px 0 40px 40px;
 }
 
@@ -150,7 +149,7 @@ button {
     padding-bottom: 5px;
     color: white;
     position: absolute;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Increase the shadow intensity */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .container-room .left-cont .video-cont-single .video-box .video-off {
@@ -303,22 +302,51 @@ button {
     align-items: flex-start;
 }
 
+.chat-box .chat-room .message-left strong{
+    margin: 5px 0 8px 0;
+}
+
 .chat-box .chat-room .message-left .bubble {
-    border-radius: 0 15px 15px 15px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.chat-box .chat-room .message-left .bubble::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 7%;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #fbcffc transparent;
 }
 
 .chat-box .chat-room .message-right {
     align-items: flex-end;
 }
 
+.chat-box .chat-room .message-right strong{
+    margin: 5px 17px 8px 0;
+}
+
 .chat-box .chat-room .message-right .bubble {
-    border-radius: 15px 0 15px 15px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.chat-box .chat-room .message-right .bubble::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    right: 22%;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #be79df transparent;
 }
 
 .chat-box .chat-room .bubble {
     padding: 10px;
     font-size: 14px;
-    margin-top: 8px;
     display: inline-block;
 }
 
@@ -331,12 +359,11 @@ button {
     background-color: #be79df;
 }
 
-.chat-box .chat-room .bubble-light strong,
-.chat-box .chat-room .bubble-dark strong {
-    font-weight: 500;
-    font-style: italic;
-    font-size: 17px;
+.chat-box .chat-room strong {
+    font-size: 13px;
+    font-weight: normal;
 }
+
 
 .chat-box .type-area {
     display: flex;
@@ -350,6 +377,7 @@ button {
 .chat-box .type-area .input-wrapper {
     overflow: hidden;
     background-color: #f7f9fb;
+    flex-grow: 1;
 }
 
 .chat-box .type-area .input-wrapper input {
