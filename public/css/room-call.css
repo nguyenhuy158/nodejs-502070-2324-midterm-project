@@ -35,39 +35,12 @@ button {
 }
 
 /* -------------------- FEATURE STYLE --------------------*/
-#content .row .col {
-    padding: 0;
-    margin: 0;
+#invite{
+    margin: 10px;
 }
 
-#content .row .col .feature {
-    width: 100%;
-    text-align: center;
-    display: none;
-}
-
-#content .stream-management {
-    background-color: seashell;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px 0;
-}
-
-#content .stream-management h5 {
-    padding: 10px 0 0;
-    margin: 0;
-}
-
-#content .stream-management button {
-    margin: 0 5px;
-    border-radius: 50px;
-}
-
-#content .stream-management .list-group {
-    width: 10%;
-    padding: 0;
+#roomName{
+    margin: 50px 0 40px 40px;
 }
 
 /* -------------------- END FEATURE STYLE --------------------*/
@@ -333,7 +306,7 @@ button {
 }
 
 .chat-box .chat-room .message-left .bubble {
-    border-radius: 0 50px 50px 50px;
+    border-radius: 0 20px 20px 20px;
 }
 
 .chat-box .chat-room .message-right {
@@ -341,7 +314,7 @@ button {
 }
 
 .chat-box .chat-room .message-right .bubble {
-    border-radius: 50px 0 50px 50px;
+    border-radius: 20px 0 20px 20px;
 }
 
 .chat-box .chat-room .bubble {
