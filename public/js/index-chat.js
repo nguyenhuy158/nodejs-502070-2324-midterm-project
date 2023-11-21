@@ -3,6 +3,7 @@
 // Chat form function 
 $(() => {
 
+    // Click outside hide emoji list
     $(document).on('click', function (event) {
         if (!$(event.target).closest('#showIcons').length) {
             $('.icon-list').removeClass('d-flex').hide();
@@ -14,7 +15,6 @@ $(() => {
     $('#showIcons').on('click', function () {
         $('.icon-list').toggleClass('d-flex');
     });
-
     $('.icon').on('click', function () {
         const selectedIcon = $(this).data('icon');
         $('.icon-list').removeClass('d-flex').hide();

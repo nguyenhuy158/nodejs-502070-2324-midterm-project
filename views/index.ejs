@@ -6,6 +6,7 @@
         <%-include('./partials/head.ejs')%>
 
         <link rel="stylesheet" href="/css/index.css" />
+
     </head>
 
     <body>
@@ -17,8 +18,14 @@
                 <h3>CallMate</h3>
             </div>
 
-            <div class="bell fs">
-                <i class="fa-regular fa-bell"></i>
+            <div id="notification" class="bell me-3 pointer position-relative">
+                <i class="h3 fa-regular fa-bell"></i>
+                <span
+                    id="invite-count"
+                    class="position-absolute top-0 start-75 translate-middle p-1 bg-danger border border-light rounded-circle"
+                >
+                    <span class="visually-hidden">New alerts</span>
+                </span>
             </div>
         </header>
 
@@ -75,5 +82,6 @@
         </script>
         <script defer src="/js/landing.js"></script>
         <script defer src="/js/index-networkstatus.js"></script>
+        <script defer src="/js/notification.js"></script>
     </body>
 </html>
