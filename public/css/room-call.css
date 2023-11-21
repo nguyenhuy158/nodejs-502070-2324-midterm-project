@@ -100,14 +100,6 @@ button {
         border-radius: 5px;
     }
 
-    .nametag {
-        color: white;
-        bottom: 10px;
-        position: absolute;
-        left: 10px;
-        bottom: 10px;
-    }
-
     .video-off {
         color: white;
         bottom: 10px;
@@ -153,11 +145,12 @@ button {
 }
 
 .container-room .left-cont .video-cont-single .video-box .nametag {
-    left: 5%;
+    left: 2%;
     bottom: 0;
-    transform: translate(-50%, 100%);
+    padding-bottom: 5px;
     color: white;
     position: absolute;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Increase the shadow intensity */
 }
 
 .container-room .left-cont .video-cont-single .video-box .video-off {
@@ -301,7 +294,7 @@ button {
 }
 
 .chat-box .chat-room .message {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     display: flex;
     flex-direction: column;
 }
@@ -311,7 +304,7 @@ button {
 }
 
 .chat-box .chat-room .message-left .bubble {
-    border-radius: 0 20px 20px 20px;
+    border-radius: 0 15px 15px 15px;
 }
 
 .chat-box .chat-room .message-right {
@@ -319,13 +312,13 @@ button {
 }
 
 .chat-box .chat-room .message-right .bubble {
-    border-radius: 20px 0 20px 20px;
+    border-radius: 15px 0 15px 15px;
 }
 
 .chat-box .chat-room .bubble {
     padding: 10px;
     font-size: 14px;
-    margin-top: 5px;
+    margin-top: 8px;
     display: inline-block;
 }
 
@@ -336,6 +329,13 @@ button {
 .chat-box .chat-room .bubble-dark {
     color: #fff;
     background-color: #be79df;
+}
+
+.chat-box .chat-room .bubble-light strong,
+.chat-box .chat-room .bubble-dark strong {
+    font-weight: 500;
+    font-style: italic;
+    font-size: 17px;
 }
 
 .chat-box .type-area {
