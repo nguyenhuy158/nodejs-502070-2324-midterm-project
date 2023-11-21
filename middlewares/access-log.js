@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const moment = require("moment");
 
 exports.logRequestDetails = (req, res, next) => {
@@ -13,6 +14,7 @@ exports.logRequestDetails = (req, res, next) => {
     console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\t${originalUrl}`);
     console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\txhr: ${xhr}`);
     console.log(`[USERNAME] ${res.app.locals.user?.username}`);
+    console.log(`[_USERS] ${JSON.stringify(_users)}`);  
     console.log(`[SESSION ID]] ${req.sessionID}`);
     next();
 };

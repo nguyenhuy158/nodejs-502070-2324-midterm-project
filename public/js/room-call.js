@@ -7,7 +7,6 @@ $(() => {
     $(document).on('click', function (event) {
         if (!$(event.target).closest('#showIcons').length) {
             $('.icon-list').removeClass('d-flex').hide();
-            console.log('click');
         }
     });
 
@@ -38,7 +37,7 @@ $(() => {
     });
 
     // Copy room ID
-    $('#roomName').on('click', function () {
+    $(document).on('click', '#roomName, .invite-link', function () {
         const copyText = $(this).data('id');
 
         navigator.clipboard.writeText(copyText)
@@ -118,7 +117,7 @@ $(() => {
     });
 
     // invite friend
-    $('#invite').on('click', function () {
+    $(document).on('click', '#invite', function () {
         Swal.fire({
             title: "Enter username to invite",
             input: "text",
@@ -128,31 +127,35 @@ $(() => {
             showCancelButton: true,
             confirmButtonText: "Invite",
             showLoaderOnConfirm: true,
-            preConfirm: async (inviteUsername) => {
+            preConfirm: async (userInvited) => {
                 try {
                     // TODO: change to invite url
-                    const response = await fetch('/api/current-user', {
-                        method: 'GET',
+                    const response = await fetch('/api/invite', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            roomName,
+                            userInvited
+                        })
                     });
-                    console.log(`🚀 response`, response);
-
                     if (!response.ok) {
                         return Swal.showValidationMessage(response.statusText);
                     }
-                    return inviteUsername;
+                    return response.json();
                 } catch (error) {
                     console.log(`🚀 error`, error);
-
-                    Swal.showValidationMessage(error + inviteUsername);
+                    Swal.showValidationMessage(`Error to invite ${userInvited}`);
                 }
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log(`🚀 result`, result);
-
                 Swal.fire({
-                    title: `Invite ${result.value} successfully!`,
+                    title: `Invite <b>${result.value.userInvited}</b> successfully!`,
+                    imageUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.value.inviteLink}`,
+                    html: `<span data-id="${result.value.inviteLink}" class="invite-link px-3 py-2 rounded bg-light text-black pointer user-select-none">${result.value.inviteLink}</span>`,
                 });
             }
         });

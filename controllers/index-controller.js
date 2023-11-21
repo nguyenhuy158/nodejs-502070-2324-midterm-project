@@ -36,7 +36,7 @@ exports.sentMail = (req, res) => {
 };
 
 exports.home = async (req, res) => {
-    res.render("index");
+    res.render("index", { username: req.session.username });
 };
 
 exports.room = (req, res) => {
@@ -66,7 +66,7 @@ exports.isLoggedIn = (req, res, next) => {
 
 exports.checkResetLogin = (req, res, next) => {
     const user = req.session.user;
-    console.log(`🚀 🚀 file: indexController.js:288 🚀 user`, user);
+    // console.log(`🚀 🚀 file: indexController.js:288 🚀 user`, user);
     if (user && user.isPasswordReset) {
         req.flash("info", "You need to change password to continue use system.");
 
