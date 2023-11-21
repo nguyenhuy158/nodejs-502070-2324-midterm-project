@@ -64,6 +64,11 @@ $(() => {
 
         $('#mute-mic-icon').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
+        if ($(this).find('i').hasClass('fa-microphone')) {
+            unmuteAudio();
+        } else {
+            muteAudio();
+        }
     });
 
     // mute camera
@@ -137,7 +142,6 @@ $(() => {
             showLoaderOnConfirm: true,
             preConfirm: async (userInvited) => {
                 try {
-                    // TODO: change to invite url
                     const response = await fetch('/api/invite', {
                         method: 'POST',
                         headers: {

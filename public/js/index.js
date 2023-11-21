@@ -21,6 +21,24 @@ let localStream;
 let peerConnection;
 let targetPeople;
 let isAlreadyCalling = false;
+let audioSender;
+let remoteUserId;
+
+
+// Tắt âm thanh (mute)
+function muteAudio() {
+    console.log(`🚀 🚀 file: index.js:30 🚀 muteAudio 🚀 muteAudio`, muteAudio);
+    if (peerConnection.getSenders().length === 0) return;
+    if (audioSender === undefined) return;
+    audioSender.track.enabled = false;
+}
+// Mở âm thanh (unmute)
+function unmuteAudio() {
+    console.log(`🚀 🚀 file: index.js:37 🚀 unmuteAudio 🚀 unmuteAudio`, unmuteAudio);
+    if (peerConnection.getSenders().length === 0) return;
+    if (audioSender === undefined) return;
+    audioSender.track.enabled = true;
+}
 
 $(() => {
     $('#offlineMessage').hide();
@@ -49,8 +67,8 @@ $(() => {
             },
         ],
     };
-    let peerConnection;
-    let remoteUserId;
+    // let peerConnection;
+    // let remoteUserId;
 
     socket.on('room-full', () => {
         toastr.error('Room is full, please create new room or enter other room id');
@@ -109,7 +127,7 @@ $(() => {
         peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     });
 
-    async function createPeerConnection(targetUsername) {
+    async function createPeerConnection() {
         console.log(`preCall - createPeerConnection`);
         peerConnection = null;
         peerConnection = new RTCPeerConnection(configuration);
@@ -135,6 +153,8 @@ $(() => {
             localVideo.srcObject = localMediaStream;
         }
         peerConnection.addStream(localMediaStream);
+
+        audioSender = peerConnection.getSenders().find(sender => sender.track.kind === 'audio');
 
         if (!remoteUserId) {
             console.log('emit ready to call');
