@@ -1,19 +1,23 @@
 /* eslint-disable no-undef */
-// video call funciton
-
-// TODO: can not display video call
-
 
 // Chat form function 
-$(document).ready(function () {
+$(() => {
+
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('#showIcons').length) {
+            $('.icon-list').removeClass('d-flex').hide();
+            console.log('click');
+        }
+    });
 
     // Emoji onclick event
-    $('#showIcons').click(function () {
-        $('.icon-list').css('display', 'flex');
+    $('#showIcons').on('click', function () {
+        $('.icon-list').toggleClass('d-flex');
     });
-    $('.icon').click(function () {
+
+    $('.icon').on('click', function () {
         const selectedIcon = $(this).data('icon');
-        $('.icon-list').hide();
+        $('.icon-list').removeClass('d-flex').hide();
         $('#chatInput').val($('#chatInput').val() + selectedIcon);
     });
 
@@ -57,13 +61,16 @@ $(document).ready(function () {
 
     // mute mic
     $('.utils .audio').on('click', function () {
+        // TODO: function mute mic
+
         $('#mute-mic-icon').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
     });
 
     // mute camera
     $('.utils .novideo').on('click', function () {
-        // TODO: add icon mute cam
+        // TODO: function mute cam
+
         $('#mute-cam-icon').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
     });
@@ -151,7 +158,3 @@ $(document).ready(function () {
         });
     });
 });
-
-
-
-// TODO 2: When click Other button, can't turn off by clicking it again. Button Emoji also have the same error 
