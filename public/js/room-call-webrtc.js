@@ -21,9 +21,49 @@ let localStream;
 let peerConnection;
 let targetPeople;
 let isAlreadyCalling = false;
+let isMuteMic = false;
+let isMuteCam = false;
 let remoteUserId;
 let audioSender;
 let videoSender;
+let sharingScreen = false;
+
+function toggleSharing() {
+    if (sharingScreen) {
+        // if you share screen, change to share camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(cameraStream => {
+                cameraStream.getVideoTracks()[0].onended = function () {
+                    toggleSharing();
+                };
+
+                localVideo.srcObject = cameraStream;
+                videoSender.replaceTrack(cameraStream.getVideoTracks()[0]);
+                // Cập nhật trạng thái
+                sharingScreen = false;
+            })
+            .catch(error => {
+                console.error('Error getting camera media:', error);
+            });
+    } else {
+        // if you share camera, change to share screen
+        navigator.mediaDevices.getDisplayMedia({ video: true })
+            .then(screenStream => {
+                screenStream.getVideoTracks()[0].onended = function () {
+                    toggleSharing();
+                };
+
+                localVideo.srcObject = screenStream;
+                videoSender.replaceTrack(screenStream.getVideoTracks()[0]);
+                sharingScreen = true;
+            })
+            .catch(error => {
+                console.error('Error getting screen media:', error);
+            });
+    }
+}
+
+
 
 // mute audio
 function muteAudio() {
@@ -42,6 +82,7 @@ function muteVideo() {
     if (peerConnection.getSenders().length === 0) return;
     if (videoSender === undefined) return;
     videoSender.track.enabled = false;
+    console.log('auto mute video');
 }
 // Mute video
 function unmuteVideo() {
@@ -196,6 +237,18 @@ $(() => {
 
     (async () => {
         await createPeerConnection();
+
+        // handle mute mic or mute camera from localStorage
+        if (localStorage.getItem('micAllowed') == 'false') {
+            $('.utils .audio').trigger('click');
+            isMuteMic = true;
+            muteAudio();
+        }
+        if (localStorage.getItem('camAllowed') == 'false') {
+            $('.utils .novideo').trigger('click');
+            isMuteCam = true;
+            muteVideo();
+        }
     })();
 
     socket.on('end-call', async () => {
@@ -233,6 +286,11 @@ $(() => {
         // swap video tag
         $('#remoteVideo').removeClass('video-remote');
         $('#localVideo').addClass('video-remote');
+    });
+
+    // feature: share screen 
+    $('.share-screen').on('click', async () => {
+        toggleSharing();
     });
 
 });

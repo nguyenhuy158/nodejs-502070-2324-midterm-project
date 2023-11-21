@@ -64,8 +64,10 @@ $(() => {
         $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
         if ($(this).find('i').hasClass('fa-microphone')) {
             unmuteAudio();
+            isMuteCam = false;
         } else {
             muteAudio();
+            isMuteCam = true;
         }
     });
 
@@ -75,18 +77,12 @@ $(() => {
         $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
         if ($(this).find('i').hasClass('fa-video')) {
             unmuteVideo();
+            isMuteMic = false;
         } else {
             muteVideo();
+            isMuteMic = true;
         }
     });
-
-    // handle mute mic or mute camera from localStorage
-    if (localStorage.getItem('micAllowed') == 'true') {
-        $('.utils .audio').trigger('click');
-    }
-    if (localStorage.getItem('camAllowed') == 'true') {
-        $('.utils .novideo').trigger('click');
-    }
 
     // Handle chat form
     $.ajax({
