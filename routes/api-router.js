@@ -20,6 +20,27 @@ router.get('/current-user', (req, res) => {
 router.post('/invite', (req, res) => {
     const { roomName, userInvited } = req.body;
 
+    // check room is full 
+    if (_rooms[roomId].members.length >= 2) {
+        return res.json({
+            error: true,
+            message: `Room ${roomName} was full`
+        });
+    }
+    // check user online
+    if (!_users[userInvited]) {
+        return res.json({
+            error: true,
+            message: `User ${userInvited} not online`
+        });
+    }
+    // don't invite yourself
+    if (userInvited === req.session.username) {
+        return res.json({
+            error: true,
+            message: `Do not invite yourself`
+        });
+    }
     try {
         const inviteLink = `${req.protocol}://${req.get('host')}/room/${roomName}`;
 

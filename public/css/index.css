@@ -292,3 +292,16 @@ body {
 .pointer {
     cursor: pointer;
 }
+
+#offlineMessage {
+    position: absolute;
+    background: none;
+    width: fit-content;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    text-shadow: 2px 2px 4px rgb(0 0 0 / 80%);
+}

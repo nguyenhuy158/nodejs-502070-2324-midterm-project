@@ -7,9 +7,10 @@ const indexController = require('../controllers/index-controller');
 
 router.use('', accountRouter);
 router.use(indexController.checkResetLogin);
-router.get("/", indexController.isLoggedIn, indexController.home);
-router.get('/room/:roomName', indexController.isLoggedIn, indexController.room);
-router.use(/^\/(api|rest)/, indexController.isLoggedIn, apiRouter);
+router.use(indexController.isLoggedIn);
+router.get("/", indexController.home);
+router.get('/room/:roomName', indexController.room);
+router.use(/^\/(api|rest)/, apiRouter);
 
 // error handlers middleware
 router.use(function (req, res) {

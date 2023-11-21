@@ -30,7 +30,7 @@ const MongoStore = require('connect-mongo');
 
 
 global._users = {};
-const rooms = {};
+global._rooms = {};
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
@@ -95,11 +95,11 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         // Xóa thông tin người dùng khi ngắt kết nối
-        const roomId = Object.keys(rooms).find((roomId) =>
-            rooms[roomId].members.includes(socket.id)
+        const roomId = Object.keys(_rooms).find((roomId) =>
+            _rooms[roomId].members.includes(socket.id)
         );
         if (roomId) {
-            rooms[roomId].members.splice(rooms[roomId].members.indexOf(socket.id), 1);
+            _rooms[roomId].members.splice(_rooms[roomId].members.indexOf(socket.id), 1);
             socket.broadcast.to(roomId).emit('user-disconnected', socket.id);
             socket.broadcast.to(roomId).emit('end-call');
         }
@@ -116,22 +116,22 @@ io.on("connection", (socket) => {
 
     socket.on('ready-call', (roomId) => {
         console.log('ready to call');
-        console.log(rooms);
+        console.log(_rooms);
         socket.to(roomId).emit('ready-call');
     });
 
     socket.on('createRoom', () => {
         console.log(`User createRoom`);
         let roomId = generateId();
-        while (rooms[roomId]) {
+        while (_rooms[roomId]) {
             roomId = generateId();
         }
-        rooms[roomId] = { members: [] };
+        _rooms[roomId] = { members: [] };
         socket.emit('redirectToRoom', `/room/${roomId}`);
     });
 
     socket.on('join', (roomId) => {
-        if (!rooms[roomId]) {
+        if (!_rooms[roomId]) {
             return socket.emit('room-not-found');
         }
         return socket.emit('redirectToRoom', `/room/${roomId}`);
@@ -139,28 +139,27 @@ io.on("connection", (socket) => {
 
     socket.on('join-room', (roomId) => {
         console.log(`🚀 roomId`, roomId);
-        console.log(`🚀 rooms`, rooms);
-        if (!rooms[roomId]) {
+        console.log(`🚀 _rooms`, _rooms);
+        if (!_rooms[roomId]) {
             return socket.emit('room-not-found');
         }
-        if (rooms[roomId].members.length < 2) {
+        if (_rooms[roomId].members.length < 2) {
             socket.join(roomId);
             socket.to(roomId).emit('new-user', {
                 newUserId: socket.id,
                 newUsername: _users[socket.id]
             });
 
-            rooms[roomId].members.push(socket.id);
-            console.log(`🚀 ~ socket.on ~ rooms:`, rooms);
+            _rooms[roomId].members.push(socket.id);
+            console.log(`🚀 ~ socket.on ~ _rooms:`, _rooms);
 
             // Gửi thông tin thành viên trong phòng cho client
-            socket.emit('all-users', rooms[roomId].members);
+            socket.emit('all-users', _rooms[roomId].members);
         } else {
             // Redirect user to another page
             socket.emit('room-full');
         }
     });
-
 });
 
 // admin.socket.io
