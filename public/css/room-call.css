@@ -25,6 +25,11 @@ button {
     height: 100%;
 }
 
+#content .row .col{
+    padding: 0;
+}
+
+
 #video-container {
     display: flex;
     flex-wrap: wrap;
@@ -351,7 +356,7 @@ button {
     outline: none;
     border: none;
     height: 100%;
-    width: 255px;
+    width: 275px;
     font-size: 14px;
     background-color: #f7f9fb;
 }
