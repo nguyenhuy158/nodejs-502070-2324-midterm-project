@@ -275,3 +275,7 @@ body {
         margin-bottom: 100px;
     }
 }
+
+.pointer {
+    cursor: pointer;
+}
