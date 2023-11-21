@@ -60,8 +60,6 @@ $(() => {
 
     // mute mic
     $('.utils .audio').on('click', function () {
-        // TODO: function mute mic
-
         $('#mute-mic-icon').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
         if ($(this).find('i').hasClass('fa-microphone')) {
@@ -73,10 +71,13 @@ $(() => {
 
     // mute camera
     $('.utils .novideo').on('click', function () {
-        // TODO: function mute cam
-
         $('#mute-cam-icon').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
+        if ($(this).find('i').hasClass('fa-video')) {
+            unmuteVideo();
+        } else {
+            muteVideo();
+        }
     });
 
     // handle mute mic or mute camera from localStorage

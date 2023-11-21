@@ -21,24 +21,36 @@ let localStream;
 let peerConnection;
 let targetPeople;
 let isAlreadyCalling = false;
-let audioSender;
 let remoteUserId;
+let audioSender;
+let videoSender;
 
-
-// Tắt âm thanh (mute)
+// mute audio
 function muteAudio() {
-    console.log(`🚀 🚀 file: index.js:30 🚀 muteAudio 🚀 muteAudio`, muteAudio);
     if (peerConnection.getSenders().length === 0) return;
     if (audioSender === undefined) return;
     audioSender.track.enabled = false;
 }
-// Mở âm thanh (unmute)
+// unmute audio
 function unmuteAudio() {
-    console.log(`🚀 🚀 file: index.js:37 🚀 unmuteAudio 🚀 unmuteAudio`, unmuteAudio);
     if (peerConnection.getSenders().length === 0) return;
     if (audioSender === undefined) return;
     audioSender.track.enabled = true;
 }
+// mute video
+function muteVideo() {
+    if (peerConnection.getSenders().length === 0) return;
+    if (videoSender === undefined) return;
+    videoSender.track.enabled = false;
+}
+// Mute video
+function unmuteVideo() {
+    if (peerConnection.getSenders().length === 0) return;
+    if (videoSender === undefined) return;
+    videoSender.track.enabled = true;
+}
+
+
 
 $(() => {
     $('#offlineMessage').hide();
@@ -155,6 +167,7 @@ $(() => {
         peerConnection.addStream(localMediaStream);
 
         audioSender = peerConnection.getSenders().find(sender => sender.track.kind === 'audio');
+        videoSender = peerConnection.getSenders().find(sender => sender.track.kind === 'video');
 
         if (!remoteUserId) {
             console.log('emit ready to call');
