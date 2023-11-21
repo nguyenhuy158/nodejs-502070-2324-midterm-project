@@ -11,6 +11,7 @@
     <body class="position-relative">
         <%- include('./flash.ejs') %>
 
+        <!-- button invite -->
         <button
             id="invite"
             style="outline: none; border: none"
@@ -19,64 +20,59 @@
             <i class="fa-solid fa-user-plus"></i>
         </button>
 
+        <!-- offline message -->
         <div id="offlineMessage" class="text-center h3">Please connect to the internet to use this website.</div>
 
-        <!-- Toast -->
+        <!-- Toast
         <div class="toast-container position-fixed top-0 end-0 p-3">
-            <!-- Info Toast -->
-            <!-- Success Toast -->
-            <!-- Error Toast -->
-        </div>
-
-        <!-- <div id="content" class="container-fluid">
-            <div class="row"> 
-                <div class="col">
-                    feature button
-                    <div class="col-2 feature">
-                        <div class="stream-management">
-                            <div class="d-grid gap-2">
-                                <h5 class="text-center fw-bold">Stream Management</h5>
-
-                                <div class="btn-group" role="group" aria-label="Stream Management Actions">
-                                    <button type="button" class="btn btn-primary" id="load-local-stream">Load
-                                        Stream</button>
-                                    <button type="button" class="btn btn-primary" id="load-active-list">Load Active
-                                        Users</button>
-                                </div>
-                            </div>
-                            <ul class="list-group" id="active-list"></ul>
-                        </div>
-                    </div> -->
+        </div> -->
 
         <!-- Main video call column -->
         <div id="content" class="container-room">
             <div class="row">
                 <div class="col">
                     <div class="left-cont">
+                        <!-- local/remote video -->
                         <div class="video-cont-single" id="vcont">
                             <div class="video-box">
+                                <!-- local video -->
                                 <video id="localVideo" muted autoplay playsinline class="video-frame"></video>
-                                <!-- create video tag for remote -->
+
+                                <!-- remote video -->
                                 <video id="remoteVideo" autoplay playsinline class="video-frame video-remote"></video>
+
+                                <!-- username tag -->
                                 <div class="nametag" id="myname"><%= username %></div>
+
+                                <!-- icon mute mic -->
                                 <div class="mute-icon d-none" id="mute-mic-icon">
                                     <i class="fas fa-microphone-slash"></i>
                                 </div>
+                                <!-- icon mute cam -->
                                 <div class="mute-icon d-none me-5" id="mute-cam-icon">
                                     <i class="fas fa-video-slash"></i>
                                 </div>
-                                <div class="video-off d-none" id="myvideooff">Video Off</div>
+
+                                <!-- don't use will remove in feature' -->
+                                <!-- <div class="video-off d-none" id="myvideooff">Video Off</div> -->
                             </div>
                         </div>
 
+                        <!-- START - Footer -->
                         <div class="footer">
+                            <!-- room name: click to copy -->
                             <span
                                 id="roomName"
                                 class="position-absolute bottom-0 start-0 z-3 px-3 py-2 m-2 rounded bg-light text-black pointer user-select-none"
                                 data-id="<%= roomName %>"
                             >
-                                Code: <%= roomName %>
+                                Click to copy: <%= roomName %>
                             </span>
+
+                            <!-- mic -->
+                            <!-- camera -->
+                            <!-- share screen -->
+                            <!-- cancel caller -->
                             <div class="utils">
                                 <div class="audio">
                                     <i class="fas fa-microphone"></i>
@@ -84,47 +80,19 @@
                                 <div class="novideo">
                                     <i class="fas fa-video"></i>
                                 </div>
+                                <div class="share-screen">
+                                    <i class="fa-solid fa-desktop"></i>
+                                </div>
                                 <div class="cutcall">
                                     <i class="fas fa-phone-slash"></i>
                                 </div>
                             </div>
                         </div>
+                        <!-- END - Footer -->
                     </div>
                 </div>
 
-                <!-- main
-                    <div class="col text-center" class="main">
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="localVideo">
-                                    Local
-                                    <p class="d-inline" id="yourLocalName"></p>
-                                </h3>
-                                <video id="localVideo" autoplay playsinline class="video-frame"></video>
-                            </div>
-                            <div class="col">
-                                <h3 class="d-inline">
-                                    Remote
-                                    <p class="d-inline" id="yourRemoteName"></p>
-                                </h3>
-                                <div id="remoteVideoPlaceholder" class="video-placeholder">
-                                    <p class="text-center">Waiting for remote user to join...</p>
-                                </div>
-                                <video id="remoteVideo" autoplay playsinline class="video-frame" hidden></video>
-                                <p id="remoteText" class="text-center"></p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col">
-                                <button class="btn btn-primary" id="startCall">Start Call</button>
-                                <button class="btn btn-warning" id="endCall">End Call</button>
-                            </div>
-                        </div> 
-                    </div> 
-                </div> -->
-
-                <!-- chat form column -->
+                <!-- START - chat form column -->
                 <div class="chat-box">
                     <div class="card">
                         <div class="header">
@@ -138,6 +106,7 @@
                             </div>
                         </div>
 
+                        <!-- chat box message -->
                         <div class="card-footer">
                             <div class="type-area">
                                 <!-- input message -->
@@ -190,15 +159,15 @@
                                 <button id="sendButton" class="button-send">
                                     <i class="h4 pt-2 fa-regular fa-paper-plane"></i>
                                 </button>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- END - chat form column -->
             </div>
         </div>
 
-        <!-- Include the WebRTC adapter and socket.io library -->
+        <!-- import js -->
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
