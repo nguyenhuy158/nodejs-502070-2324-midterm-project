@@ -75,23 +75,6 @@ io.on("connection", (socket) => {
         _users[socket.id] = userName;
     });
 
-    // socket.on("get-active-list", (roomName = '') => {
-    //     try {
-    //         console.log(`get-active-list: ${userId}`);
-    //         const usersInRoom = getUsersInRoom(roomName);
-    //         console.log(`usersInRoom`, usersInRoom);
-    //         const objCopy = { ...usersInRoom };
-    //         if (objCopy.hasOwnProperty(userId)) {
-    //             delete objCopy[userId];
-    //         }
-    //         socket.emit("active-list", objCopy);
-    //     } catch (error) {
-    //         console.error(`Error in get-active-list: ${error}`);
-    //         // You can also emit an error event to the client
-    //         socket.emit("error", { message: 'An error occurred in get-active-list' });
-    //     }
-    // });
-
     socket.on('offer', (data) => {
         io.to(data.target).emit('offer', { target: socket.id, offer: data.offer });
     });
@@ -136,7 +119,6 @@ io.on("connection", (socket) => {
         socket.to(roomId).emit('ready-call');
     });
 
-    // Join a room
     socket.on('createRoom', () => {
         console.log(`User createRoom`);
         let roomId = generateId();
@@ -162,7 +144,10 @@ io.on("connection", (socket) => {
         }
         if (rooms[roomId].members.length < 2) {
             socket.join(roomId);
-            socket.to(roomId).emit('new-user', socket.id);
+            socket.to(roomId).emit('new-user', {
+                newUserId: socket.id,
+                newUsername: _users[socket.id]
+            });
 
             rooms[roomId].members.push(socket.id);
             console.log(`🚀 ~ socket.on ~ rooms:`, rooms);
@@ -175,26 +160,6 @@ io.on("connection", (socket) => {
         }
     });
 
-    // function getUsersInRoom(room) {
-    //     console.log(`🚀 🚀 file: app.js:168 🚀 getUsersInRoom 🚀 room`, room);
-    //     console.log(`🚀 🚀 file: app.js:170 🚀 getUsersInRoom 🚀 io.sockets.adapter.rooms`, io.sockets.adapter.rooms);
-    //     let socketsInRoom = io.sockets.adapter.rooms.get(room);
-    //     console.log(`🚀 🚀 file: app.js:171 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
-    //     console.log(`🚀 🚀 file: app.js:173 🚀 getUsersInRoom 🚀 users`, _users);
-    //     if (!socketsInRoom) {
-    //         return [];
-    //     }
-    //     socketsInRoom = Array.from(socketsInRoom);
-    //     console.log(`🚀 🚀 file: app.js:178 🚀 getUsersInRoom 🚀 socketsInRoom`, socketsInRoom);
-    //     console.log(`🚀 🚀 file: app.js:181 🚀 getUsersInRoom 🚀 users`, _users);
-    //     const filteredUsers = Object.fromEntries(
-    //         Object.entries(users).filter(([key, value]) => {
-    //             return socketsInRoom.includes(value);
-    //         })
-    //     );
-    //     console.log(filteredUsers);
-    //     return filteredUsers;
-    // }
 });
 
 // admin.socket.io

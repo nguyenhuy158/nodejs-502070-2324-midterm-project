@@ -142,8 +142,11 @@ $(() => {
         }
     }
 
-    socket.on('new-user', (userId) => {
-        remoteUserId = userId;
+    socket.on('new-user', (data) => {
+        const { newUserId, newUsername } = data;
+        remoteUserId = newUserId;
+        // console.log('new-user', data);
+        displayMessage(`${newUsername} joined the room`, '🤖🤖🤖');
     });
 
     socket.on('ready-call', async () => {

@@ -37,13 +37,4 @@ router.post('/invite', (req, res) => {
     }
 });
 
-// router.get('/users', (req, res) => {
-//     res.send('List of users');
-// });
-
-// router.get('/users/:id', (req, res) => {
-//     const userId = req.params.id;
-//     res.send(`User with ID ${userId}`);
-// });
-
 module.exports = router;

@@ -155,7 +155,7 @@ $(() => {
                 Swal.fire({
                     title: `Invite <b>${result.value.userInvited}</b> successfully!`,
                     imageUrl: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.value.inviteLink}`,
-                    html: `<span class="invite-link px-3 py-2 rounded bg-light text-black pointer user-select-none">${result.value.inviteLink}</span>`,
+                    html: `<span data-id="${result.value.inviteLink}" class="invite-link px-3 py-2 rounded bg-light text-black pointer user-select-none">${result.value.inviteLink}</span>`,
                 });
             }
         });
