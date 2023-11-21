@@ -41,6 +41,10 @@ function toggleSharing() {
                 videoSender.replaceTrack(cameraStream.getVideoTracks()[0]);
                 // Cập nhật trạng thái
                 sharingScreen = false;
+
+                if (isMuteCam) {
+                    muteVideo();
+                }
             })
             .catch(error => {
                 console.error('Error getting camera media:', error);
@@ -225,7 +229,6 @@ $(() => {
 
     socket.on('ready-call', async () => {
         console.log('socket.on ready call');
-
         try {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
