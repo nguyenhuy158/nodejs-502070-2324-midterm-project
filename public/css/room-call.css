@@ -39,12 +39,38 @@ button {
 }
 
 /* -------------------- FEATURE STYLE --------------------*/
+/* Add the animation keyframes */
+@keyframes enlargeAnimation {
+    0% {
+        transform: scale(1);
+        background-color: #ecf0f1;
+    }
+    50% {
+        transform: scale(1.2);
+        background-color: #f1f1f1;
+    }
+    100% {
+        transform: scale(1.2);
+        background-color: #f1f1f1;
+    }
+}
+
 #invite {
     margin: 10px;
 }
 
+#invite:hover{
+    background-color: #e0e0e0 !important;
+    animation: enlargeAnimation 2s forwards;
+}
+
 #roomName {
     margin: 50px 0 40px 40px;
+}
+
+/* Apply the animation to the desired elements */
+#roomName:hover {
+    animation: enlargeAnimation 2s ;
 }
 
 /* -------------------- END FEATURE STYLE --------------------*/
@@ -218,7 +244,7 @@ button {
 .container-room .left-cont .footer .utils .audio:hover,
 .container-room .left-cont .footer .utils .share-screen:hover {
     cursor: pointer;
-    background-color: #88a8da;
+    background-color: #5c6bc0;
 }
 
 .fa-microphone-slash,
@@ -248,10 +274,13 @@ button {
     transition: background-color 0.3s;
 }
 
-.container-room .left-cont .footer .utils .novideo:hover,
+.container-room .left-cont .footer .utils .novideo:hover{
+    cursor: pointer;
+    background-color: #5c6bc0;
+}
 .container-room .left-cont .footer .utils .cutcall:hover {
     cursor: pointer;
-    background-color: #88a8da;
+    background-color: #6d7375;
 }
 
 /* -------------------- END MAIN VIDEO STYLE --------------------*/
@@ -449,7 +478,7 @@ button {
 .chat-box .type-area .button-upload i,
 .chat-box .type-area .button-add i {
     font-size: 24px;
-    color: rgb(24, 112, 199);
+    color: #5c6bc0;
     cursor: pointer;
 }
 
@@ -459,7 +488,26 @@ button {
 
 .chat-box .type-area .button-upload i:hover,
 .chat-box .type-area .button-add i:hover {
-    color: #7ce8f7;
+    animation: enlargeAnimation 2s forwards;
+}
+
+.chat-box .type-area .button-send {
+    background-color: #f7f9fb;
+    width: 65px;
+    color: #6f74ff;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+}
+
+@keyframes flyAwayAnimation {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(calc(70% - 25px), calc(0% - 25px));
+        background: transparent;
+    }
 }
 
 .chat-box .type-area .button-send {
@@ -473,8 +521,9 @@ button {
 
 .chat-box .type-area .button-send:hover {
     height: 100%;
-    background-color: #6fbced;
-    color: #fff;
+    /* background-color: #6fbced;
+    color: #fff; */
+    animation: flyAwayAnimation 3s infinite;
 }
 
 .chat-box .type-area .button-send svg {

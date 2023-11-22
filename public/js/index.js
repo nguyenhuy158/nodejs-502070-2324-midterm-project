@@ -7,6 +7,7 @@ function isValidCode(code) {
 }
 
 const createButton = document.querySelector("#createroom");
+const realTime = document.querySelector("#time");
 const videoCont = document.querySelector('.video-self');
 const codeCont = document.querySelector('#roomcode');
 const joinBut = document.querySelector('#joinroom');
@@ -187,3 +188,20 @@ $(() => {
         });
     });
 });
+
+function updateTime() {
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const seconds = currentTime.getSeconds();
+
+    const amOrPm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
+
+    const formattedTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${amOrPm}`;
+    realTime.textContent = formattedTime;
+}
+
+setInterval(updateTime, 1000);
