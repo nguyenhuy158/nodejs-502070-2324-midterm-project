@@ -287,6 +287,18 @@ button {
 
 /* -------------------- CHAT FORM / AKA RIGHT CONTAINER--------------------*/
 
+/* message animation */
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .container-room .chat-box {
     width: 25%;
     background-color: #ffffff;
@@ -343,6 +355,7 @@ button {
     margin-bottom: 5px;
     display: flex;
     flex-direction: column;
+    animation: fade-in 0.5s ease-in-out;
 }
 
 .chat-box .chat-room .message-left {
@@ -373,7 +386,7 @@ button {
     left: 15px;
     border-style: solid;
     border-width: 0 10px 10px 10px;
-    border-color: transparent transparent #58b666 transparent;
+    border-color: transparent transparent #4ecca3 transparent;
 }
 
 .chat-box .chat-room .message-right {
@@ -381,7 +394,7 @@ button {
 }
 
 .chat-box .chat-room .message-right strong {
-    margin: 8px 17px 10px 0;
+    margin: 8px 7px 10px 0;
     font-size: 15px;
 }
 
@@ -411,7 +424,7 @@ button {
     right: 15px;
     border-style: solid;
     border-width: 0 10px 10px 10px;
-    border-color: transparent transparent #6fbced transparent;
+    border-color: transparent transparent #5c6bc0 transparent;
 }
 
 .chat-box .chat-room .bubble {
@@ -422,12 +435,12 @@ button {
 
 .chat-box .chat-room .bubble-light {
     color: #fff;
-    background-color: #58b666;
+    background-color: #4ecca3;
 }
 
 .chat-box .chat-room .bubble-dark {
     color: #fff;
-    background-color: #6fbced;
+    background-color: #5c6bc0;
 }
 
 .chat-box .chat-room strong {
@@ -489,6 +502,7 @@ button {
 .chat-box .type-area .button-upload i:hover,
 .chat-box .type-area .button-add i:hover {
     animation: enlargeAnimation 2s forwards;
+    color: #4ecca3;
 }
 
 .chat-box .type-area .button-send {
@@ -500,6 +514,7 @@ button {
     border: none;
 }
 
+/*  button send animation */
 @keyframes flyAwayAnimation {
     0% {
         transform: translate(0, 0);
@@ -521,15 +536,12 @@ button {
 
 .chat-box .type-area .button-send:hover {
     height: 100%;
-    /* background-color: #6fbced;
-    color: #fff; */
     animation: flyAwayAnimation 3s infinite;
 }
 
 .chat-box .type-area .button-send svg {
     width: 25px;
-    height: 25px;
-}
+    height: 25px;}
 /* -------------------- END CHAT FORM --------------------*/
 
 /* .no-scrollbar::-webkit-scrollbar {
