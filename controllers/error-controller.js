@@ -1,28 +1,14 @@
-const { currentTime } = require("../middlewares/format");
-exports.errorNotFound = function (req, res, next) {
-    const { method, originalUrl } = req;
-    console.error(`[ERROR][404] ${method}\t${originalUrl}`);
-    console.error(`[ERROR][404] ${method}\t${originalUrl}`);
-    res.status(404).render("pages/404");
+const logger = require('../config/logger');
+
+
+exports.error500 = (error, req, res, next) => {
+    logger.error(`500 Internal Server Error: ${error}`);
+
+    res.status(500).render('500', { error: error });
 };
 
-exports.logErrors = function (err, req, res, next) {
-    console.error(`[ERROR][LOG] ${err.message}`);
-    console.error(`[ERROR][LOG] ${err.stack}`);
-    next(err);
-};
+exports.error404 = function (req, res, next) {
+    logger.error(`404 Not Found: ${req.originalUrl}`);
 
-exports.clientErrorHandler = function (err, req, res, next) {
-    if (req.xhr) {
-        res.status(404).send({ error: "Something failed!", message: err.message });
-    } else {
-        next(err);
-    }
+    res.status(404).render('404', {});
 };
-
-exports.serverErrorHandler = function (err, req, res, next) {
-    console.error(`[ERROR][500] ${err.message}`);
-    console.error(`[ERROR][500] ${err.stack}`);
-    res.status(500).render("pages/500", { error: "Something failed!", message: err.message });
-};
-

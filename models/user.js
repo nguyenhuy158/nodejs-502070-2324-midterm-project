@@ -1,86 +1,62 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
 
-const userSchema = new Schema({
-    email: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true
-    },
-    username: {
-        type: String,
-        trim: true,
-        minlength: 1
-    },
-    fullName: {
-        type: String,
-        trim: true,
-        minlength: 2
-    },
-    role: {
-        type: String,
-        enum: [process.env.ROLE_ADMIN, process.env.ROLE_SALE],
-        default: process.env.ROLE_SALE,
-        lowercase: true
-    },
-    password: {
-        type: String,
-        trim: true,
-        minlength: 1
-    },
-    password_confirm: {
-        type: String,
-        trim: true,
-        minlength: 1,
-        select: false
-    },
-    token: { type: String },
-    tokenExpiration: { type: Date },
-    passwordResetToken: String,
-    passwordResetTokenExpires: Date,
-    isFirstLogin: {
-        type: Boolean,
-        default: true
-    },
-    isPasswordReset: {
-        type: Boolean,
-        default: false
-    },
-    profilePicture: { type: String },
-    inactivateStatus: {
-        type: Boolean,
-        default: false
-    },
-    lockedStatus: {
-        type: Boolean,
-        default: false
-    },
-    settings: {
-        darkMode: {
-            type: Boolean,
-            default: false
-        },
-        notification: {
-            type: Boolean,
-            default: true
-        },
-        language: {
+const userSchema = new Schema(
+    {
+        email: {
             type: String,
-            default: "en"
+            unique: true,
+            required: true,
+            trim: true,
         },
-        fontSize: {
-            type: Number,
-            default: 16
-        }
-    }
-}, {
-    timestamps: true
-});
+        username: {
+            type: String,
+            trim: true,
+            minlength: 1,
+        },
+        fullName: {
+            type: String,
+            trim: true,
+            minlength: 2,
+        },
+        password: {
+            type: String,
+            trim: true,
+            minlength: 1,
+        },
+        token: { type: String },
+        tokenExpiration: { type: Date },
+        isPasswordReset: {
+            type: Boolean,
+            default: false,
+        },
+        profilePicture: { type: String },
+        settings: {
+            darkMode: {
+                type: Boolean,
+                default: false,
+            },
+            notification: {
+                type: Boolean,
+                default: true,
+            },
+            language: {
+                type: String,
+                default: "en",
+            },
+            fontSize: {
+                type: Number,
+                default: 16,
+            },
+        },
+    },
+    {
+        timestamps: true,
+    },
+);
 
 userSchema.methods.updateProfilePicture = function (newProfilePicture) {
     this.profilePicture = newProfilePicture;
@@ -112,15 +88,10 @@ userSchema.pre("save", function (next) {
             }
 
             user.password = hash;
-            user.password_confirm = hash;
             next();
         });
     });
 });
-
-userSchema.methods.isAdmin = function () {
-    return this.role === process.env.ROLE_ADMIN;
-};
 
 userSchema.methods.validPassword = async function (password) {
     // console.log("=>(user.js:66) password", password);
@@ -129,28 +100,17 @@ userSchema.methods.validPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
-userSchema.virtual("createdAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.createdAt);
-    });
+userSchema.virtual("createdAtFormatted").get(function () {
+    return formatTimestamp(this.createdAt);
+});
 
-userSchema.virtual("updatedAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.updatedAt);
-    });
-
-userSchema.methods.generateAccessJWT = function () {
-    let payload = {
-        id: this._id,
-    };
-    return jwt.sign(payload, process.env.SECRET_ACCESS_TOKEN, {
-        expiresIn: "20m",
-    });
-};
+userSchema.virtual("updatedAtFormatted").get(function () {
+    return formatTimestamp(this.updatedAt);
+});
 
 userSchema.methods.display = function () {
     return `${this.fullName} (${this.username})`;
-}
+};
 
 userSchema.plugin(passportLocalMongoose);
 

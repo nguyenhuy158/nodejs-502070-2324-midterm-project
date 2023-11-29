@@ -1,5 +1,4 @@
 const PORT = process.env.PORT;
-const winstonLogger = require("../config/logger");
 
 exports.listen = () => {
     console.log(`[LISTEN] Server is running on http://localhost:${PORT}`);

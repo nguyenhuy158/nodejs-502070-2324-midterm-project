@@ -1,25 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const session = require("express-session");
+
 const accountController = require("../controllers/account-controller");
 const customValidator = require("../middlewares/custom-validator");
+
 const { doubleCsrf } = require("csrf-csrf");
-const indexController = require('../controllers/index-controller');
+const { sessionConfig } = require("../config/config");
+const { isLoggedIn } = require('../controllers/index-controller');
+const { doubleCsrfOptions } = require("../config/config");
 
-router.use(
-    session({
-        secret: process.env.SECRET_KEY,
-        resave: false,
-        saveUninitialized: true,
-    }),
-);
+const { invalidCsrfTokenError } = doubleCsrf(doubleCsrfOptions);
+const { generateToken } = doubleCsrf(doubleCsrfOptions);
+const { validateRequest } = doubleCsrf(doubleCsrfOptions);
+const { doubleCsrfProtection } = doubleCsrf(doubleCsrfOptions);
 
-const doubleCsrfOptions = {
-    getSecret: () => "Secret",
-    cookieName: "_crsf",
-    getTokenFromRequest: (req) => req.body._csrf,
-};
-const { invalidCsrfTokenError, generateToken, validateRequest, doubleCsrfProtection } = doubleCsrf(doubleCsrfOptions);
+// router.use(session(sessionConfig));
 
 router.get("/login", accountController.isNotAuthenticated, doubleCsrfProtection, accountController.getLogin);
 
@@ -39,9 +34,9 @@ router.post("/email-confirm", accountController.emailConfirm);
 
 router.get("/logout", accountController.getLogout);
 
-router.get("/reset-password", indexController.isLoggedIn, accountController.getChangepassword);
+router.get("/reset-password", isLoggedIn, accountController.getChangePassword);
 
-router.post("/reset-password", indexController.isLoggedIn, customValidator.postChangePassword, accountController.postChangepassword);
+router.post("/reset-password", isLoggedIn, customValidator.postChangePassword, accountController.postChangepassword);
 
 router.get("/logout-success", accountController.getLogoutSuccess);
 

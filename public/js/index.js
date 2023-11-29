@@ -190,18 +190,6 @@ $(() => {
 });
 
 function updateTime() {
-    const currentTime = new Date();
-    const hours = currentTime.getHours();
-    const minutes = currentTime.getMinutes();
-    const seconds = currentTime.getSeconds();
-
-    const amOrPm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = seconds.toString().padStart(2, '0');
-
-    const formattedTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${amOrPm}`;
-    realTime.textContent = formattedTime;
+    realTime.textContent = moment().format('hh:mm:ss A');
 }
-
 setInterval(updateTime, 1000);

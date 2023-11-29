@@ -1,125 +1,79 @@
 /* eslint-disable no-undef */
 require('dotenv').config();
 
-const flash = require("connect-flash");
-const { instrument } = require("@socket.io/admin-ui");
-const express = require("express");
+// const flash = require("connect-flash");
 const http = require("http");
+const path = require("path");
+const express = require("express");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+
+const { instrument } = require("@socket.io/admin-ui");
 const { Server } = require("socket.io");
+
 const { generateId } = require('./utils/utils');
+const { corsConfig } = require('./config/config');
+const { authConfig } = require('./config/config');
+const { sessionConfig } = require('./config/config');
+const { logRequestDetails } = require('./middlewares/access-log');
+
+const logger = require('./config/logger');
+const indexRouter = require("./routes/index-router");
+const connectDb = require("./middlewares/db");
+connectDb();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: ["https://admin.socket.io", "*:*"],
-        methods: ["GET", "POST"],
-        credentials: true
-    }
-});
+const io = new Server(server, { cors: corsConfig });
+
 global._io = io;
-
-const indexRouter = require("./routes/index-router");
-const logger = require("morgan");
-const cookieParser = require("cookie-parser");
-const path = require("path");
-const connectDb = require("./middlewares/db");
-const { logRequestDetails } = require('./middlewares/access-log');
-const session = require("express-session");
-const MongoStore = require('connect-mongo');
-
-
 global._users = {};
 global._rooms = {};
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
-app.use(logger("dev"));
 app.disable("x-powered-by");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIES_SECRET));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(flash());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 10 },
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        ttl: 1000 * 60 * 60 * 24 * 10
-    }),
-    resave: true,
-    saveUninitialized: true,
-    name: 'callmate.sid',
-    httpOnly: true,
-    secure: true,
-}));
+// app.use(flash());
+app.use(session(sessionConfig));
 
-
-connectDb();
 app.use(logRequestDetails);
 app.use(indexRouter);
 
-
-
 io.on("connection", (socket) => {
 
-    // const requestHeaders = socket.handshake.headers;
-    // console.log(`🚀 🚀 file: app.js:40 🚀 io.on 🚀 requestHeaders`, requestHeaders);
-    // console.log(`🚀 🚀 file: app.js:42 🚀 io.on 🚀 requestHeaders.host`, requestHeaders.host);
 
-    socket.on("set-username", (userName) => {
-        if (_users[userName] && _users[socket.id]) {
-            return;
-        }
-        _users[userName] = socket.id;
-        _users[socket.id] = userName;
-    });
-
+    // webRTC handler
     socket.on('offer', (data) => {
         io.to(data.target).emit('offer', { target: socket.id, offer: data.offer });
     });
-
     socket.on('answer', (data) => {
         io.to(data.target).emit('answer', data.answer);
     });
-
     socket.on('ice-candidate', (data) => {
         io.to(data.target).emit('ice-candidate', data.candidate);
     });
-
-    socket.on("connect_error", (err) => {
-        console.log(`connect_error due to `, err);
-        console.log(`connect_error due to ${err.message}`);
-    });
-
-    socket.on("disconnect", () => {
-        // Xóa thông tin người dùng khi ngắt kết nối
-        const roomId = Object.keys(_rooms).find((roomId) =>
-            _rooms[roomId].members.includes(socket.id)
-        );
-        if (roomId) {
-            _rooms[roomId].members.splice(_rooms[roomId].members.indexOf(socket.id), 1);
-            socket.broadcast.to(roomId).emit('user-disconnected', socket.id);
-            socket.broadcast.to(roomId).emit('end-call');
-        }
-    });
-
-    socket.on('chat-message', (data) => {
-        console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
-        socket.to(data.roomName).emit('chat-message', data);
-    });
-
-    socket.on('end-call', (remoteUserId) => {
-        io.to(remoteUserId).emit('end-call');
-    });
-
     socket.on('ready-call', (roomId) => {
         console.log('ready to call');
         console.log(_rooms);
         socket.to(roomId).emit('ready-call');
     });
+    socket.on('end-call', (remoteUserId) => {
+        io.to(remoteUserId).emit('end-call');
+    });
+    // webRTC handler
 
+    // chat handler
+    socket.on('chat-message', (data) => {
+        console.log(`🚀 🚀 file: app.js:134 🚀 socket.on 🚀 data`, data);
+        socket.to(data.roomName).emit('chat-message', data);
+    });
+    // chat handler
+
+    // room handler
     socket.on('createRoom', () => {
         console.log(`User createRoom`);
         let roomId = generateId();
@@ -129,14 +83,12 @@ io.on("connection", (socket) => {
         _rooms[roomId] = { members: [] };
         socket.emit('redirectToRoom', `/room/${roomId}`);
     });
-
     socket.on('join', (roomId) => {
         if (!_rooms[roomId]) {
             return socket.emit('room-not-found');
         }
         return socket.emit('redirectToRoom', `/room/${roomId}`);
     });
-
     socket.on('join-room', (roomId) => {
         console.log(`🚀 roomId`, roomId);
         console.log(`🚀 _rooms`, _rooms);
@@ -153,22 +105,41 @@ io.on("connection", (socket) => {
             _rooms[roomId].members.push(socket.id);
             console.log(`🚀 ~ socket.on ~ _rooms:`, _rooms);
 
-            // Gửi thông tin thành viên trong phòng cho client
             socket.emit('all-users', _rooms[roomId].members);
         } else {
-            // Redirect user to another page
             socket.emit('room-full');
         }
     });
+    // room handler
+
+    // other handler
+    socket.on("set-username", (userName) => {
+        if (_users[userName] && _users[socket.id]) {
+            return;
+        }
+        _users[userName] = socket.id;
+        _users[socket.id] = userName;
+    });
+    socket.on("connect_error", (err) => {
+        logger.error(`connect_error due to `, err);
+        logger.error(`connect_error due to ${err.message}`);
+    });
+    socket.on("disconnect", () => {
+        const roomId = Object.keys(_rooms).find((roomId) =>
+            _rooms[roomId].members.includes(socket.id)
+        );
+        if (roomId) {
+            _rooms[roomId].members.splice(_rooms[roomId].members.indexOf(socket.id), 1);
+            socket.broadcast.to(roomId).emit('user-disconnected', socket.id);
+            socket.broadcast.to(roomId).emit('end-call');
+        }
+    });
+    // other handler
 });
 
-// admin.socket.io
+// https://admin.socket.io/
 instrument(io, {
-    auth: {
-        type: "basic",
-        username: "admin",
-        password: "$2a$10$Zek90ZcKamw4C3XW6Y28KuLxdyFcywscn2o7KWBO3T0Za.oWORs.6"
-    },
+    auth: authConfig,
     serverId: `${require("os").hostname()}#${process.pid}`
 });
 

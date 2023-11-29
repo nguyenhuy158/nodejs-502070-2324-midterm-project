@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>CallMate</title>
+        <title><%= pageTitle %></title>
 
         <%-include('./partials/head.ejs')%>
 
@@ -10,6 +10,10 @@
 
     <body class="position-relative">
         <%- include('./flash.ejs') %>
+
+        <!-- Buttons for starting and stopping recording -->
+        <button id="startRecordingButton">Start Recording</button>
+        <button id="stopRecordingButton">Stop Recording</button>
 
         <!-- button invite -->
         <button
@@ -180,5 +184,6 @@
         <script defer src="/js/room-call-webrtc.js"></script>
         <script defer src="/js/room-call.js"></script>
         <script defer src="/js/index-networkstatus.js"></script>
+        <script defer src="/js/room-call-record.js"></script>
     </body>
 </html>
