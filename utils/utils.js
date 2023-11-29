@@ -1,21 +1,6 @@
 const { transporter } = require("../config/email");
 const { v2: cloudinary } = require("cloudinary");
 
-
-exports.isNumeric = function isNumeric(value) {
-    return !isNaN(value) && typeof value !== 'boolean';
-};
-
-exports.getFullUrlForMailConfirm = function getFullUrlForMailConfirm(req, token) {
-    const baseUrl = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${token}`;
-    return baseUrl;
-};
-
-exports.getFullUrl = function getFullUrl(req) {
-    const baseUrl = `${req.protocol + "://" + req.get("host")}`;
-    return baseUrl;
-};
-
 exports.generateToken = function () {
     const length = 64;
     const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -80,7 +65,6 @@ exports.removeImageByUrl = async function (imageUrl) {
         console.error(`Error removing image from Cloudinary: ${error.message}`);
     }
 };
-
 
 exports.generateId = function () {
     return 'xxx-xxx-xxx'.replace(/[x]/g, function (c) {

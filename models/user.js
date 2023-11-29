@@ -1,62 +1,58 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
-const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
 
-const userSchema = new Schema(
-    {
-        email: {
-            type: String,
-            unique: true,
-            required: true,
-            trim: true,
-        },
-        username: {
-            type: String,
-            trim: true,
-            minlength: 1,
-        },
-        fullName: {
-            type: String,
-            trim: true,
-            minlength: 2,
-        },
-        password: {
-            type: String,
-            trim: true,
-            minlength: 1,
-        },
-        token: { type: String },
-        tokenExpiration: { type: Date },
-        isPasswordReset: {
+const userSchema = new Schema({
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true,
+    },
+    username: {
+        type: String,
+        trim: true,
+        minlength: 1,
+    },
+    fullName: {
+        type: String,
+        trim: true,
+        minlength: 2,
+    },
+    password: {
+        type: String,
+        trim: true,
+        minlength: 1,
+    },
+    token: { type: String },
+    tokenExpiration: { type: Date },
+    isPasswordReset: {
+        type: Boolean,
+        default: false,
+    },
+    profilePicture: { type: String },
+    settings: {
+        darkMode: {
             type: Boolean,
             default: false,
         },
-        profilePicture: { type: String },
-        settings: {
-            darkMode: {
-                type: Boolean,
-                default: false,
-            },
-            notification: {
-                type: Boolean,
-                default: true,
-            },
-            language: {
-                type: String,
-                default: "en",
-            },
-            fontSize: {
-                type: Number,
-                default: 16,
-            },
+        notification: {
+            type: Boolean,
+            default: true,
+        },
+        language: {
+            type: String,
+            default: "en",
+        },
+        fontSize: {
+            type: Number,
+            default: 16,
         },
     },
-    {
-        timestamps: true,
-    },
-);
+}, {
+    timestamps: true,
+});
 
 userSchema.methods.updateProfilePicture = function (newProfilePicture) {
     this.profilePicture = newProfilePicture;
@@ -94,18 +90,15 @@ userSchema.pre("save", function (next) {
 });
 
 userSchema.methods.validPassword = async function (password) {
-    // console.log("=>(user.js:66) password", password);
-    // console.log("=>(user.js:68) this.password", this.password);
-    // console.log("=>[user.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
     return await bcrypt.compare(password, this.password);
 };
 
 userSchema.virtual("createdAtFormatted").get(function () {
-    return formatTimestamp(this.createdAt);
+    return moment(this.createdAt).format(process.env.DATETIME_FORMAT_FULL);
 });
 
 userSchema.virtual("updatedAtFormatted").get(function () {
-    return formatTimestamp(this.updatedAt);
+    return moment(this.updatedAt).format(process.env.DATETIME_FORMAT_FULL);
 });
 
 userSchema.methods.display = function () {
