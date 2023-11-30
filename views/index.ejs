@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>CallMate</title>
+        <title><%= pageTitle %></title>
 
         <%-include('./partials/head.ejs')%>
 
@@ -23,7 +23,10 @@
             </div>
 
             <div class="bell me-3 pointer position-relative">
-                <span style="font-weight: normal;">Welcome <p><%= username %></p></span>
+                <span style="font-weight: normal">
+                    Welcome
+                    <p><%= username %></p>
+                </span>
             </div>
         </header>
 

@@ -1,8 +1,14 @@
-const User = require("../models/user");
-const { generateToken, sendEmail } = require('../utils/utils');
-const moment = require('morgan');
+const moment = require('moment');
 
-const { query, body, param, validationResult } = require("express-validator");
+const User = require("../models/user");
+
+const { generateToken } = require('../utils/utils');
+const { sendEmail } = require('../utils/utils');
+
+const { query } = require("express-validator");
+const { body } = require("express-validator");
+const { param } = require("express-validator");
+const { validationResult } = require("express-validator");
 
 async function createAccount(name, email, password) {
     const user = new User({
@@ -14,27 +20,20 @@ async function createAccount(name, email, password) {
     return savedUser;
 }
 
-exports.postRegister = async (req, res) => {
-    const result = validationResult(req);
-
-    let name = req.body.name;
-    let email = req.body.email;
-    let password = req.body.password;
-    if (result.errors.length === 0) {
-        const savedUser = await createAccount(name, email, password);
-        if (savedUser) {
-            return res.json({ error: false, message: 'User created successfully' });
-        } else {
-            return res.json({ error: true, message: 'User creation failed' });
-        }
+exports.isNotAuthenticated = (req, res, next) => {
+    // TODO: rename loggedin
+    if (req.session.loggedin) {
+        res.redirect("/");
     } else {
-        return res.json({
-            error: true,
-            message: result.errors[0].msg
-        });
+        next();
     }
 };
 
+
+// LOGIN
+exports.getLogin = (req, res) => {
+    res.render("login", { csrf: req.csrfToken() });
+};
 exports.postLogin = async (req, res) => {
     const result = validationResult(req);
 
@@ -59,7 +58,10 @@ exports.postLogin = async (req, res) => {
         return res.json({ error: true, message: result.errors[0].msg });
     }
 };
+// LOGIN
 
+
+// LOGOUT
 exports.getLogout = (req, res) => {
     req.session.destroy((err) => {
         console.log(`🚀 🚀 file: accountController.js:85 🚀 req.session.destroy 🚀 err`, err);
@@ -67,11 +69,43 @@ exports.getLogout = (req, res) => {
         res.redirect("/login");
     });
 };
+exports.getLogoutSuccess = (req, res) => {
+    res.render("logout");
+};
+// LOGOUT
 
-exports.getChangepassword = (req, res) => {
+
+// REGISTER
+exports.getRegister = (req, res) => {
+    res.render("register");
+};
+exports.postRegister = async (req, res) => {
+    const result = validationResult(req);
+
+    let name = req.body.name;
+    let email = req.body.email;
+    let password = req.body.password;
+    if (result.errors.length === 0) {
+        const savedUser = await createAccount(name, email, password);
+        if (savedUser) {
+            return res.json({ error: false, message: 'User created successfully' });
+        } else {
+            return res.json({ error: true, message: 'User creation failed' });
+        }
+    } else {
+        return res.json({
+            error: true,
+            message: result.errors[0].msg
+        });
+    }
+};
+// REGISTER
+
+
+// CHANGE PASSWORD
+exports.getChangePassword = (req, res) => {
     res.render("reset-password");
 };
-
 exports.postChangepassword = async (req, res) => {
     try {
         const { password } = req.body;
@@ -88,23 +122,13 @@ exports.postChangepassword = async (req, res) => {
         res.status(500).json({ error: true, message: 'An error occurred while updating the password' });
     }
 };
+// CHANGE PASSWORD
 
-exports.getLogoutSuccess = (req, res) => {
-    res.render("logout");
-};
 
-exports.getRegister = (req, res) => {
-    res.render("register");
-};
-
-exports.getLogin = (req, res) => {
-    res.render("login", { csrf: req.csrfToken() });
-};
-
+// FORGET PASSWORD
 exports.getForgetPassword = (req, res) => {
     res.render("forget-password");
 };
-
 exports.postForgetPassword = async (req, res) => {
     const result = validationResult(req);
     console.log(`exports.postForgetPassword= 🚀  req.body`, req.body);
@@ -156,20 +180,13 @@ exports.postForgetPassword = async (req, res) => {
         return res.json({ error: true, message: result.errors[0].msg });
     }
 };
+// FORGET PASSWORD
 
-exports.isNotAuthenticated = (req, res, next) => {
-    // console.log("[LOGIN] -> ");
-    if (req.session.loggedin) {
-        res.redirect("/");
-    } else {
-        next();
-    }
-};
 
+// EMAIL CONFIRM
 exports.getEmailConfirm = (req, res) => {
     res.render("email-confirm");
 };
-
 exports.emailConfirm = async (req, res) => {
     const token = req.query.token;
 
@@ -219,3 +236,4 @@ exports.emailConfirm = async (req, res) => {
         });
     }
 };
+// EMAIL CONFIRM

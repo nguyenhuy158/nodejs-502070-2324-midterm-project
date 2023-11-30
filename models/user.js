@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
@@ -10,76 +8,50 @@ const userSchema = new Schema({
         type: String,
         unique: true,
         required: true,
-        trim: true
+        trim: true,
     },
     username: {
         type: String,
         trim: true,
-        minlength: 1
+        minlength: 1,
     },
     fullName: {
         type: String,
         trim: true,
-        minlength: 2
-    },
-    role: {
-        type: String,
-        enum: [process.env.ROLE_ADMIN, process.env.ROLE_SALE],
-        default: process.env.ROLE_SALE,
-        lowercase: true
+        minlength: 2,
     },
     password: {
         type: String,
         trim: true,
-        minlength: 1
-    },
-    password_confirm: {
-        type: String,
-        trim: true,
         minlength: 1,
-        select: false
     },
     token: { type: String },
     tokenExpiration: { type: Date },
-    passwordResetToken: String,
-    passwordResetTokenExpires: Date,
-    isFirstLogin: {
-        type: Boolean,
-        default: true
-    },
     isPasswordReset: {
         type: Boolean,
-        default: false
+        default: false,
     },
     profilePicture: { type: String },
-    inactivateStatus: {
-        type: Boolean,
-        default: false
-    },
-    lockedStatus: {
-        type: Boolean,
-        default: false
-    },
     settings: {
         darkMode: {
             type: Boolean,
-            default: false
+            default: false,
         },
         notification: {
             type: Boolean,
-            default: true
+            default: true,
         },
         language: {
             type: String,
-            default: "en"
+            default: "en",
         },
         fontSize: {
             type: Number,
-            default: 16
-        }
-    }
+            default: 16,
+        },
+    },
 }, {
-    timestamps: true
+    timestamps: true,
 });
 
 userSchema.methods.updateProfilePicture = function (newProfilePicture) {
@@ -112,45 +84,26 @@ userSchema.pre("save", function (next) {
             }
 
             user.password = hash;
-            user.password_confirm = hash;
             next();
         });
     });
 });
 
-userSchema.methods.isAdmin = function () {
-    return this.role === process.env.ROLE_ADMIN;
-};
-
 userSchema.methods.validPassword = async function (password) {
-    // console.log("=>(user.js:66) password", password);
-    // console.log("=>(user.js:68) this.password", this.password);
-    // console.log("=>[user.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
     return await bcrypt.compare(password, this.password);
 };
 
-userSchema.virtual("createdAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.createdAt);
-    });
+userSchema.virtual("createdAtFormatted").get(function () {
+    return moment(this.createdAt).format(process.env.DATETIME_FORMAT_FULL);
+});
 
-userSchema.virtual("updatedAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.updatedAt);
-    });
-
-userSchema.methods.generateAccessJWT = function () {
-    let payload = {
-        id: this._id,
-    };
-    return jwt.sign(payload, process.env.SECRET_ACCESS_TOKEN, {
-        expiresIn: "20m",
-    });
-};
+userSchema.virtual("updatedAtFormatted").get(function () {
+    return moment(this.updatedAt).format(process.env.DATETIME_FORMAT_FULL);
+});
 
 userSchema.methods.display = function () {
     return `${this.fullName} (${this.username})`;
-}
+};
 
 userSchema.plugin(passportLocalMongoose);
 
