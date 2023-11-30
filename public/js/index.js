@@ -60,7 +60,7 @@ createButton.addEventListener('click', (e) => {
 
     setTimeout(() => {
         socket.emit('createRoom');
-    }, 1000);
+    }, 2000);
 });
 
 socket.on('redirectToRoom', (url) => {

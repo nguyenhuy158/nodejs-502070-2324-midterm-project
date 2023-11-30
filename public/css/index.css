@@ -121,7 +121,7 @@ body {
     margin-top: 60px;
     font-size: 24px;
     font-weight: bold;
-    background-color: #512da8;
+    background-color: #5c6bc0;
     color: white;
     text-align: center;
     padding: 10px 20px;
@@ -153,7 +153,9 @@ body {
     border-radius: 10px;
     background-color: white;
     border: 2px solid #38d8d3;
-    color: #4ecca3;
+    color: #3a4e47;
+    position: relative;
+    overflow: hidden;
 }
 
 .main .create-join .createroom-clicked:focus {
