@@ -112,6 +112,14 @@ io.on("connection", (socket) => {
     });
     // room handler
 
+    // file handler
+    socket.on('file', (data) => {
+        const { file, roomId } = data;
+        socket.to(roomId).emit('file', { file, sender: _users[socket.id] });
+    });
+    // file handler
+
+
     // other handler
     socket.on("set-username", (userName) => {
         if (_users[userName] && _users[socket.id]) {

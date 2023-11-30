@@ -298,16 +298,50 @@ $(() => {
 
 });
 
-function displayMessage(message, sender, timeSent, isMe = false) {
+// function displayMessage(message, sender, timeSent, isMe = false) {
+//     // format date now to hh:mm:ss AM
+//     console.log(`🚀 🚀 file: index.js:194 🚀 displayMessage 🚀 timeSent`, timeSent);
+//     timeSent = timeSent || moment(Date.now()).format('hh:mm:ss A');
+//     $('#chatBox').append(`
+//         <div class="message ${isMe ? 'message-right' : 'message-left'}">
+//             <strong>${sender}<small>${timeSent}</small></strong>
+//             <div class="bubble ${isMe ? 'bubble-dark' : 'bubble-light'}">
+//                 ${message}
+//                 <!-- <div><small>${timeSent}</small></div> -->
+//             </div>
+//         </div>
+//     `);
+
+//     $('#chatInput').val(isMe ? '' : $('#chatInput').val());
+
+//     $('.card-body').scrollTop($('.card-body>#chatBox')[0].scrollHeight);
+// }
+function displayMessage(message, sender, timeSent, isMe = false, isImage = false) {
     // format date now to hh:mm:ss AM
     console.log(`🚀 🚀 file: index.js:194 🚀 displayMessage 🚀 timeSent`, timeSent);
     timeSent = timeSent || moment(Date.now()).format('hh:mm:ss A');
+
+    let messageContent;
+
+    if (isImage) {
+        // If it's an image file, display the image
+        messageContent = `<img src="${message}" alt="Image" class="file-image">`;
+    } else {
+        // If it's not an image file, provide a download link
+        const fileName = message.substring(message.lastIndexOf('/') + 1);
+        messageContent = `
+            <div>
+                <span>File: ${fileName}</span>
+                <a href="${message}" download="${fileName}" class="file-download-link">Download</a>
+            </div>
+        `;
+    }
+
     $('#chatBox').append(`
         <div class="message ${isMe ? 'message-right' : 'message-left'}">
             <strong>${sender}<small>${timeSent}</small></strong>
             <div class="bubble ${isMe ? 'bubble-dark' : 'bubble-light'}">
-                ${message}
-                <!-- <div><small>${timeSent}</small></div> -->
+                ${messageContent}
             </div>
         </div>
     `);
@@ -316,3 +350,8 @@ function displayMessage(message, sender, timeSent, isMe = false) {
 
     $('.card-body').scrollTop($('.card-body>#chatBox')[0].scrollHeight);
 }
+
+// Example usage:
+// displayMessage('https://example.com/image.jpg', 'John Doe', '12:30 PM', false, true);
+// displayMessage('https://example.com/document.pdf', 'Jane Smith', '1:45 PM', true, false);
+
