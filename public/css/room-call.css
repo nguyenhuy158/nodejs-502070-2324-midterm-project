@@ -59,7 +59,7 @@ button {
     margin: 10px;
 }
 
-#invite:hover{
+#invite:hover {
     background-color: #e0e0e0 !important;
     animation: enlargeAnimation 2s forwards;
 }
@@ -70,7 +70,7 @@ button {
 
 /* Apply the animation to the desired elements */
 #roomName:hover {
-    animation: enlargeAnimation 2s ;
+    animation: enlargeAnimation 2s;
 }
 
 /* -------------------- END FEATURE STYLE --------------------*/
@@ -241,7 +241,6 @@ button {
     transition: background-color 0.3s;
 }
 
-
 .container-room .left-cont .footer .utils .audio:hover,
 .container-room .left-cont .footer .utils .share-screen:hover {
     cursor: pointer;
@@ -249,7 +248,7 @@ button {
 }
 
 .fa-microphone-slash,
-.fa-video-slash{
+.fa-video-slash {
     color: #cc4e4e;
 }
 
@@ -275,7 +274,7 @@ button {
     transition: background-color 0.3s;
 }
 
-.container-room .left-cont .footer .utils .novideo:hover{
+.container-room .left-cont .footer .utils .novideo:hover {
     cursor: pointer;
     background-color: #5c6bc0;
 }
@@ -314,7 +313,7 @@ button {
     padding: 0 !important;
 }
 
-.card-footer{
+.card-footer {
     padding: 0 10px 20px 0 !important;
 }
 
@@ -542,7 +541,8 @@ button {
 
 .chat-box .type-area .button-send svg {
     width: 25px;
-    height: 25px;}
+    height: 25px;
+}
 /* -------------------- END CHAT FORM --------------------*/
 
 /* .no-scrollbar::-webkit-scrollbar {
@@ -632,4 +632,10 @@ button {
     padding: 5px 10px;
     color: white;
     text-shadow: 2px 2px 4px rgb(0 0 0 / 80%);
+}
+
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-panel {
+    background-color: transparent;
+    color: transparent;
 }

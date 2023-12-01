@@ -132,7 +132,7 @@
                                 <button id="uploadButton" class="button-upload">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                 </button>
-                                <input hidden type="file" name="attach-file" id="attach-file">
+                                <input hidden type="file" name="attach-file" id="attach-file" />
 
                                 <!-- emoji -->
                                 <div class="icon-box">
@@ -186,6 +186,7 @@
             let username = '<%= username %>'
             socket.emit('set-username', username)
         </script>
+        <script defer src="/js/magnific-popup-config.js"></script>
         <script defer src="/js/room-call-webrtc.js"></script>
         <script defer src="/js/room-call.js"></script>
         <script defer src="/js/index-networkstatus.js"></script>

@@ -8,6 +8,9 @@ const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
+const { v2: cloudinary } = require("cloudinary");
+const { cloudinaryConfig } = require("./config/config");
+
 const { instrument } = require("@socket.io/admin-ui");
 const { Server } = require("socket.io");
 
@@ -43,6 +46,31 @@ app.use(session(sessionConfig));
 app.use(logRequestDetails);
 app.use(indexRouter);
 
+cloudinary.config(cloudinaryConfig);
+async function uploadToCloudinary(file) {
+    try {
+        const result = await cloudinary.uploader.upload(file.data, {
+            resource_type: 'auto',
+            folder: 'call-mate',
+        });
+        logger.info(`🚀 result`, result);
+
+        return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            cloudinaryUrl: result.secure_url,
+        };
+    } catch (error) {
+        logger.error('Error uploading file to Cloudinary:', error);
+        return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            cloudinaryUrl: file.data,
+        };
+    }
+}
 io.on("connection", (socket) => {
 
 
@@ -113,9 +141,19 @@ io.on("connection", (socket) => {
     // room handler
 
     // file handler
-    socket.on('file', (data) => {
+    socket.on('file', async (data) => {
         const { file, roomId } = data;
-        socket.to(roomId).emit('file', { file, sender: _users[socket.id] });
+        const fileData = await uploadToCloudinary(file);
+        socket.to(roomId).emit('file', {
+            file: fileData,
+            sender: _users[socket.id],
+            isSender: false
+        });
+        socket.emit('file', {
+            file: fileData,
+            sender: _users[socket.id],
+            isSender: true
+        })
     });
     // file handler
 
