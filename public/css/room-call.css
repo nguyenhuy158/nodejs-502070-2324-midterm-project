@@ -46,7 +46,7 @@ button {
         background-color: #ecf0f1;
     }
     50% {
-        transform: scale(1.2);
+        transform: scale(1.1);
         background-color: #f1f1f1;
     }
     100% {
@@ -61,7 +61,7 @@ button {
 
 #invite:hover {
     background-color: #e0e0e0 !important;
-    animation: enlargeAnimation 2s forwards;
+    animation: enlargeAnimation 1s forwards;
 }
 
 #roomName {
@@ -70,7 +70,7 @@ button {
 
 /* Apply the animation to the desired elements */
 #roomName:hover {
-    animation: enlargeAnimation 2s;
+    animation: enlargeAnimation 1s;
 }
 
 /* -------------------- END FEATURE STYLE --------------------*/
@@ -501,7 +501,7 @@ button {
 
 .chat-box .type-area .button-upload i:hover,
 .chat-box .type-area .button-add i:hover {
-    animation: enlargeAnimation 2s forwards;
+    animation: enlargeAnimation 1s forwards;
     color: #4ecca3;
 }
 
