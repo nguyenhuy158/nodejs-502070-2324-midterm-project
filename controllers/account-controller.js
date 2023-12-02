@@ -22,6 +22,7 @@ async function createAccount(name, email, password) {
 
 exports.isNotAuthenticated = (req, res, next) => {
     // TODO: rename loggedin
+    // TODO: fix loi anh bi nguoc khi share
     if (req.session.loggedin) {
         res.redirect("/");
     } else {
