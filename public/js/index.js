@@ -168,6 +168,9 @@ mic.addEventListener('click', () => {
 });
 
 $(() => {
+    localStorage.setItem('camAllowed', true);
+    localStorage.setItem('micAllowed', true);
+
     socket.on('invite', (data) => {
         console.log(`🚀 🚀 file: landing.js:168 🚀 socket.on 🚀 data`, data);
         const { roomName, userInvited, inviteLink } = data;
