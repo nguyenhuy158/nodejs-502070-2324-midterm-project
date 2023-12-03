@@ -177,7 +177,7 @@ button {
     min-height: 200px;
     width: 100%;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 10px;
     /* transform: scaleX(-1); */
 }
 
@@ -203,12 +203,25 @@ button {
 }
 
 .container-room .left-cont .video-cont-single .video-box .mute-icon {
-    color: #d63434;
+    color: #ffffff;
     bottom: 10px;
     position: absolute;
     right: 10px;
     font-size: 20px;
     bottom: 10px;
+}
+
+#mute-mic-icon-remote {
+    top: 15px;
+    left: 0px;
+    transform: translate(-40px, 0);
+    z-index: 10;
+}
+#mute-cam-icon-remote {
+    top: 15px;
+    left: 0px;
+    transform: translate(-55px, 0);
+    z-index: 10;
 }
 
 .container-room .left-cont .footer {
@@ -242,7 +255,7 @@ button {
 }
 
 .container-room .left-cont .footer .utils .audio:hover,
-.container-room .left-cont .footer .utils .share-screen:hover, 
+.container-room .left-cont .footer .utils .share-screen:hover,
 .container-room .left-cont .footer .utils .record:hover {
     cursor: pointer;
     background-color: #5c6bc0;
@@ -379,6 +392,8 @@ button {
     position: relative;
     min-width: 50px;
     text-align: center;
+    max-width: 100%;
+    text-align: left;
 }
 
 .chat-box .chat-room .message-left .bubble::before {
@@ -417,6 +432,8 @@ button {
     position: relative;
     min-width: 50px;
     text-align: center;
+    max-width: 100%;
+    text-align: right;
 }
 
 .chat-box .chat-room .message-right .bubble::before {
@@ -651,4 +668,16 @@ audio::-webkit-media-controls-panel {
     color: rgba(255, 255, 255);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     transform: translate(-50%, 0px);
+}
+
+.video-box {
+    height: 100vh;
+}
+
+#remote-user-name {
+    z-index: 10;
+    position: absolute;
+    padding: 20px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }

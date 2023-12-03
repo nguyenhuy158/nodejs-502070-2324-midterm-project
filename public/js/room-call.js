@@ -58,7 +58,7 @@ $(() => {
             });
     });
 
-    // mute mic
+    // mute mic local
     $('.utils .audio').on('click', function () {
         $('#mute-mic-icon').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
@@ -70,10 +70,34 @@ $(() => {
             isMuteCam = true;
         }
     });
-
-    // mute camera
+    // mute camera local
     $('.utils .novideo').on('click', function () {
         $('#mute-cam-icon').toggleClass('d-none');
+        $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
+        if ($(this).find('i').hasClass('fa-video')) {
+            unmuteVideo();
+            isMuteMic = false;
+        } else {
+            muteVideo();
+            isMuteMic = true;
+        }
+    });
+
+    // mute mic remote
+    $('.utils .audio').on('click', function () {
+        $('#mute-mic-icon-remote').toggleClass('d-none');
+        $(this).find('i').toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
+        if ($(this).find('i').hasClass('fa-microphone')) {
+            unmuteAudio();
+            isMuteCam = false;
+        } else {
+            muteAudio();
+            isMuteCam = true;
+        }
+    });
+    // mute camera remote
+    $('.utils .novideo').on('click', function () {
+        $('#mute-cam-icon-remote').toggleClass('d-none');
         $(this).find('i').toggleClass('fa-video').toggleClass('fa-video-slash');
         if ($(this).find('i').hasClass('fa-video')) {
             unmuteVideo();

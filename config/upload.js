@@ -2,11 +2,11 @@ const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
-
+const logger = require('./logger');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const destinationDir = path.join(__dirname, '..', 'public', 'uploads');
+        const destinationDir = path.join(__dirname, '..', 'public', process.env.UPLOAD_DIR || 'uploads');
         fs.mkdirSync(destinationDir, { recursive: true });
         cb(null, destinationDir);
     },
@@ -22,8 +22,29 @@ const resizeImageSharp = async (file, destinationDir) => {
         .toBuffer();
     fs.writeFileSync(file.path, resizedImage);
 };
-const upload = multer({ storage: storage });
+exports.upload = multer({ storage: storage });
 
-module.exports = {
-    upload
+exports.uploadToCloudinary = async function (file) {
+    try {
+        const result = await cloudinary.uploader.upload(file.data, {
+            resource_type: 'auto',
+            folder: 'call-mate',
+        });
+        logger.info(`🚀 result`, result);
+
+        return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            cloudinaryUrl: result.secure_url,
+        };
+    } catch (error) {
+        logger.error('Error uploading file to Cloudinary:', error);
+        return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            cloudinaryUrl: file.data,
+        };
+    }
 };

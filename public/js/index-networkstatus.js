@@ -15,4 +15,5 @@ $(() => {
     window.addEventListener('offline', updateOnlineStatus);
 
     updateOnlineStatus();
+
 });

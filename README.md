@@ -1,12 +1,13 @@
 <!-- vscode-markdown-toc -->
-* [Pre-requisites](#Pre-requisites)
-* [Getting Started](#GettingStarted)
-* [Deployment](#Deployment)
-* [Database Configuration](#DatabaseConfiguration)
-* [Deployment Account](#DeploymentAccount)
-* [User Guide](#UserGuide)
-* [Current Issue](#CurrentIssue)
-* [End](#End)
+
+-   [Getting Started](#GettingStarted)
+    -   [Pre-requisites](#Pre-requisites)
+    -   [Installation](#Installation)
+-   [Deployment](#Deployment)
+-   [Database Configuration](#DatabaseConfiguration)
+-   [Deployment Account](#DeploymentAccount)
+-   [User Guide](#UserGuide)
+-   [Project Structure](#ProjectStructure)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -22,7 +23,9 @@ Website/Production: [[https://callmate.onrender.com](https://callmate.onrender.c
 
 **Warning:** The first-time access may take longer to respond because the server auto-freezes the app when there are no end-users accessing the website.
 
-## <a name='Pre-requisites'></a>Pre-requisites
+## <a name='GettingStarted'></a>Getting Started
+
+### <a name='Pre-requisites'></a>Pre-requisites
 
 1. Node.js version 18.18.0 or largest is required. You can download it from [Node.js Official Website](https://nodejs.org/en/).
 
@@ -32,7 +35,7 @@ Website/Production: [[https://callmate.onrender.com](https://callmate.onrender.c
     npm install -g yarn
     ```
 
-## <a name='GettingStarted'></a>Getting Started
+### <a name='Installation'></a>Installation
 
 1. Clone the repository:
     ```bash
@@ -93,8 +96,22 @@ Use the application to make real-time calls using WebRTC.
 -   To initiate a call, click the "Start Call" button, enter the name of the person you want to call, and click "OK."
 -   The call will be automatically established, and both parties will be able to see and hear each other.
 
-## <a name='CurrentIssue'></a>Current Issue
+## <a name='ProjectStructure'></a>Project Structure
 
-If two computers are on the same network, calls can be made. However, if they are on different networks, calls between them may not work.
+The folder structure of this app is explained below:
 
-## <a name='End'></a>End
+| Name                | Description                                                                                                                                                                         |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **dist**            | Contains the distributable (or output) from your TypeScript build.                                                                                                                  |
+| **node_modules**    | Contains all npm dependencies                                                                                                                                                       |
+| **src**             | Contains source code that will be compiled to the dist dir                                                                                                                          |
+| **configuration**   | Application configuration including environment-specific configs                                                                                                                    |
+| **src/controllers** | Controllers define functions to serve various express routes.                                                                                                                       |
+| **src/lib**         | Common libraries to be used across your app.                                                                                                                                        |
+| **src/middlewares** | Express middlewares which process the incoming requests before handling them down to the routes                                                                                     |
+| **src/routes**      | Contain all express routes, separated by module/area of application                                                                                                                 |
+| **src/models**      | Models define schemas that will be used in storing and retrieving data from Application database                                                                                    |
+| **src/monitoring**  | Prometheus metrics                                                                                                                                                                  |
+| **src**/index.ts    | Entry point to express app                                                                                                                                                          |
+| package.json        | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped) tsconfig.json Config settings for compiling source code only written in TypeScript |
+| tslint.json         | Config settings for TSLint code style checking                                                                                                                                      |

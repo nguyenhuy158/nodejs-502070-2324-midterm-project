@@ -1,6 +1,4 @@
-const fs = require("fs");
 const path = require("path");
-const passport = require("passport");
 const rateLimit = require("express-rate-limit");
 const cookieSession = require("cookie-session");
 const MongoStore = require('connect-mongo');

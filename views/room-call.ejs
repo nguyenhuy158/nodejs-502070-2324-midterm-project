@@ -30,7 +30,7 @@
         <!-- Main video call column -->
         <div id="content" class="container-room">
             <div class="row">
-                <div class="col">
+                <div class="col video-box">
                     <div class="left-cont">
                         <!-- local/remote video -->
                         <div class="video-cont-single" id="vcont">
@@ -39,6 +39,7 @@
                                 <video id="localVideo" muted autoplay playsinline class="video-frame"></video>
 
                                 <!-- remote video -->
+                                <p id="remote-user-name" class=""></p>
                                 <video id="remoteVideo" autoplay playsinline class="video-frame video-remote"></video>
 
                                 <!-- username tag -->
@@ -55,6 +56,14 @@
                                 <div class="mute-icon d-none me-5" id="mute-cam-icon">
                                     <i class="fas fa-video-slash"></i>
                                 </div>
+                                <!-- icon mute mic remote -->
+                                <div class="mute-icon d-none" id="mute-mic-icon-remote">
+                                    <i class="fas fa-microphone-slash"></i>
+                                </div>
+                                <!-- icon mute cam remote -->
+                                <div class="mute-icon d-none me-5" id="mute-cam-icon-remote">
+                                    <i class="fas fa-video-slash"></i>
+                                </div>
 
                                 <!-- don't use will remove in feature' -->
                                 <!-- <div class="video-off d-none" id="myvideooff">Video Off</div> -->
@@ -69,7 +78,7 @@
                                 class="position-absolute bottom-0 start-0 z-3 px-3 py-2 m-2 rounded bg-light text-black pointer user-select-none"
                                 data-id="<%= roomName %>"
                             >
-                                Click to copy: <%= roomName %>
+                                <%= roomName %>
                             </span>
 
                             <!-- mic -->

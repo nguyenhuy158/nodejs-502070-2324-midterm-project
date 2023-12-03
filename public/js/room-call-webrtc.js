@@ -67,8 +67,6 @@ function toggleSharing() {
     }
 }
 
-
-
 // mute audio
 function muteAudio() {
     if (peerConnection.getSenders().length === 0) return;
@@ -94,8 +92,6 @@ function unmuteVideo() {
     if (videoSender === undefined) return;
     videoSender.track.enabled = true;
 }
-
-
 
 $(() => {
     $('#offlineMessage').hide();
@@ -124,8 +120,6 @@ $(() => {
             },
         ],
     };
-    // let peerConnection;
-    // let remoteUserId;
 
     socket.on('room-full', () => {
         toastr.error('Room is full, please create new room or enter other room id');
@@ -223,8 +217,14 @@ $(() => {
     socket.on('new-user', (data) => {
         const { newUserId, newUsername } = data;
         remoteUserId = newUserId;
-        // console.log('new-user', data);
+
+        $('#remote-user-name').text(newUsername);
+        socket.emit('display-name', { username, roomId: roomName });
         displayMessage(`${newUsername} joined the room`, '🤖🤖🤖');
+    });
+
+    socket.on('display-name', (userRemoteName) => {
+        $('#remote-user-name').text(userRemoteName);
     });
 
     socket.on('ready-call', async () => {

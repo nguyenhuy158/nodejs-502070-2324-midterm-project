@@ -14,11 +14,13 @@ const { cloudinaryConfig } = require("./config/config");
 const { instrument } = require("@socket.io/admin-ui");
 const { Server } = require("socket.io");
 
+const { limiter } = require('./config/config');
 const { generateId } = require('./utils/utils');
 const { corsConfig } = require('./config/config');
 const { authConfig } = require('./config/config');
 const { sessionConfig } = require('./config/config');
 const { logRequestDetails } = require('./middlewares/access-log');
+const { uploadToCloudinary } = require('./config/upload');
 
 const logger = require('./config/logger');
 const indexRouter = require("./routes/index-router");
@@ -40,37 +42,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIES_SECRET));
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(flash());
 app.use(session(sessionConfig));
 
+app.use(limiter);
 app.use(logRequestDetails);
 app.use(indexRouter);
 
 cloudinary.config(cloudinaryConfig);
-async function uploadToCloudinary(file) {
-    try {
-        const result = await cloudinary.uploader.upload(file.data, {
-            resource_type: 'auto',
-            folder: 'call-mate',
-        });
-        logger.info(`🚀 result`, result);
 
-        return {
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            cloudinaryUrl: result.secure_url,
-        };
-    } catch (error) {
-        logger.error('Error uploading file to Cloudinary:', error);
-        return {
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            cloudinaryUrl: file.data,
-        };
-    }
-}
 io.on("connection", (socket) => {
 
 
@@ -87,7 +66,7 @@ io.on("connection", (socket) => {
     socket.on('ready-call', (roomId) => {
         console.log('ready to call');
         console.log(_rooms);
-        socket.to(roomId).emit('ready-call');
+        socket.to(roomId).emit('ready-call', _users[socket.id]);
     });
     socket.on('end-call', (remoteUserId) => {
         io.to(remoteUserId).emit('end-call');
@@ -138,6 +117,10 @@ io.on("connection", (socket) => {
             socket.emit('room-full');
         }
     });
+    socket.on('display-name', (data) => {
+        const { username, roomId } = data;
+        socket.to(roomId).emit('display-name', username);
+    });
     // room handler
 
     // file handler
@@ -153,7 +136,7 @@ io.on("connection", (socket) => {
             file: fileData,
             sender: _users[socket.id],
             isSender: true
-        })
+        });
     });
     // file handler
 
