@@ -2,7 +2,7 @@
 
 Project: Real-time caller using WebRTC [Projects](https://drive.google.com/file/d/15Jn0WJvZvjyFAVr_qeT0fVKYVj8L6Eqs/view)
 
-Website: [https://callquick.onrender.com](https://callquick.onrender.com)
+Website: [[https://callquick.onrender.com](https://callquick.onrender.com)](https://callmate.onrender.com/)
 
 **Warning:** The first-time access may take longer to respond because the server auto-freezes the app when there are no end-users accessing the website.
 
