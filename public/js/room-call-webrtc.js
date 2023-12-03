@@ -262,6 +262,8 @@ $(() => {
             $('#remoteVideo').addClass('video-remote');
             peerConnection.close();
             await createPeerConnection();
+
+            $("#remote-user-name").text("");
         } catch (error) {
             console.error('Error ending the call:', error);
         }
