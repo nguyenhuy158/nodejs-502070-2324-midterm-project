@@ -146,7 +146,8 @@ $(() => {
                         },
                         body: JSON.stringify({
                             roomName,
-                            userInvited
+                            userInvited,
+                            userInviter: username,
                         })
                     });
                     if (!response.ok) {

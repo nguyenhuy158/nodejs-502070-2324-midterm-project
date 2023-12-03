@@ -173,9 +173,9 @@ $(() => {
 
     socket.on('invite', (data) => {
         console.log(`🚀 🚀 file: landing.js:168 🚀 socket.on 🚀 data`, data);
-        const { roomName, userInvited, inviteLink } = data;
+        const { roomName, userInviter, inviteLink } = data;
         Swal.fire({
-            title: `<strong>User ${userInvited} invite you to join room</strong>`,
+            title: `<strong>User ${userInviter} invite you to join room</strong>`,
             icon: 'info',
             html: `
                         <div>

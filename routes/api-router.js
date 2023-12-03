@@ -18,7 +18,7 @@ router.get('/current-user', (req, res) => {
 });
 
 router.post('/invite', (req, res) => {
-    const { roomName, userInvited } = req.body;
+    const { roomName, userInvited, userInviter } = req.body;
 
     try {
         // check room is full 
@@ -45,7 +45,7 @@ router.post('/invite', (req, res) => {
         const inviteLink = `${req.protocol}://${req.get('host')}/room/${roomName}`;
 
         const targetSocketId = _users[userInvited];
-        _io.to(targetSocketId).emit('invite', { roomName, userInvited, inviteLink });
+        _io.to(targetSocketId).emit('invite', { roomName, userInviter, inviteLink });
 
         res.json({
             error: false,
