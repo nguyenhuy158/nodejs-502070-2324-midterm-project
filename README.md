@@ -61,7 +61,7 @@ To deploy your changes to the server (onrender.com):
 Configure your MongoDB database connection in the .env file:
 
 ```env
-DB_URI=mongodb+srv://noreplaynodejs502070:9bmdioNxz8UeylCQ@techhutgc.foofgxp.mongodb.net/ChitChatConnect
+DB_URI=mongodb+srv://noreplaynodejs502070:9bmdioNxz8UeylCQ@techhutgc.foofgxp.mongodb.net/CallMate
 ```
 
 Please note that the project currently lacks a sign-in/sign-up functionality.
