@@ -13,7 +13,7 @@ exports.checkResetLogin = (req, res, next) => {
     const user = req.session.user;
     // console.log(`🚀 🚀 file: indexController.js:288 🚀 user`, user);
     if (user && user.isPasswordReset) {
-        req.flash("info", "You need to change password to continue use system.");
+        // req.flash("info", "You need to change password to continue use system.");
 
         return res.redirect("/reset-password");
     }

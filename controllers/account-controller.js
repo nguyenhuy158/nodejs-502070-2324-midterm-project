@@ -194,17 +194,16 @@ exports.emailConfirm = async (req, res) => {
             const salesperson = await User.findOne({ token });
 
             if (!salesperson) {
-                console.log(`🚀 🚀 file: accountController.js:154 🚀 exports.emailConfirm= 🚀 salesperson`, salesperson);
                 return res.json({
                     error: true,
-                    message: 'Link invalid or used, please contact to admin and try again.'
+                    message: "Link invalid or used, please try again.",
                 });
             }
 
             if (salesperson && salesperson.tokenExpiration < moment()) {
                 return res.json({
                     error: true,
-                    message: 'Link expired, please contact to admin and try again.'
+                    message: "Link expired, please try again.",
                 });
             }
 
@@ -220,7 +219,7 @@ exports.emailConfirm = async (req, res) => {
 
             return res.json({
                 error: false,
-                message: 'Welcome Now you are salespeople.'
+                message: "Welcome to Callmate.",
             });
         } catch (error) {
             return res.json({
