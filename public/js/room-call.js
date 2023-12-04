@@ -122,23 +122,21 @@ $(() => {
         },
     });
 
-    socket.on("chat-message", (data) => {
-        displayMessage(data.message, data.sender, data.timeSent);
+    socket.on('chat-message', (data) => {
+        displayMessage(data.message, data.sender, undefined);
     });
 
     function sendMessage() {
         const message = $("#chatInput").val();
         const sender = username;
-        const timeSent = new Date().toLocaleTimeString();
 
         if (message.trim() !== "") {
             socket.emit("chat-message", {
                 roomName,
                 message,
                 sender,
-                timeSent,
             });
-            displayMessage(message, sender, timeSent, true);
+            displayMessage(message, sender, undefined, true);
         }
     }
 

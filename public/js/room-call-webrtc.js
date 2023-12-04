@@ -28,6 +28,14 @@ let audioSender;
 let videoSender;
 let sharingScreen = false;
 
+function swapText(id1, id2) {
+    var text1 = $('#' + id1).text();
+    var text2 = $('#' + id2).text();
+
+    $('#' + id1).text(text2);
+    $('#' + id2).text(text1);
+}
+
 function toggleSharing() {
     if (sharingScreen) {
         // if you share screen, change to share camera
@@ -260,6 +268,10 @@ $(() => {
             // swap video tag
             $('#localVideo').removeClass('video-remote');
             $('#remoteVideo').addClass('video-remote');
+
+            swapText('remote-user-name', 'myname');
+            $('#remote-user-name').text('');
+
             peerConnection.close();
             await createPeerConnection();
 
@@ -291,6 +303,8 @@ $(() => {
         // swap video tag
         $('#remoteVideo').removeClass('video-remote');
         $('#localVideo').addClass('video-remote');
+
+        swapText('remote-user-name', 'myname')
     });
 
     // feature: share screen 
@@ -302,7 +316,7 @@ $(() => {
 
 function displayMessage(message, sender, timeSent = undefined, isMe = false, file = undefined) {
     // format date now to hh:mm:ss AM
-    timeSent = timeSent || moment(Date.now()).format('hh:mm:ss A');
+    timeSent = timeSent || moment(Date.now()).format('HH:mm:ss');
 
     if (file !== undefined) {
         const isImage = file.type.includes('image');
